@@ -1,1 +1,40 @@
 GET http://localhost:3000/api/users
+
+GET http://localhost:3000/api/users/44427692
+
+
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "name": "Manuel",
+    "lastName": "Variego",
+    "dni": 44765236,
+    "address": "Dorrego 700",
+    "mail": "manuvariego@gmail.com",
+    "telephone": 3416538852
+}
+
+
+
+PUT http://localhost:3000/api/users/44427692
+Content-Type: application/json
+
+{
+    "name": "Candela",
+    "lastname": "Tanchi",
+    "dni": 45656415,
+    "address": "España 1800",
+    "mail": "candetanchi@gmail.com",
+    "telephone": 3413654987
+}
+
+PATCH http://localhost:3000/api/characters/44427692
+Content-Type: application/json
+
+{
+    "address": "Avenida Circunvalacion 7000",
+    "mail": "yasuriyamilei@gmail.com"
+}
+
+DELETE http://localhost:3000/api/characters/44427692
