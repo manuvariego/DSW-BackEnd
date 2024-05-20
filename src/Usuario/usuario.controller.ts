@@ -10,7 +10,7 @@ function sanitizeUserInput(req: Request, res:Response , next:NextFunction){
   req.body.sanitizedInput= {
   name: req.body.name,
   lastName: req.body.lastname,
-  dni: Number(req.body.dni),
+  dni: req.body.dni,
   address: req.body.address,
   mail: req.body.mail,
   telephone: req.body.telephone,
@@ -21,10 +21,6 @@ function sanitizeUserInput(req: Request, res:Response , next:NextFunction){
     if(req.body.sanitizedInput[key] === undefined){ 
       delete req.body.sanitizedInput[key]}
     })
-
- if (req.body.sanitizedInput.dni != Number){
-        Number(req.body.sanitizedInput.dni)
-    }
 
   next()
 }

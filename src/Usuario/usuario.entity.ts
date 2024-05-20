@@ -6,7 +6,7 @@ constructor(
 
 public name: string,
 public lastname: string,
-public dni: number,
+public dni: string,
 public address: string,
 public mail: string,
 public telephone: number

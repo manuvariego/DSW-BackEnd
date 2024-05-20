@@ -6,7 +6,7 @@ const users = [
     new User(
         'Yamila',
         'Donzino',
-        44427692,
+        '44.427.692',
         'Buenos aires 1465',
         'yamidonzino@gmail.com',
         3416543212
@@ -21,7 +21,7 @@ export class UserRepository implements Repository<User>{
       return users
     }
     
-    public findOne(item: { dni: number; }): User | undefined {
+    public findOne(item: { dni: string; }): User | undefined {
       return users.find(user => user.dni === item.dni)
     
     }
@@ -44,7 +44,7 @@ export class UserRepository implements Repository<User>{
     
     }
     
-    public delete(item: { dni: number }): User | undefined {
+    public delete(item: { dni: string }): User | undefined {
      const userIndex = users.findIndex(user=>{user.dni === item.dni})
     
       const EliminatedUser = users[userIndex]

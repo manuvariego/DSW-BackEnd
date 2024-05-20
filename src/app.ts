@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response} from 'express'
-
+import { UserRouter } from './Usuario/usuario.routes.js'
 
 const app = express()
 app.use(express.json())
 
-//app.use('/api/characters', UserRouter)
+app.use('/api/users', UserRouter)
 
 app.use((_,res)=>{
 
