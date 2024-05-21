@@ -8,8 +8,8 @@ Content-Type: application/json
 
 {
     "name": "Manuel",
-    "lastName": "Variego",
-    "dni": 44765236,
+    "lastname": "Variego",
+    "dni": "44427693",
     "address": "Dorrego 700",
     "mail": "manuvariego@gmail.com",
     "telephone": 3416538852
@@ -23,7 +23,7 @@ Content-Type: application/json
 {
     "name": "Candela",
     "lastname": "Tanchi",
-    "dni": 45656415,
+    "dni": "45656415",
     "address": "España 1800",
     "mail": "candetanchi@gmail.com",
     "telephone": 3413654987

@@ -9,7 +9,7 @@ function sanitizeUserInput(req: Request, res:Response , next:NextFunction){
 
   req.body.sanitizedInput= {
   name: req.body.name,
-  lastName: req.body.lastname,
+  lastname: req.body.lastname,
   dni: req.body.dni,
   address: req.body.address,
   mail: req.body.mail,
@@ -50,7 +50,7 @@ function add(req: Request ,res: Response){
 
   const userInput = new User(
     input.name,
-    input.lastName,
+    input.lastname,
     input.dni,
     input.address,
     input.mail,

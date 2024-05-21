@@ -1,12 +1,12 @@
 import { User } from "./usuario.entity.js";
-import { Repository } from "../../shared/repository.js";
+import { Repository } from "../shared/repository.js";
 
 const users = [
 
     new User(
         'Yamila',
         'Donzino',
-        '44.427.692',
+        '44427692',
         'Buenos aires 1465',
         'yamidonzino@gmail.com',
         3416543212
@@ -22,7 +22,7 @@ export class UserRepository implements Repository<User>{
     }
     
     public findOne(item: { dni: string; }): User | undefined {
-      return users.find(user => user.dni === item.dni)
+      return users.find(user => {user.dni === item.dni})
     
     }
     
