@@ -37,4 +37,4 @@ Content-Type: application/json
     "mail": "yasuriyamilei@gmail.com"
 }
 
-DELETE http://localhost:3000/api/characters/44427692
+DELETE http://localhost:3000/api/characters/44427693

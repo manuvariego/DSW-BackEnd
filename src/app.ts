@@ -4,6 +4,8 @@ import { UserRouter } from './Usuario/usuario.routes.js'
 const app = express()
 app.use(express.json())
 
+
+//gay
 app.use('/api/users', UserRouter)
 
 //app.use((_,res)=>{

@@ -17,7 +17,7 @@ function sanitizeUserInput(req: Request, res:Response , next:NextFunction){
   
 }
 
-  Object.keys(req.body.sanitizedInput).forEach(key=>{
+  Object.keys(req.body.sanitizedInput).forEach((key)=>{
     if(req.body.sanitizedInput[key] === undefined){ 
       delete req.body.sanitizedInput[key]}
     })
@@ -33,7 +33,9 @@ function findAll(req: Request ,res: Response){
 
 function findOne(req: Request ,res: Response){
 
-  const user = repository.findOne({dni: req.params.dni})
+
+  const dni = req.params.dni
+  const user = repository.findOne({dni})
 
   if(!user){
 
@@ -64,26 +66,27 @@ function add(req: Request ,res: Response){
 }
 
 function Update(req: Request ,res: Response){
-
-  req.body.sanitizedInput.dni = req.params.dni
     
+
   const user = repository.update(req.body.sanitizedInput)
 
-  if(!user){return res.status(404).send({message: "It doesnt found."})}
+  if(!user){return res.status(404).send({message: "User not found"})}
 
   return res.status(200).send({message: 'User updated succesfully.'})
 }
 
 function Eliminate(req: Request ,res: Response){
 
-  const user = repository.delete({dni: req.params.dni})
+  const dni = req.params.dni
 
-if(!user){res.status(404).send({message: "User not found"})}
+  const user = repository.delete({dni})
 
-else{
+  if(!user){res.status(404).send({message: "User not found"})}
 
-return res.status(200).send({message: "User deleted succesfully"})}
+  else{
 
-}
+  return res.status(200).send({message: "User deleted succesfully"})}
+
+  }
 
 export {findAll, findOne, add, Eliminate, Update, sanitizeUserInput}
