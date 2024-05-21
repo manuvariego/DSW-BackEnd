@@ -32,11 +32,11 @@ export class UserRepository implements Repository<User>{
     }
     
   public update(item: User): User | undefined {
-     const userIndex = users.findIndex((user) => item.dni === user.dni)
+     const userIndex = users.findIndex((user) => user.dni === item.dni)
     
      if (userIndex !== -1){
     
-      Object.assign(users[userIndex], item)
+      users[userIndex] = { ...users[userIndex], ...item }
     
     }
     

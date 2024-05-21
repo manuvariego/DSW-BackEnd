@@ -65,8 +65,9 @@ function add(req: Request ,res: Response){
 
 }
 
-function Update(req: Request ,res: Response){
+function update(req: Request ,res: Response){
     
+  req.body.sanitizedInput.dni = req.params.dni
 
   const user = repository.update(req.body.sanitizedInput)
 
@@ -75,7 +76,7 @@ function Update(req: Request ,res: Response){
   return res.status(200).send({message: 'User updated succesfully.'})
 }
 
-function Eliminate(req: Request ,res: Response){
+function eliminate(req: Request ,res: Response){
 
   const dni = req.params.dni
 
@@ -89,4 +90,4 @@ function Eliminate(req: Request ,res: Response){
 
   }
 
-export {findAll, findOne, add, Eliminate, Update, sanitizeUserInput}
+export {findAll, findOne, add, eliminate, update, sanitizeUserInput}
