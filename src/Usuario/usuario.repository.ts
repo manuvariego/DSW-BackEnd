@@ -1,12 +1,12 @@
 import { User } from "./usuario.entity.js";
-import { Repository } from "../../shared/repository.js";
+import { Repository } from "../shared/repository.js";
 
 const users = [
 
     new User(
         'Yamila',
         'Donzino',
-        '44.427.692',
+        '44427692',
         'Buenos aires 1465',
         'yamidonzino@gmail.com',
         3416543212
@@ -17,26 +17,26 @@ const users = [
 
 export class UserRepository implements Repository<User>{
 
-    public findAll(): User[] | undefined {
+  public findAll(): User[] | undefined {
       return users
     }
     
-    public findOne(item: { dni: string; }): User | undefined {
-      return users.find(user => user.dni === item.dni)
+  public findOne(item: { dni: string }): User | undefined {
+      return users.find((user) => user.dni === item.dni)
     
     }
     
-    public add(item: User): User | undefined {
+  public add(item: User): User | undefined {
       users.push(item)
       return(item)
     }
     
-    public update(item: User): User | undefined {
-     const userIndex = users.findIndex(user =>{item === user})
+  public update(item: User): User | undefined {
+     const userIndex = users.findIndex((user) => user.dni === item.dni)
     
-     if (userIndex != -1){
+     if (userIndex !== -1){
     
-      Object.assign(users[userIndex], item)
+      users[userIndex] = { ...users[userIndex], ...item }
     
     }
     
@@ -44,17 +44,18 @@ export class UserRepository implements Repository<User>{
     
     }
     
-    public delete(item: { dni: string }): User | undefined {
-     const userIndex = users.findIndex(user=>{user.dni === item.dni})
+  public delete(item: { dni: string }): User | undefined {
+     const userIndex = users.findIndex((user)=> user.dni === item.dni)
     
-      const EliminatedUser = users[userIndex]
+   
     
-      if (userIndex != -1){
+      if (userIndex !== -1){
+        const EliminatedUser = users[userIndex]
         users.splice(userIndex,1)
+        return EliminatedUser
     }
     
-     return EliminatedUser
-    
+  
     }
     
     }

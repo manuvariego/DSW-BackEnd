@@ -8,8 +8,8 @@ Content-Type: application/json
 
 {
     "name": "Manuel",
-    "lastName": "Variego",
-    "dni": 44765236,
+    "lastname": "Variego",
+    "dni": "44427693",
     "address": "Dorrego 700",
     "mail": "manuvariego@gmail.com",
     "telephone": 3416538852
@@ -23,13 +23,13 @@ Content-Type: application/json
 {
     "name": "Candela",
     "lastname": "Tanchi",
-    "dni": 45656415,
+    "dni": "45656415",
     "address": "España 1800",
     "mail": "candetanchi@gmail.com",
     "telephone": 3413654987
 }
 
-PATCH http://localhost:3000/api/characters/44427692
+PATCH http://localhost:3000/api/users/44427692
 Content-Type: application/json
 
 {
@@ -37,4 +37,4 @@ Content-Type: application/json
     "mail": "yasuriyamilei@gmail.com"
 }
 
-DELETE http://localhost:3000/api/characters/44427692
+DELETE http://localhost:3000/api/users/44427693
