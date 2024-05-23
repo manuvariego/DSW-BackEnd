@@ -1,12 +1,11 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, sanitizeUserInput, eliminate } from "./usuario.controller.js";
+import { sanitizeUserInput, findAll, findOne, update, add, eliminate } from "./usuario.controller.js";
 
 export const UserRouter = Router()
 
 UserRouter.get('/', findAll)
-UserRouter.get('/:dni', findOne)
+UserRouter.get('/:id', findOne)
 UserRouter.post('/', sanitizeUserInput, add)
-UserRouter.put('/:dni', sanitizeUserInput, update)
-UserRouter.patch('/:dni', sanitizeUserInput, update)
-UserRouter.delete('/:dni', eliminate)
+UserRouter.put('/:id', sanitizeUserInput, update)
+UserRouter.delete('/:id', eliminate)

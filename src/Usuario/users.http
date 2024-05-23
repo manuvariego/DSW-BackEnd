@@ -1,23 +1,28 @@
+
+### obtener todos los usuarios
 GET http://localhost:3000/api/users
 
-GET http://localhost:3000/api/users/44427692
+
+### obtener un usuario
+GET http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
 
 
-POST http://localhost:3000/api/users
+### crear un nuevo usuario
+POST  http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
     "name": "Manuel",
     "lastname": "Variego",
-    "dni": "44427693",
+    "dni": "12345678",
     "address": "Dorrego 700",
     "mail": "manuvariego@gmail.com",
     "telephone": 3416538852
 }
 
 
-
-PUT http://localhost:3000/api/users/44427692
+### modificar un usuario
+PUT http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
 Content-Type: application/json
 
 {
@@ -29,12 +34,6 @@ Content-Type: application/json
     "telephone": 3413654987
 }
 
-PATCH http://localhost:3000/api/users/44427692
-Content-Type: application/json
 
-{
-    "address": "Avenida Circunvalacion 7000",
-    "mail": "yasuriyamilei@gmail.com"
-}
-
-DELETE http://localhost:3000/api/users/44427693
+### eliminar un usuario
+DELETE http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
