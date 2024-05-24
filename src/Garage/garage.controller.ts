@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { UserRepository } from "./usuario.repository.js";
-import { User } from "./usuario.entity.js";
+import { GarageRepository } from "./garage.repository.js"
+import { Garage } from "./garage.entity.js";
 
-const repository = new UserRepository()
+const repository = new GarageRepository()
 
 
 function sanitizeUserInput(req: Request, res: Response , next: NextFunction){
   req.body.sanitizedInput = {
+    cuit: req.body.cuit,
     name: req.body.name,
-    lastname: req.body.lastname,
-    dni: req.body.dni,
     address: req.body.address,
-    mail: req.body.mail,
     telephone: req.body.telephone,
+    mail: req.body.mail,
+    priceHour: req.body.priceHour,
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -31,53 +31,53 @@ function findAll(req: Request ,res: Response){
 
 function findOne(req: Request ,res: Response){
   const id = req.params.id
-  const user = repository.findOne({ id })
+  const garage = repository.findOne({ id })
   
-  if(!user){
-    return res.status(404).send({message: 'User not found.'})
+  if(!garage){
+    return res.status(404).send({message: 'Garage not found.'})
   }
 
-  res.json({data: user})
+  res.json({data: garage})
 }
 
 
 function add(req: Request, res: Response){
   const input = req.body.sanitizedInput
 
-  const userInput = new User(
+  const garageInput = new Garage(
+    input.cuit,
     input.name,
-    input.lastname,
-    input.dni,
     input.address,
-    input.mail,
     input.telephone,
+    input.mail,
+    input.priceHour,
   )
 
-  const user = repository.add(userInput)
-  return res.status(201).send({message: 'User created', data: user})
+  const garage = repository.add(garageInput)
+  return res.status(201).send({message: 'Garage created', data: garage})
 }
 
 
 function update(req: Request ,res: Response){
   req.body.sanitizedInput.id = req.params.id
-  const user = repository.update(req.body.sanitizedInput)
+  const garage = repository.update(req.body.sanitizedInput)
 
-  if(!user){
-    return res.status(404).send({message: "User not found"})
+  if(!garage){
+    return res.status(404).send({message: "Garage not found"})
   }
 
-  return res.status(200).send({message: 'User updated succesfully.', data: user})
+  return res.status(200).send({message: 'Garage updated succesfully.', data: garage})
 }
 
 
 function eliminate(req: Request ,res: Response){
   const id = req.params.id
-  const user = repository.delete({id})
+  const garage = repository.delete({id})
 
-  if(!user) {
-    res.status(404).send({message: "User not found"})
+  if(!garage) {
+    res.status(404).send({message: "Garage not found"})
   } else{
-    return res.status(200).send({message: "User deleted succesfully"})
+    return res.status(200).send({message: "Garage deleted succesfully"})
   }
 
 }
