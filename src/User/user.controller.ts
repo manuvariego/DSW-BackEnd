@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { UserRepository } from "./usuario.repository.js";
-import { User } from "./usuario.entity.js";
+import { UserRepository } from "./user.repository.js";
+import { User } from "./user.entity.js";
 
 const repository = new UserRepository()
 
