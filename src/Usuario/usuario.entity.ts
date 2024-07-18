@@ -1,5 +1,3 @@
-import crypto from 'node:crypto'
-
 export class User{
   constructor(
     public name: string,
@@ -8,7 +6,6 @@ export class User{
     public address: string,
     public mail: string,
     public telephone: number,
-    public id = crypto.randomUUID()
 ) {}
 
 }
