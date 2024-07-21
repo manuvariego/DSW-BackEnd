@@ -1,16 +1,35 @@
 import crypto from 'node:crypto'
+import { baseEntity } from '../shared/baseEntity.entity.js';
+import { Cascade, Collection, Entity, ManyToMany, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { UserClass } from './usuarioClass.entity.js';
+import { itemUser } from './itemUser.entity.js';
 
-export class User{
-  constructor(
-    public name: string,
-    public lastname: string,
-    public dni: string,
-    public address: string,
-    public mail: string,
-    public telephone: number,
-    public id = crypto.randomUUID()
-) {}
+@Entity()
+export class User extends baseEntity{
+ @Property({nullable: false})
+  name!: string
+
+ @Property({nullable: false})
+ lastname!: string
+ 
+ @Property({nullable: false})
+ dni!: string
+ 
+ @Property({nullable: false})
+ address!: string
+ 
+ @Property({nullable: false})
+ mail!: string
+ 
+ @Property()
+ telephone!: string
+
+ @ManyToOne(()=> UserClass, {nullable:false})
+ class!: Rel<UserClass>
+
+ @ManyToMany(()=> itemUser, (itemUser) => itemUser.users, {cascade: [Cascade.ALL], owner: true,})
+ items!: itemUser[]
+
 
 }
 
-//asdasd

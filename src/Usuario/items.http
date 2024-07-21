@@ -1,0 +1,35 @@
+### obtener items
+GET http://localhost:3000/api/items
+
+### añadir un item
+# @name createPerro
+POST http://localhost:3000/api/items
+Content-Type: application/json
+
+
+{
+    "name": "Perro",
+    "desc": "Perro genial",
+    "users": [1,2]
+
+}
+###ID
+@id = {{createPerro.response.body.data.id}}
+
+###modificar un item
+
+PUT http://localhost:3000/api/items/{{id}}
+Content-Type: application/json
+
+{
+
+    "name": "Gato"
+
+}
+
+
+### obtener un item
+GET http://localhost:3000/api/items/{{id}}
+
+### eliminar un item
+DELETE http://localhost:3000/api/items/{{id}}

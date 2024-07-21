@@ -1,0 +1,31 @@
+### obtener items
+GET http://localhost:3000/api/classes
+
+### añadir una clase
+# @name createClase
+POST http://localhost:3000/api/classes
+Content-Type: application/json
+
+{
+    "name": "genio",
+    "description": "sos re genio"
+}
+###ID
+@id = {{createClase.response.body.data.id}}
+
+PUT http://localhost:3000/api/classes/{{id}}
+Content-Type: application/json
+
+{
+
+    "name": "Gato"
+
+}
+
+
+
+### obtener un item
+GET http://localhost:3000/api/classes/{{id}}
+
+### eliminar un item
+DELETE http://localhost:3000/api/classes/{{id}}
