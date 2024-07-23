@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import express from 'express'
 import { UserRouter } from './Usuario/usuario.routes.js'
+import {VehiculoRouter} from './Vehiculo/vehiculo.routes.js' 
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { UserClassRouter } from './Usuario/usuarioClass.routes.js'
@@ -21,6 +22,8 @@ app.use('/api/users', UserRouter)
 app.use('/api/classes', UserClassRouter)
 
 app.use('/api/items', ItemUserRouter)
+
+app.use('/api/vehiculos', VehiculoRouter)
 
 
 
