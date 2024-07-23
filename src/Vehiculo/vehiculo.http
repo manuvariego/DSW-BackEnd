@@ -7,7 +7,7 @@ GET http://localhost:3000/api/vehiculos
 GET http://localhost:3000/api/vehiculos/{{patente}}
 
 
-### crear un nuevo usuario
+### crear un nuevo vehículo
 # @name createVehiculo
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
@@ -22,7 +22,7 @@ Content-Type: application/json
 @patente= {{createVehiculo.response.body.data.patente}}
 
 ### modificar un vehículo
-PUT http://localhost:3000/api/vehiculos/{{{{patente}}}}
+PUT http://localhost:3000/api/vehiculos/{{patente}}
 Content-Type: application/json
 
 {

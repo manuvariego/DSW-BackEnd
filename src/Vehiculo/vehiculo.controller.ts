@@ -19,16 +19,15 @@ function sanitizeUserInput(req: Request, res: Response , next: NextFunction){
 
 
 async function findAll(req: Request ,res: Response){
-try{  const vehiculos = await em.find(Vehiculo, {},) //{populate: ['class', 'items']}) ver esto
+try{  const vehiculos = await em.find(Vehiculo, {},) 
   res.status(201).json({message: 'Vehiculo Encontrado', data:vehiculos})
 } catch (error:any){res.status(500).json({message: error.message})}
 }
 
 
 async function findOne(req: Request ,res: Response){
-try{  const patente = Number.parseInt(req.params.vehiculo) //ver si es number
-
-  const vehiculo = await em.findOneOrFail(Vehiculo, {patente},) //{populate: ['class', 'items']})
+try{  const patente = req.params.vehiculo;
+  const vehiculo = await em.findOneOrFail(Vehiculo, {patente},) 
 
   res.status(201).json({message: 'Vehiculo Encontrado', data:vehiculo})
 }catch (error:any){res.status(500).json({message: error.message})}
@@ -45,7 +44,7 @@ try{
 
 
 async function update(req: Request ,res: Response){
-try{  const patente = Number.parseInt(req.params.patente)
+try{  const patente = req.params.vehiculo;
 
   const vehiculoToUpdate = await em.findOneOrFail(Vehiculo, {patente})
   em.assign(vehiculoToUpdate, req.body.sanitizedInput)
@@ -57,15 +56,17 @@ try{  const patente = Number.parseInt(req.params.patente)
 
 async function eliminate(req: Request ,res: Response){
   try{
-  const patente = Number.parseInt(req.params.patente)
+    const patente = req.params.vehiculo;
 
-  const vehiculo = em.getReference(Vehiculo, patente)
+    const vehiculo = await em.findOneOrFail(Vehiculo, { patente })
   
   await em.removeAndFlush(vehiculo)
 
   res.status(201).json({message: 'Vehiculo eliminado / dado de baja'})
-} catch (error:any){res.status(500).json({message: error.message})}
+} catch (error:any)
+{res.status(500).json({message: error.message})}
 
 }
 
-export { sanitizeUserInput, findAll, findOne, add, update, eliminate}
+export { sanitizeUserInput, findAll, findOne, add, update ,eliminate}
+
