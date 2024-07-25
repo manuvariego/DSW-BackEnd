@@ -2,14 +2,19 @@
 ### obtener todos los usuarios
 GET http://localhost:3000/api/users
 
+### obtener las clases
+GET http://localhost:3000/api/classes
+
 
 ### obtener un usuario
-GET http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
+GET http://localhost:3000/api/users/{{id}}
 
 
 ### crear un nuevo usuario
-POST  http://localhost:3000/api/users/
+# @name createManuel
+POST http://localhost:3000/api/users
 Content-Type: application/json
+
 
 {
     "name": "Manuel",
@@ -17,12 +22,16 @@ Content-Type: application/json
     "dni": "12345678",
     "address": "Dorrego 700",
     "mail": "manuvariego@gmail.com",
-    "telephone": 3416538852
-}
+    "telephone": "3416538852",
+    "class": 1,
+    "items": [1]
 
+}
+###ID
+@id = {{createManuel.response.body.data.id}}
 
 ### modificar un usuario
-PUT http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
+PUT http://localhost:3000/api/users/{{id}}
 Content-Type: application/json
 
 {
@@ -31,9 +40,12 @@ Content-Type: application/json
     "dni": "45656415",
     "address": "España 1800",
     "mail": "candetanchi@gmail.com",
-    "telephone": 3413654987
+    "telephone": "3413654987",
+    "class": 1,
+    "items": [1]
+
 }
 
 
 ### eliminar un usuario
-DELETE http://localhost:3000/api/users/8b2dd650-d0b4-49b9-b2b4-113f25a3fa06
+DELETE http://localhost:3000/api/users/{{id}}
