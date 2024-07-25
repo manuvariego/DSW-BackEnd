@@ -1,4 +1,3 @@
-import crypto from 'node:crypto'
 import { baseEntity } from '../shared/baseEntity.entity.js';
 import { Cascade, Collection, Entity, ManyToMany, ManyToOne, Property, Rel, OneToMany } from '@mikro-orm/core';
 import { UserClass } from './usuarioClass.entity.js';
