@@ -1,0 +1,45 @@
+### GET all localidades
+http://localhost:3000/api/localidades
+
+
+### POST a character
+# @name createLocalidad
+POST http://localhost:3000/api/localidades
+Content-Type: application/json
+
+{
+    "nombre": "San Vicente",
+    "provincia": "Santa Fe"  
+}
+
+## ID
+@id = {{createLocalidad.response.body.data.id}}
+
+
+### GET ONE 
+http://localhost:3000/api/localidades/{{id}}
+
+
+### PUT
+PUT  http://localhost:3000/api/localidades/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Rosario",
+    "provincia": "Santa Fe"
+}
+
+
+### POST LOCALIDAD TO DELETE
+# @name createLocalidadToDelete
+POST http://localhost:3000/api/localidades
+Content-Type: application/json
+
+{
+    "nombre": "Rafaela",
+    "provincia": "Santa Fe"
+}
+
+### DELETE
+@idToDelete = {{createLocalidadToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/localidades/{{idToDelete}}

@@ -6,6 +6,7 @@ import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { UserClassRouter } from './Usuario/usuarioClass.routes.js'
 import { ItemUserRouter } from './Usuario/itemUser.routes.js'
+import { LocalidadRouter } from './Localidad/localidad.routes.js'
 
 const app = express()
 app.use(express.json())
@@ -25,13 +26,15 @@ app.use('/api/items', ItemUserRouter)
 
 app.use('/api/vehiculos', VehiculoRouter)
 
+app.use('/api/localidades', LocalidadRouter)
+
 
 
 app.use((_,res)=>{
     return res.status(404).send({message: 'Resource not found.'})
 })
 
-await syncSchema()
+await syncSchema() //never in production
 
 
 app.listen(3000, ()=>{
