@@ -11,7 +11,7 @@ export class itemUser extends baseEntity {
   @Property()
   desc!: string
 
-  //@ManyToMany(()=> User, (user) => user.items)
-  //users = new Collection<User>(this)
+  @ManyToMany(() => User, (user) => user.items)
+  users = new Collection<User>(this)
 
 }

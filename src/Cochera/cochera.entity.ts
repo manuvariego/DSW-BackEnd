@@ -1,6 +1,5 @@
-import { Entity, PrimaryKey, OneToMany, Cascade, Collection, Property } from '@mikro-orm/core';
-import { User } from '../Usuario/usuario.entity.js';
-import { baseEntity } from '../shared/baseEntity.entity.js';
+import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property } from '@mikro-orm/core';
+import { Localidad } from '../Localidad/localidad.entity.js';
 
 @Entity()
 export class Cochera {
@@ -19,9 +18,9 @@ export class Cochera {
   @Property({ type: 'number' })
   precioxHora!: number;
 
-  //
-  //@ManyToOne(() => Localidad, localidad => localidad.cochera)
-  //localidad!: Localidad;
+  @ManyToOne(() => Localidad, localidad => localidad.cocheras)
+  localidad!: Localidad;
+
 
 
 }

@@ -12,8 +12,6 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     telefono: req.body.telefono,
     correo: req.body.correo,
     precioHora: req.body.precioHora,
-    //class: req.body.class,
-    //items: req.body.items
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -37,8 +35,9 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
-    const cocheras = await em.findOneOrFail(Cochera, { cuit }, { populate: ['localidad'] })
-    res.status(201).json({ message: 'Cochera encontrada', data: cocheras })
+    const cochera = await em.findOneOrFail(Cochera, { cuit }, { populate: ['localidad'] })
+    res.status(201).json({ message: 'Cochera encontrada', data: cochera })
+    console.log("Pertenece a la localidad", cochera.localidad)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -46,9 +45,9 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const user = em.create(User, req.body.sanitizedInput)
-    await em.persistAndFlush(user)
-    res.status(201).json({ Message: 'User created', data: user })
+    const cochera = em.create(Cochera, req.body.sanitizedInput)
+    await em.persistAndFlush(cochera)
+    res.status(201).json({ Message: 'User created', data: cochera })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -56,25 +55,25 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const id = Number.parseInt(req.params.id)
-    const userToUpdate = await em.findOneOrFail(User, { id })
-    em.assign(userToUpdate, req.body.sanitizedInput)
+    const cuit = Number.parseInt(req.params.cuit)
+    const cocheraToUpdate = await em.findOneOrFail(Cochera, { cuit })
+    em.assign(cocheraToUpdate, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'User updated', data: userToUpdate })
+    res.status(201).json({ message: 'Cochera actualizada', data: cocheraToUpdate })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+//
+//async function eliminate(req: Request, res: Response) {
+//  try {
+//    const cuit = req.params.cuit
+//    const cochera = em.getReference(Cochera, cuit )
+//    await em.removeAndFlush(cochera)
+//    res.status(201).json({ message: 'Cochera eliminada' })
+//  }
+//  catch (error: any) { res.status(500).json({ message: error.message }) }
 
-async function eliminate(req: Request, res: Response) {
-  try {
-    const id = Number.parseInt(req.params.id)
-    const user = em.getReference(User, id)
-    await em.removeAndFlush(user)
-    res.status(201).json({ message: 'Character eliminated' })
-  }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+//}
 
-}
-
-export { sanitizeUserInput, add, update, eliminate }
+export { sanitizeUserInput, findAll, findOne, add, update }
