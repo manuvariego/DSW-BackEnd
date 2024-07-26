@@ -6,6 +6,9 @@ import { baseEntity } from '../shared/baseEntity.entity.js'
 @Entity()
 export class User extends baseEntity{
  @Property({nullable: false})
+ name!: string
+  
+ @Property({nullable: false})
  lastname!: string
  
  @Property({nullable: false})

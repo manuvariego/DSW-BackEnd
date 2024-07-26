@@ -1,0 +1,45 @@
+
+### obtener todos los vehículos
+GET http://localhost:3000/api/vehiculos
+
+
+### obtener un solo vehículo
+GET http://localhost:3000/api/vehiculos/{{patente}}
+
+
+### crear un nuevo vehículo
+# @name createVehiculo
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "aaaa",
+    "owner": 5
+}
+
+###ID
+@patente = {{createVehiculo.response.body.data.patente}}
+
+### modificar un vehículo
+PUT http://localhost:3000/api/vehiculos/{{patente}}
+Content-Type: application/json
+
+{
+    "patente": "dddd"
+}
+
+
+### crear un vehiculo TO DELETE
+# @name createVehiculoToDelete
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "aaaa",
+    "owner": 5
+}
+
+
+### eliminar un vehículo
+@patenteToDelete = {{createVehiculoToDelete.response.body.data.patente}}
+DELETE http://localhost:3000/api/vehiculos/{{patenteToDelete}}

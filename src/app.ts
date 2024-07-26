@@ -25,6 +25,7 @@ app.use('/api/vehiculos', VehiculoRouter)
 
 app.use('/api/localidades', LocalidadRouter)
 
+
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found.' })
 })
