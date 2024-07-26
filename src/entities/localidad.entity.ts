@@ -1,6 +1,6 @@
-import { Collection, Entity, OneToMany, Property, Cascade } from '@mikro-orm/core';
+import { Collection, Entity, Cascade, OneToMany, Property } from '@mikro-orm/core';
 import { baseEntity } from "../shared/baseEntity.entity.js";
-import { Cochera } from "../Cochera/cochera.entity.js";
+import { Cochera } from "../entities/cochera.entity.js";
 
 @Entity()
 export class Localidad extends baseEntity {
@@ -14,8 +14,7 @@ export class Localidad extends baseEntity {
     cascade: [Cascade.ALL],
   })
   cocheras = new Collection<Cochera>(this)
+
 }
-
-
 
 

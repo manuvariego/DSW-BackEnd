@@ -1,5 +1,5 @@
 import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel } from '@mikro-orm/core';
-import { Localidad } from '../Localidad/localidad.entity.js';
+import { Localidad } from './localidad.entity.js';
 
 @Entity()
 export class Cochera {
@@ -23,4 +23,6 @@ export class Cochera {
 
   @ManyToOne(() => Localidad, { nullable: false })
   localidad!: Rel<Localidad>
+
+
 }

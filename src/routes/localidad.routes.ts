@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { findAll, findOne, add, update, remove, sanitizeLocalidadInput } from './localidad.controller.js'
+import { findAll, findOne, add, update, remove, sanitizeLocalidadInput } from '../controllers/localidad.controller.js'
 
 export const LocalidadRouter = Router()
 

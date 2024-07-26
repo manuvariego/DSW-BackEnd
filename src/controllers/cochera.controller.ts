@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Cochera } from "./cochera.entity.js";
+import { Cochera } from "../entities/cochera.entity.js";
 import { orm } from "../shared/db/orm.js";
 
 const em = orm.em

@@ -1,0 +1,40 @@
+### GET all cocheras
+http://localhost:3000/api/cocheras
+
+
+### POST a Cochera
+# @name createCochera
+POST http://localhost:3000/api/cocheras
+Content-Type: application/json
+{
+
+    "cuit": 666626,
+    "nombre": "CocherRosario",
+    "direccion": "Dorrego 123",
+    "correo": "cocherRosario@gmail.com",
+    "precioHora": 555
+}
+##Cuit es primary key
+## ID
+@cuit = {{createCochera.response.body.data.cuit}}
+
+
+### GET ONE 
+http://localhost:3000/api/cocheras/{{cuit}}
+
+
+### PUT
+PUT  http://localhost:3000/api/cocheras/{{cuit}}
+Content-Type: application/json
+
+
+
+### POST Cochera TO DELETE
+# @name createCochera to delete
+POST http://localhost:3000/api/cocheras
+Content-Type: application/json
+
+
+### DELETE
+@cuitToDelete = {{createCocheraToDelete.response.body.data.cuit}}
+DELETE http://localhost:3000/api/cocheras/{{cuitToDelete}}
