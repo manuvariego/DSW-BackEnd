@@ -4,9 +4,10 @@ import { orm } from "../shared/db/orm.js";
 
 const em= orm.em
 
-function sanitizeUserInput(req: Request, res: Response , next: NextFunction){
+function sanitizeVehiculoInput(req: Request, res: Response , next: NextFunction){
   req.body.sanitizedInput = {
     patente: req.body.patente,
+    owner: req.body.owner,
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -20,13 +21,13 @@ function sanitizeUserInput(req: Request, res: Response , next: NextFunction){
 
 async function findAll(req: Request ,res: Response){
 try{  const vehiculos = await em.find(Vehiculo, {},) 
-  res.status(201).json({message: 'Vehiculo Encontrado', data:vehiculos})
+  res.status(201).json({message: 'Vehiculos Encontrados', data:vehiculos})
 } catch (error:any){res.status(500).json({message: error.message})}
 }
 
 
 async function findOne(req: Request ,res: Response){
-try{  const patente = req.params.vehiculo;
+try{  const patente = req.params.patente;
   const vehiculo = await em.findOneOrFail(Vehiculo, {patente},) 
 
   res.status(201).json({message: 'Vehiculo Encontrado', data:vehiculo})
@@ -36,6 +37,7 @@ try{  const patente = req.params.vehiculo;
 
 async function add(req: Request, res: Response){
 try{
+  console.log(`add ${JSON.stringify(req.body.sanitizedInput)}`)
   const vehiculo = em.create(Vehiculo, req.body.sanitizedInput)
   await em.flush()
   res.status(201).json({Message: 'Vehiculo Creado / dado de alta', data:vehiculo})
@@ -44,8 +46,8 @@ try{
 
 
 async function update(req: Request ,res: Response){
-try{  const patente = req.params.vehiculo;
-
+try{  const patente = req.params.patente;
+console.log(patente)
   const vehiculoToUpdate = await em.findOneOrFail(Vehiculo, {patente})
   em.assign(vehiculoToUpdate, req.body.sanitizedInput)
   await em.flush()
@@ -56,7 +58,7 @@ try{  const patente = req.params.vehiculo;
 
 async function eliminate(req: Request ,res: Response){
   try{
-    const patente = req.params.vehiculo;
+    const patente = req.params.patente;
 
     const vehiculo = await em.findOneOrFail(Vehiculo, { patente })
   
@@ -68,5 +70,5 @@ async function eliminate(req: Request ,res: Response){
 
 }
 
-export { sanitizeUserInput, findAll, findOne, add, update ,eliminate}
+export { sanitizeVehiculoInput, findAll, findOne, add, update ,eliminate}
 
