@@ -12,9 +12,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     dni: req.body.dni,
     address: req.body.address,
     mail: req.body.mail,
-    telephone: req.body.telephone,
-    //class: req.body.class,
-    //items: req.body.items
+    telephone: req.body.telephone
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -25,23 +23,22 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-//async function findAll(req: Request, res: Response) {
-//  try {
-//    const users = await em.find(User, {}, { populate: ['class', 'items'] })
-//    res.status(201).json({ message: 'Users finded', data: users })
-//  }
-//  catch (error: any) { res.status(500).json({ message: error.message }) }
-//}
+
+async function findAll(req: Request ,res: Response){
+try{  const users = await em.find(User, {}, {populate: ['vehiculos']})
+  res.status(201).json({message: 'Users finded', data:users})
+} catch (error:any){res.status(500).json({message: error.message})}
+}
 
 
-//async function findOne(req: Request, res: Response) {
-//  try {
-//    const id = Number.parseInt(req.params.id)
-//    const user = await em.findOneOrFail(User, { id }, { populate: ['class', 'items'] })
-//    res.status(201).json({ message: 'User founded', data: user })
-//  }
-//  catch (error: any) { res.status(500).json({ message: error.message }) }
-//}
+async function findOne(req: Request ,res: Response){
+try{  const id = Number.parseInt(req.params.id)
+
+  const user = await em.findOneOrFail(User, {id}, {populate: ['vehiculos']})
+
+  res.status(201).json({message: 'User founded', data:user})
+}catch (error:any){res.status(500).json({message: error.message})}
+}
 
 
 async function add(req: Request, res: Response) {
@@ -66,14 +63,16 @@ async function update(req: Request, res: Response) {
 }
 
 
-async function eliminate(req: Request, res: Response) {
-  try {
-    const id = Number.parseInt(req.params.id)
-    const user = em.getReference(User, id)
-    await em.removeAndFlush(user)
-    res.status(201).json({ message: 'Character eliminated' })
-  }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+async function eliminate(req: Request ,res: Response){
+  try{
+  const id = Number.parseInt(req.params.id)
+
+  const user = em.getReference(User, id)
+  
+  await em.removeAndFlush(user)
+
+  res.status(201).json({message: 'Usuario eliminated'})
+} catch (error:any){res.status(500).json({message: error.message})}
 
 }
 

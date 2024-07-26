@@ -2,7 +2,7 @@
 http://localhost:3000/api/localidades
 
 
-### POST a character
+### POST a localidad
 # @name createLocalidad
 POST http://localhost:3000/api/localidades
 Content-Type: application/json
@@ -39,6 +39,7 @@ Content-Type: application/json
     "nombre": "Rafaela",
     "provincia": "Santa Fe"
 }
+
 
 ### DELETE
 @idToDelete = {{createLocalidadToDelete.response.body.data.id}}

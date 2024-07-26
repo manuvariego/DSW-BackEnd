@@ -1,5 +1,5 @@
 import { User } from './usuario.entity.js';
-import { Property, ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
+import { Rel, Property, ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
 
 @Entity()
 export class Vehiculo {
@@ -8,10 +8,7 @@ export class Vehiculo {
 
   @Property()
   tipo!: string;
-  //@ManyToOne(() => User)
-  //usuario!: User;
-  @OneToMany(() => User, (usuario) => usuario.vehiculo, {
-    cascade: [Cascade.ALL],
-  })
-  usuarios = new Collection<User>(this);
+
+  @ManyToOne(() => User, { nullable: false })
+    owner!: Rel<User>
 }
