@@ -9,7 +9,6 @@ function sanitizeCocheraInput(req: Request, res: Response, next: NextFunction) {
     cuit: req.body.cuit,
     nombre: req.body.nombre,
     direccion: req.body.direccion,
-    telefono: req.body.telefono,
     correo: req.body.correo,
     precioHora: req.body.precioHora,
     localidad: req.body.localidad
@@ -36,9 +35,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
-    const cochera = await em.findOneOrFail(Cochera, { cuit }, { populate: ['localidad'] })
+    const cochera = await em.findOneOrFail(Cochera, { cuit })
     res.status(201).json({ message: 'Cochera encontrada', data: cochera })
-    console.log("Pertenece a la localidad", cochera.localidad)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }

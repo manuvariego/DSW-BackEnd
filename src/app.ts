@@ -19,6 +19,8 @@ app.use((req, res, next) => {
 
 app.use('/api/users', UserRouter)
 
+app.use('/api/cocheras', CocheraRouter)
+
 app.use('/api/vehiculos', VehiculoRouter)
 
 app.use('/api/localidades', LocalidadRouter)
