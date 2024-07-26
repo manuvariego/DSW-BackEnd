@@ -6,6 +6,6 @@ export class Vehiculo {
   @PrimaryKey()
   patente!: string; // Asumo que la patente es una cadena única que actúa como la clave primaria
 
-  @ManyToOne(() => User, { nullable: false })
+ @ManyToOne(() => User, { nullable: false })
   owner!: Rel<User>
 }

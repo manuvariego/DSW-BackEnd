@@ -6,16 +6,16 @@ const em = orm.em
 
 
 async function findAll(req: Request, res: Response) {
-    try {
-    const localidades = await em.find (Localidad, {})
-    res.status(200).json({ message: 'found all localidades', data: localidades})
+  try {
+    const localidades = await em.find(Localidad, {})
+    res.status(200).json({ message: 'found all localidades', data: localidades })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
   }
 }
 
 async function findOne(req: Request, res: Response) {
-   try {
+  try {
     const id = Number.parseInt(req.params.id)
     const localidad = await em.findOneOrFail(Localidad, { id })
     res.status(200).json({ message: 'found localidad', data: localidad })
@@ -25,7 +25,7 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
-   try {
+  try {
     const localidad = em.create(Localidad, req.body)
     await em.flush()
     res.status(201).json({ message: 'localidad created', data: localidad })
