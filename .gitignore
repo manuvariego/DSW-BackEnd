@@ -27,3 +27,8 @@ dist/**/*
 
 ## built vscode extensions
 *.vsix
+
+.vscode
+
+.nvmrc
+
