@@ -10,8 +10,8 @@ export class Localidad extends baseEntity {
   @Property({ type: 'string' })
   provincia!: string;
 
-  @OneToMany(() => Cochera, cochera => cochera.localidad)
-  cocheras = new Collection<Cochera>(this);
+  //@OneToMany(() => Cochera, cochera => cochera.localidad)
+  //cocheras = new Collection<Cochera>(this);
 }
 
 

@@ -13,13 +13,13 @@ export class Cochera {
   direccion!: string;
 
   @Property({ type: 'string' })
-  correo_contacto!: string;
+  correo!: string;
 
   @Property({ type: 'number' })
-  precioxHora!: number;
+  precioHora!: number;
 
-  @ManyToOne(() => Localidad, localidad => localidad.cocheras)
-  localidad!: Localidad;
+  //@ManyToOne(() => Localidad, localidad => localidad.cocheras)
+  //localidad!: Localidad;
 
 
 
