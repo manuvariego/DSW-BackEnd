@@ -1,9 +1,23 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { Localidad } from './localidad.entity.js'
 import { orm } from '../shared/db/orm.js'
 
 const em = orm.em
 
+//function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
+//  req.body.sanitizedInput = {
+//    nombre: req.body.nombre,
+//    provincia: req.body.provincia,
+//
+//  }
+//
+//  Object.keys(req.body.sanitizedInput).forEach((key) => {
+//    if (req.body.sanitizedInput[key] === undefined) {
+//      delete req.body.sanitizedInput[key]
+//    }
+//  })
+//  next()
+//}
 
 async function findAll(req: Request, res: Response) {
   try {
