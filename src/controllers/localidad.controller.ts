@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { Localidad } from './localidad.entity.js'
+import { Localidad } from '../entities/localidad.entity.js'
 import { orm } from '../shared/db/orm.js'
 
 const em = orm.em

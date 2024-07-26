@@ -1,4 +1,4 @@
-import { User } from '../Usuario/usuario.entity.js';
+import { User } from './usuario.entity.js';
 import { Property, ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
 
 @Entity()

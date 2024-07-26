@@ -1,6 +1,6 @@
 //import { Router } from "express";
 //
-//import { findAll, findOne, update, add, sanitizeUserInput } from "./cochera.controller.js";
+//import { findAll, findOne, update, add, sanitizeUserInput } from "../controllers/cochera.controller.js";
 //
 //export const CocheraRouter = Router()
 //

@@ -1,5 +1,5 @@
 //import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property } from '@mikro-orm/core';
-//import { Localidad } from '../shared/entity.module.js';
+//import { Localidad } from './localidad.entity.js';
 //
 //@Entity()
 //export class Cochera {
