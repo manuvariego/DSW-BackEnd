@@ -13,8 +13,8 @@ POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
 
 {
-    "patente": "5",
-    "owner": 3
+    "patente": "aaaa",
+    "owner": 5
 }
 
 ###ID

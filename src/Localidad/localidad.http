@@ -1,20 +1,20 @@
-### GET all localidades
+### obtener todas las localidades
 http://localhost:3000/api/localidades
 
 
-### POST a localidad
+### create a localidad
 # @name createLocalidad
 POST http://localhost:3000/api/localidades
 Content-Type: application/json
 
 {
     "nombre": "San Vicente",
-    "provincia": "Santa Fe"  
+    "provincia": "Santa Fe",
+    "cochera": []  
 }
 
-## ID
+###ID
 @id = {{createLocalidad.response.body.data.id}}
-
 
 ### GET ONE 
 http://localhost:3000/api/localidades/{{id}}
@@ -26,7 +26,8 @@ Content-Type: application/json
 
 {
     "nombre": "Rosario",
-    "provincia": "Santa Fe"
+    "provincia": "Santa Fe",
+    "cochera": []
 }
 
 
@@ -36,8 +37,9 @@ POST http://localhost:3000/api/localidades
 Content-Type: application/json
 
 {
-    "nombre": "Rafaela",
-    "provincia": "Santa Fe"
+    "nombre": "San Francisco",
+    "provincia": "Cordoba",
+    "cochera": []
 }
 
 

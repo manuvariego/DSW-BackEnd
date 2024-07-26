@@ -1,0 +1,61 @@
+### obtener todas las cocheras
+GET http://localhost:3000/api/cocheras
+
+
+### obtener un solo vehículo
+GET http://localhost:3000/api/cocheras/{{cuit}}
+
+
+### crear un nuevo vehículo
+# @name createCochera
+POST http://localhost:3000/api/cocheras
+Content-Type: application/json
+
+{
+    "cuit": 222222,
+    "nombre": "EsxVos",
+    "direccion": "Maipu 22",
+    "telefono": "3333333",
+    "correo": "esxvos@gggg",
+    "precioHora": 1000,
+    "localidad": 1
+}
+
+###ID
+@cuit = {{createCochera.response.body.data.cuit}}
+
+
+### modificar una cochera
+PUT http://localhost:3000/api/cocheras/{{cuit}}
+Content-Type: application/json
+
+{
+    "cuit": 222222,
+    "nombre": "CENTRO",
+    "direccion": "Maipu 22",
+    "telefono": "3333333",
+    "correo": "centro@gggg",
+    "precioHora": 1000,
+    "localidad": 1
+}
+
+
+### crear una cochera TO DELETE
+# @name createCocheraToDelete
+POST http://localhost:3000/api/cocheras
+Content-Type: application/json
+
+{
+    "cuit": 33333,
+    "nombre": "LA BAJADA",
+    "direccion": "Arenales 10",
+    "telefono": "111",
+    "correo": "labajada@gggg",
+    "precioHora": 900,
+    "localidad": 1
+}
+
+
+### eliminar una cochera
+@cuitToDelete = {{createCocheraToDelete.response.body.data.cuit}}
+DELETE http://localhost:3000/api/cocheras/{{cuitToDelete}}

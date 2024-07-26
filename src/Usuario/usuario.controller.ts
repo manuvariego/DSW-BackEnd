@@ -75,4 +75,4 @@ async function eliminate(req: Request ,res: Response){
 
 }
 
-export { sanitizeUserInput, add, update, eliminate }
+export { sanitizeUserInput, findAll, findOne, add, update, eliminate }

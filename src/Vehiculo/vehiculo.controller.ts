@@ -7,7 +7,7 @@ const em= orm.em
 function sanitizeVehiculoInput(req: Request, res: Response , next: NextFunction){
   req.body.sanitizedInput = {
     patente: req.body.patente,
-    owner: req.body.owner,
+    owner: req.body.owner
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -37,7 +37,6 @@ try{  const patente = req.params.patente;
 
 async function add(req: Request, res: Response){
 try{
-  console.log(`add ${JSON.stringify(req.body.sanitizedInput)}`)
   const vehiculo = em.create(Vehiculo, req.body.sanitizedInput)
   await em.flush()
   res.status(201).json({Message: 'Vehiculo Creado / dado de alta', data:vehiculo})
