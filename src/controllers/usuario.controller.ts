@@ -25,19 +25,23 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
 
 
 async function findAll(req: Request ,res: Response){
-try{  const users = await em.find(User, {}, {populate: ['vehiculos']})
-  res.status(201).json({message: 'Users finded', data:users})
-} catch (error:any){res.status(500).json({message: error.message})}
+  try { 
+    const users = await em.find(User, {}, {populate: ['vehiculos']})
+
+    res.status(201).json({message: 'Users finded', data:users})
+
+  } catch (error:any){res.status(500).json({message: error.message})}
 }
 
 
 async function findOne(req: Request ,res: Response){
-try{  const id = Number.parseInt(req.params.id)
+  try {  
+    const id = Number.parseInt(req.params.id)
+    const user = await em.findOneOrFail(User, {id}, {populate: ['vehiculos']})
 
-  const user = await em.findOneOrFail(User, {id}, {populate: ['vehiculos']})
+    res.status(201).json({message: 'User founded', data:user})
 
-  res.status(201).json({message: 'User founded', data:user})
-}catch (error:any){res.status(500).json({message: error.message})}
+  } catch (error:any){res.status(500).json({message: error.message})}
 }
 
 
@@ -45,9 +49,10 @@ async function add(req: Request, res: Response) {
   try {
     const user = em.create(User, req.body.sanitizedInput)
     await em.persistAndFlush(user)
+
     res.status(201).json({ Message: 'User created', data: user })
-  }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+
+  } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
 
@@ -57,23 +62,22 @@ async function update(req: Request, res: Response) {
     const userToUpdate = await em.findOneOrFail(User, { id })
     em.assign(userToUpdate, req.body.sanitizedInput)
     await em.flush()
+
     res.status(201).json({ message: 'User updated', data: userToUpdate })
-  }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+
+  } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
 
 async function eliminate(req: Request ,res: Response){
   try{
-  const id = Number.parseInt(req.params.id)
+    const id = Number.parseInt(req.params.id)
+    const user = em.getReference(User, id)
+    await em.removeAndFlush(user)
 
-  const user = em.getReference(User, id)
-  
-  await em.removeAndFlush(user)
+    res.status(201).json({message: 'Usuario eliminated'})
 
-  res.status(201).json({message: 'Usuario eliminated'})
-} catch (error:any){res.status(500).json({message: error.message})}
-
+  } catch (error:any){res.status(500).json({message: error.message})}
 }
 
 export { sanitizeUserInput, findAll, findOne, add, update, eliminate }

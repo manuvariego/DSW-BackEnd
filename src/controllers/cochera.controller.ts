@@ -9,6 +9,7 @@ function sanitizeCocheraInput(req: Request, res: Response, next: NextFunction) {
     cuit: req.body.cuit,
     nombre: req.body.nombre,
     direccion: req.body.direccion,
+    telefono: req.body.telefono,
     correo: req.body.correo,
     precioHora: req.body.precioHora,
     localidad: req.body.localidad

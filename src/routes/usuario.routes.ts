@@ -6,6 +6,7 @@ export const UserRouter = Router()
 
 UserRouter.get('/', findAll)
 UserRouter.get('/:id', findOne)
+//UserRouter.get('/:id/vehiculos', findOne)
 UserRouter.post('/', sanitizeUserInput, add)
 UserRouter.put('/:id', sanitizeUserInput, update)
 UserRouter.delete('/:id', eliminate)

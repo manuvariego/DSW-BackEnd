@@ -22,27 +22,29 @@ function sanitizeLocalidadInput(req: Request, res: Response , next: NextFunction
 async function findAll(req: Request, res: Response) {
   try {
     const localidades = await em.find(Localidad, {}, {populate: ['cocheras']})
+
     res.status(200).json({ message: 'found all localidades', data: localidades })
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
-  }
+
+  } catch (error: any) {res.status(500).json({ message: error.message })}
 }
 
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
     const localidad = await em.findOneOrFail(Localidad, {id}, {populate: ['cocheras']})
+
     res.status(200).json({ message: 'found localidad', data: localidad })
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
-  }
+
+  } catch (error: any) {res.status(500).json({ message: error.message })}
 }
 
 async function add(req: Request, res: Response) {
   try {
     const localidad = em.create(Localidad, req.body.sanitizedInput)
     await em.flush()
+
     res.status(201).json({ Message: 'localidad created', data: localidad })
+
   } catch (error: any) { res.status(500).json({ message: error.message }) }
   }
 
@@ -52,10 +54,10 @@ async function update(req: Request, res: Response) {
     const localidad = em.getReference(Localidad, id)
     em.assign(localidad, req.body.sanitizedInput)
     await em.flush()
+
     res.status(200).json({ message: 'localidad updated' })
-  } catch (error: any) {
-    res.status(500).json({ message: error.message }) }
-}
+
+  } catch (error: any) {res.status(500).json({ message: error.message }) }}
 
 
 async function remove(req: Request, res: Response) {
@@ -63,10 +65,10 @@ async function remove(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id)
     const localidad = em.getReference(Localidad, id)
     await em.removeAndFlush(localidad)
+
     res.status(200).send({ message: 'localidad deleted' })
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
-  }
+
+  } catch (error: any) {res.status(500).json({ message: error.message })}
 }
 
 

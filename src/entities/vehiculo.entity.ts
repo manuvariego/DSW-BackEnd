@@ -8,4 +8,7 @@ export class Vehiculo {
 
   @ManyToOne(() => User, { nullable: false })
     owner!: Rel<User>
+
+  //@ManyToOne({ entity: () => User, nullable: true })
+  //owner?: User;
 }
