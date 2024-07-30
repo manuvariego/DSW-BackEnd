@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../entities/usuario.entity.js";
+import { User } from "../entities/user.entity.js";
+import { Vehicle } from "../entities/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 
 
@@ -26,9 +27,9 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request ,res: Response){
   try { 
-    const users = await em.find(User, {}, {populate: ['vehiculos']})
+    const users = await em.find(User, {}, {populate: ['vehicles']})
 
-    res.status(201).json({message: 'Users finded', data:users})
+    res.status(201).json({message: 'Users found', data:users})
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
@@ -37,9 +38,9 @@ async function findAll(req: Request ,res: Response){
 async function findOne(req: Request ,res: Response){
   try {  
     const id = Number.parseInt(req.params.id)
-    const user = await em.findOneOrFail(User, {id}, {populate: ['vehiculos']})
+    const user = await em.findOneOrFail(User, {id}, {populate: ['vehicles']})
 
-    res.status(201).json({message: 'User founded', data:user})
+    res.status(201).json({message: 'User found', data:user})
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
@@ -55,6 +56,15 @@ async function add(req: Request, res: Response) {
   } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+async function get_vehicles(req: Request ,res: Response){
+  try {  
+    const id = Number.parseInt(req.params.id)
+    const vehicles = await em.find(Vehicle, {owner:  id})
+
+    res.status(201).json({message: 'Vehicles found for this user', data:vehicles})
+
+  } catch (error:any){res.status(500).json({message: error.message})}
+}
 
 async function update(req: Request, res: Response) {
   try {
@@ -75,9 +85,9 @@ async function eliminate(req: Request ,res: Response){
     const user = em.getReference(User, id)
     await em.removeAndFlush(user)
 
-    res.status(201).json({message: 'Usuario eliminated'})
+    res.status(201).json({message: 'User eliminated'})
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
 
-export { sanitizeUserInput, findAll, findOne, add, update, eliminate }
+export {get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate }

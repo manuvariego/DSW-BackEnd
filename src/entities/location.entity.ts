@@ -1,19 +1,19 @@
 import { Collection, Entity, Cascade, OneToMany, Property } from '@mikro-orm/core';
 import { baseEntity } from "../shared/baseEntity.entity.js";
-import { Cochera } from "../entities/cochera.entity.js";
+import { Garage } from "../entities/garage.entity.js";
 
 @Entity()
-export class Localidad extends baseEntity {
+export class Location extends baseEntity {
   @Property({ type: 'string' })
-  nombre!: string;
+  name!: string;
 
   @Property({ type: 'string' })
-  provincia!: string;
+  province!: string;
 
-  @OneToMany(() => Cochera, (cochera) => cochera.localidad, {
+  @OneToMany(() => Garage, (garage) => garage.location, {
     cascade: [Cascade.ALL],
   })
-  cocheras = new Collection<Cochera>(this)
+  garages = new Collection<Garage>(this)
 
 }
 

@@ -2,10 +2,10 @@ import 'reflect-metadata'
 import express from 'express'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
-import { UserRouter } from './routes/usuario.routes.js'
-import { VehiculoRouter } from './routes/vehiculo.routes.js' 
-import { LocalidadRouter } from './routes/localidad.routes.js'
-import { CocheraRouter } from './routes/cochera.routes.js'
+import { UserRouter } from './routes/user.routes.js'
+import { VehicleRouter } from './routes/vehicle.routes.js' 
+import { LocationRouter } from './routes/location.routes.js'
+import { GarageRouter } from './routes/garage.routes.js'
 
 const app = express()
 app.use(express.json())
@@ -19,11 +19,11 @@ app.use((req, res, next) => {
 
 app.use('/api/users', UserRouter)
 
-app.use('/api/cocheras', CocheraRouter)
+app.use('/api/garages', GarageRouter)
 
-app.use('/api/vehiculos', VehiculoRouter)
+app.use('/api/vehicles', VehicleRouter)
 
-app.use('/api/localidades', LocalidadRouter)
+app.use('/api/locations', LocationRouter)
 
 
 app.use((_, res) => {

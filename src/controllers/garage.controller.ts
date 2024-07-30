@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { Cochera } from "../entities/cochera.entity.js";
+import { Garage } from "../entities/garage.entity.js";
 import { orm } from "../shared/db/orm.js";
 
 const em = orm.em
 
-function sanitizeCocheraInput(req: Request, res: Response, next: NextFunction) {
+function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     cuit: req.body.cuit,
-    nombre: req.body.nombre,
-    direccion: req.body.direccion,
-    telefono: req.body.telefono,
-    correo: req.body.correo,
-    precioHora: req.body.precioHora,
-    localidad: req.body.localidad
+    name: req.body.name,
+    address: req.body.address,
+    phone_number: req.body.phone_number,
+    email: req.body.email,
+    priceHour: req.body.priceHour,
+    location: req.body.location
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -26,8 +26,8 @@ function sanitizeCocheraInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
   try {
-    const cocheras = await em.find(Cochera, {},)
-    res.status(201).json({ message: 'Cocheras encontradas', data:cocheras })
+    const garages = await em.find(Garage, {},)
+    res.status(201).json({ message: 'Garages found', data:garages })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -36,8 +36,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
-    const cochera = await em.findOneOrFail(Cochera, { cuit })
-    res.status(201).json({ message: 'Cochera encontrada', data: cochera })
+    const garage = await em.findOneOrFail(Garage, { cuit })
+    res.status(201).json({ message: 'Garage found', data: garage })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -45,9 +45,9 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const cochera = em.create(Cochera, req.body.sanitizedInput)
+    const garage = em.create(Garage, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ Message: 'Cochera created', data:cochera })
+    res.status(201).json({ Message: 'Garage created', data:garage })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -56,10 +56,10 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
-    const cocheraToUpdate = await em.findOneOrFail(Cochera, { cuit })
-    em.assign(cocheraToUpdate, req.body.sanitizedInput)
+    const garageToUpdate = await em.findOneOrFail(Garage, { cuit })
+    em.assign(garageToUpdate , req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'Cochera actualizada', data: cocheraToUpdate })
+    res.status(201).json({ message: 'Garage updated', data: garageToUpdate })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -68,12 +68,12 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
  try {
    const cuit = req.params.cuit
-   const cochera = await em.findOneOrFail(Cochera, { cuit: +cuit },)
-   await em.removeAndFlush(cochera)
-   res.status(201).json({ message: 'Cochera eliminada' })
+   const garage = await em.findOneOrFail(Garage, { cuit: +cuit },)
+   await em.removeAndFlush(garage)
+   res.status(201).json({ message: 'Garage eliminated' })
  }
  catch (error: any) { res.status(500).json({ message: error.message }) }
 
 }
 
-export { sanitizeCocheraInput, findAll, findOne, add, update, eliminate }
+export { sanitizeGarageInput, findAll, findOne, add, update, eliminate }

@@ -1,4 +1,4 @@
-import { Vehiculo } from './vehiculo.entity.js';
+import { Vehicle } from './vehicle.entity.js';
 import { Cascade, Collection, Entity, ManyToMany, ManyToOne, Property, Rel, OneToMany } from '@mikro-orm/core';
 import { baseEntity } from '../shared/baseEntity.entity.js'
 
@@ -18,13 +18,13 @@ export class User extends baseEntity{
  address!: string
  
  @Property({nullable: false})
- mail!: string
+ email!: string
  
  @Property()
- telephone!: string
+ phone_number!: string
 
- @OneToMany(() => Vehiculo, (vehiculo) => vehiculo.owner, {
+ @OneToMany(() => Vehicle, (vehicle) => vehicle.owner, {
     cascade: [Cascade.ALL],
   })
-  vehiculos = new Collection<Vehiculo>(this)
+  vehicles = new Collection<Vehicle>(this)
 }
