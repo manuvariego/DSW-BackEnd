@@ -3,22 +3,22 @@ import { Location } from './location.entity.js';
 
 @Entity()
 export class Garage {
-  @PrimaryKey({ type: 'number' })
+  @PrimaryKey({})
   cuit!: number;
 
-  @Property({ type: 'string' })
+  @Property({})
   name!: string;
 
-  @Property({ type: 'string' })
+  @Property({})
   address!: string;
 
-  @Property({ type: 'string' })
+  @Property({})
   phone_number!: string;
 
-  @Property({ type: 'string' })
+  @Property({})
   email!: string;
 
-  @Property({ type: 'number' })
+  @Property({})
   priceHour!: number;
 
   @ManyToOne(() => Location, { nullable: false })

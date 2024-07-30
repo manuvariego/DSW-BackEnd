@@ -4,10 +4,10 @@ import { Garage } from "../entities/garage.entity.js";
 
 @Entity()
 export class Location extends baseEntity {
-  @Property({ type: 'string' })
+  @Property({})
   name!: string;
 
-  @Property({ type: 'string' })
+  @Property({})
   province!: string;
 
   @OneToMany(() => Garage, (garage) => garage.location, {

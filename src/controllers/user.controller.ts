@@ -13,7 +13,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     dni: req.body.dni,
     address: req.body.address,
     mail: req.body.mail,
-    telephone: req.body.telephone
+    phone_number: req.body.phone_number
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -60,6 +60,7 @@ async function get_vehicles(req: Request ,res: Response){
   try {  
     const id = Number.parseInt(req.params.id)
     const vehicles = await em.find(Vehicle, {owner:  id})
+    console.log(vehicles)
 
     res.status(201).json({message: 'Vehicles found for this user', data:vehicles})
 

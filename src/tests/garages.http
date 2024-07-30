@@ -6,6 +6,7 @@ http://localhost:3000/api/cocheras
 # @name createCochera
 POST http://localhost:3000/api/cocheras
 Content-Type: application/json
+
 {
 
     "cuit": 666626,
@@ -14,6 +15,7 @@ Content-Type: application/json
     "correo": "cocherRosario@gmail.com",
     "precioHora": 555
 }
+
 ##Cuit es primary key
 ## ID
 @cuit = {{createCochera.response.body.data.cuit}}

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import { findAll, findOne, add, update, remove, sanitizeLocationInput } from '../controllers/location.controller.js'
 
 export const LocationRouter = Router()
