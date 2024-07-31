@@ -1,0 +1,45 @@
+### obtener todos los usuarios
+GET http://localhost:3000/api/users
+
+
+### obtener un usuario
+GET http://localhost:3000/api/users/{{id}}
+
+
+### crear un nuevo usuario
+# @name createUser
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "name": "Marta",
+    "lastname": "Martinez",
+    "dni": "999666",
+    "address": "Moreno 100",
+    "email": "marta@gmail.com",
+    "phone_number": "3777772",
+    "vehicle": []
+}
+
+
+###ID
+@id = {{createUser.response.body.data.id}}
+
+
+### modificar un usuario
+PUT http://localhost:3000/api/users/{{id}}
+Content-Type: application/json
+
+{
+    "name": "Candela",
+    "lastname": "Tanchi",
+    "dni": "45656415",
+    "address": "España 1800",
+    "mail": "candetanchi@gmail.com",
+    "phone_number": "3413654987",
+    "vehicle": []
+}
+
+
+### eliminar un usuario
+DELETE http://localhost:3000/api/users/{{id}}

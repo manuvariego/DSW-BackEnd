@@ -1,48 +1,48 @@
 ### obtener todas las localidades
-http://localhost:3000/api/localidades
+http://localhost:3000/api/locations
 
 
 ### create a localidad
-# @name createLocalidad
-POST http://localhost:3000/api/localidades
+# @name createLocation
+POST http://localhost:3000/api/locations
 Content-Type: application/json
 
 {
-    "nombre": "San Vicente",
-    "provincia": "Santa Fe",
-    "cochera": []  
+    "name": "San Vicente",
+    "province": "Santa Fe",
+    "garage": []  
 }
 
 ###ID
-@id = {{createLocalidad.response.body.data.id}}
+@id = {{createLocation.response.body.data.id}}
 
 ### GET ONE 
-http://localhost:3000/api/localidades/{{id}}
+http://localhost:3000/api/locations/{{id}}
 
 
 ### PUT
-PUT  http://localhost:3000/api/localidades/{{id}}
+PUT  http://localhost:3000/api/locations/{{id}}
 Content-Type: application/json
 
 {
-    "nombre": "Rosario",
-    "provincia": "Santa Fe",
-    "cochera": []
+    "name": "Rosario",
+    "province": "Santa Fe",
+    "garage": []  
 }
 
 
 ### POST LOCALIDAD TO DELETE
-# @name createLocalidadToDelete
-POST http://localhost:3000/api/localidades
+# @name createLocationToDelete
+POST http://localhost:3000/api/locations
 Content-Type: application/json
 
 {
-    "nombre": "San Francisco",
-    "provincia": "Cordoba",
-    "cochera": []
+    "name": "San Francisco",
+    "province": "Cordoba",
+    "garage": []  
 }
 
 
 ### DELETE
-@idToDelete = {{createLocalidadToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/localidades/{{idToDelete}}
+@idToDelete = {{createLocationToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/locations/{{idToDelete}}

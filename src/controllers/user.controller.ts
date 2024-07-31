@@ -12,8 +12,9 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     lastname: req.body.lastname,
     dni: req.body.dni,
     address: req.body.address,
-    mail: req.body.mail,
-    phone_number: req.body.phone_number
+    email: req.body.email,
+    phone_number: req.body.phone_number,
+    vehicle: req.body.vehicle
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

@@ -1,42 +1,64 @@
 ### GET all cocheras
-http://localhost:3000/api/cocheras
+http://localhost:3000/api/garages
 
 
 ### POST a Cochera
-# @name createCochera
-POST http://localhost:3000/api/cocheras
+# @name createGarage
+POST http://localhost:3000/api/garages
 Content-Type: application/json
 
-{
 
+{
     "cuit": 666626,
-    "nombre": "CocherRosario",
-    "direccion": "Dorrego 123",
-    "correo": "cocherRosario@gmail.com",
-    "precioHora": 555
+    "name": "CocherRosario",
+    "address": "Dorrego 123",
+    "phone_number": "444689525",
+    "email": "cocherRosario@gmail.com",
+    "priceHour": 555,
+    "location": 1
 }
 
-##Cuit es primary key
-## ID
-@cuit = {{createCochera.response.body.data.cuit}}
+
+### Cuit es primary key
+@cuit = {{createGarage.response.body.data.cuit}}
 
 
 ### GET ONE 
-http://localhost:3000/api/cocheras/{{cuit}}
+http://localhost:3000/api/garages/{{cuit}}
 
 
 ### PUT
-PUT  http://localhost:3000/api/cocheras/{{cuit}}
+PUT  http://localhost:3000/api/garages/{{cuit}}
 Content-Type: application/json
 
+{
+    "cuit": 888,
+    "name": "CocheraSur",
+    "address": "Colon 2400",
+    "phone_number": "577735851",
+    "email": "cocherSur@gmail.com",
+    "priceHour": 200,
+    "location": 1
+}
 
 
 ### POST Cochera TO DELETE
-# @name createCochera to delete
-POST http://localhost:3000/api/cocheras
+# @name createGarageToDelete
+POST http://localhost:3000/api/garages
 Content-Type: application/json
 
+{
+    "cuit": 7777,
+    "name": "CocheraCentro",
+    "address": "Dorrego 1400",
+    "phone_number": "54235851",
+    "email": "cocherC@gmail.com",
+    "priceHour": 100,
+    "location": 1
+}
+
+### CUIT
+@cuitToDelete = {{createGarageToDelete.response.body.data.cuit}}
 
 ### DELETE
-@cuitToDelete = {{createCocheraToDelete.response.body.data.cuit}}
-DELETE http://localhost:3000/api/cocheras/{{cuitToDelete}}
+DELETE http://localhost:3000/api/garages/{{cuitToDelete}}
