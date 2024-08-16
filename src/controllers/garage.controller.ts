@@ -27,7 +27,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
 async function findAll(req: Request, res: Response) {
   try {
     const garages = await em.find(Garage, {},)
-    res.status(201).json({ message: 'Garages found', data:garages })
+    res.status(200).json(garages)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -37,7 +37,7 @@ async function findOne(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
     const garage = await em.findOneOrFail(Garage, { cuit })
-    res.status(201).json({ message: 'Garage found', data: garage })
+    res.status(200).json(garage)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -47,7 +47,7 @@ async function add(req: Request, res: Response) {
   try {
     const garage = em.create(Garage, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ Message: 'Garage created', data:garage })
+    res.status(200).json(garage)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -59,7 +59,7 @@ async function update(req: Request, res: Response) {
     const garageToUpdate = await em.findOneOrFail(Garage, { cuit })
     em.assign(garageToUpdate , req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'Garage updated', data: garageToUpdate })
+    res.status(200).json(garageToUpdate)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -70,7 +70,7 @@ async function eliminate(req: Request, res: Response) {
    const cuit = req.params.cuit
    const garage = await em.findOneOrFail(Garage, { cuit: +cuit },)
    await em.removeAndFlush(garage)
-   res.status(201).json({ message: 'Garage eliminated' })
+   res.status(200).json({ message: 'Garage eliminated' })
  }
  catch (error: any) { res.status(500).json({ message: error.message }) }
 
