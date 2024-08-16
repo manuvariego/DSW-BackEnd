@@ -15,7 +15,8 @@ Content-Type: application/json
     "phone_number": "444689525",
     "email": "cocherRosario@gmail.com",
     "priceHour": 555,
-    "location": 1
+    "location": 1,
+    "parking_space": []  
 }
 
 
@@ -38,7 +39,8 @@ Content-Type: application/json
     "phone_number": "577735851",
     "email": "cocherSur@gmail.com",
     "priceHour": 200,
-    "location": 1
+    "location": 1,
+    "parking_space": []  
 }
 
 
@@ -54,7 +56,8 @@ Content-Type: application/json
     "phone_number": "54235851",
     "email": "cocherC@gmail.com",
     "priceHour": 100,
-    "location": 1
+    "location": 1,
+    "parking_space": []  
 }
 
 ### CUIT
