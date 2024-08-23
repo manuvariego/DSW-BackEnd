@@ -1,0 +1,35 @@
+#obtener los tipos de vehiculo
+GET http://localhost:3000/api/typeVehicles
+
+### Crear un tipo de vehiculo
+# @name createType
+POST http://localhost:3000/api/typeVehicles
+Content-Type: application/json
+
+{
+"name": "4x4",
+"vehicles": []
+}
+
+### id
+@id = {{createType.response.body.data.id}}
+
+#Obtener un tipo
+GET http://localhost:3000/api/typeVehicles/{{id}}
+
+#Obtener los vehiculos de un tipo
+GET http://localhost:3000/api/typeVehicles/{{id}}
+
+
+# Modificar un tipo de Vehiculo
+PUT http://localhost:3000/api/typeVehicles/{{id}}
+Content-Type: application/json
+
+{
+"name": "Sedan"
+}
+
+#Eliminar un tipo
+DELETE http://localhost:3000/api/typeVehicles/{{id}}
+
+

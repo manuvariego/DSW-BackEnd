@@ -30,7 +30,7 @@ async function findAll(req: Request ,res: Response){
   try { 
     const users = await em.find(User, {}, {populate: ['vehicles']})
 
-    res.status(201).json({message: 'Users found', data:users})
+    res.status(200).json(users)
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
@@ -41,7 +41,7 @@ async function findOne(req: Request ,res: Response){
     const id = Number.parseInt(req.params.id)
     const user = await em.findOneOrFail(User, {id}, {populate: ['vehicles']})
 
-    res.status(201).json({message: 'User found', data:user})
+    res.status(200).json(user)
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
@@ -52,7 +52,7 @@ async function add(req: Request, res: Response) {
     const user = em.create(User, req.body.sanitizedInput)
     await em.persistAndFlush(user)
 
-    res.status(201).json({ Message: 'User created', data: user })
+    res.status(200).json(user)
 
   } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -63,7 +63,7 @@ async function get_vehicles(req: Request ,res: Response){
     const vehicles = await em.find(Vehicle, {owner:  id})
     console.log(vehicles)
 
-    res.status(201).json({message: 'Vehicles found for this user', data:vehicles})
+    res.status(200).json(vehicles)
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }
@@ -75,7 +75,7 @@ async function update(req: Request, res: Response) {
     em.assign(userToUpdate, req.body.sanitizedInput)
     await em.flush()
 
-    res.status(201).json({ message: 'User updated', data: userToUpdate })
+    res.status(200).json(userToUpdate )
 
   } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -87,7 +87,7 @@ async function eliminate(req: Request ,res: Response){
     const user = em.getReference(User, id)
     await em.removeAndFlush(user)
 
-    res.status(201).json({message: 'User eliminated'})
+    res.status(200).json({message: 'User eliminated'})
 
   } catch (error:any){res.status(500).json({message: error.message})}
 }

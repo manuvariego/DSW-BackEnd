@@ -23,7 +23,7 @@ async function findAll(req: Request, res: Response) {
   try {
     const locations = await em.find(Location, {}, {populate: ['garages']})
 
-    res.status(200).json({ message: 'Locations found', data: locations })
+    res.status(200).json(locations)
 
   } catch (error: any) {res.status(500).json({ message: error.message })}
 }
@@ -33,7 +33,7 @@ async function findOne(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id)
     const location = await em.findOneOrFail(Location, {id}, {populate: ['garages']})
 
-    res.status(200).json({ message: 'Location found', data: location })
+    res.status(200).json(location)
 
   } catch (error: any) {res.status(500).json({ message: error.message })}
 }
@@ -43,7 +43,7 @@ async function add(req: Request, res: Response) {
     const location = em.create(Location, req.body.sanitizedInput)
     await em.flush()
 
-    res.status(201).json({ Message: 'Location created', data: location })
+    res.status(200).json(location)
 
   } catch (error: any) { res.status(500).json({ message: error.message }) }
   }
