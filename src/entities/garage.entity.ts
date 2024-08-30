@@ -1,5 +1,6 @@
 import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel } from '@mikro-orm/core';
 import { Location } from './location.entity.js';
+import { Parking_space } from './parking_space.entity.js';
 
 @Entity()
 export class Garage {
@@ -23,6 +24,11 @@ export class Garage {
 
   @ManyToOne(() => Location, { nullable: false })
   location!: Rel<Location>
+
+  @OneToMany(() => Parking_space, (parking_space) => parking_space.garage, {
+    cascade: [Cascade.ALL],
+  })
+  parking_spaces = new Collection<Parking_space>(this)
 
 
 }
