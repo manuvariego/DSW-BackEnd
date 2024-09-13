@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ###ID
-@license_plate = {{createVehiculo.response.body.data.license_plate}}
+@license_plate = {{createVehiculo.response.body.license_plate}}
 
 ### modificar un vehículo
 PUT http://localhost:3000/api/vehicles/{{license_plate}}
@@ -42,7 +42,7 @@ Content-Type: application/json
 
 
 ### Patente
-@license_plateToDelete = {{createVehiculoToDelete.response.body.data.license_plate}}
+@license_plateToDelete = {{createVehiculoToDelete.response.body.license_plate}}
 
 ### eliminar un vehículo
 DELETE http://localhost:3000/api/vehicles/{{license_plateToDelete}}

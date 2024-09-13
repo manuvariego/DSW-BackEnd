@@ -15,7 +15,7 @@ Content-Type: application/json
 
 
 ### Number es primary key
-@number = {{createParking_space.response.body.data.number}}
+@number = {{createParking_space.response.body.number}}
 
 
 ### GET ONE parking_space
@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 ### CUIT
-@numberToDelete = {{createGarageToDelete.response.body.data.number}}
+@numberToDelete = {{createGarageToDelete.response.body.number}}
 
 ### DELETE parking_space
 DELETE http://localhost:3000/api/parking_spaces/{{numberToDelete}}

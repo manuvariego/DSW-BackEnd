@@ -8,7 +8,7 @@ import { LocationRouter } from './routes/location.routes.js'
 import { GarageRouter } from './routes/garage.routes.js'
 import { typeVehicleRouter } from './routes/typeVehicle.routes.js'
 import { Parking_spaceRouter } from './routes/parking_space.routes.js'
-import { TipoEstadiaRouter } from './routes/tipo_estadia.routes.js'
+import { ReservationTypeRouter } from './routes/reservationType.routes.js'
 import { ReservationRouter } from './routes/reservation.routes.js'
 import cors from 'cors'
 
@@ -42,7 +42,7 @@ app.use('/api/typeVehicles', typeVehicleRouter)
 
 app.use('/api/parking_spaces', Parking_spaceRouter)
 
-app.use('/api/tiposE', TipoEstadiaRouter )
+app.use('/api/reservationTypes', ReservationTypeRouter )
 
 app.use('/api/reservations', ReservationRouter)
 

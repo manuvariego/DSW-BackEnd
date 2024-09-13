@@ -2,6 +2,7 @@ import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property
 import { Location } from './location.entity.js';
 import { Parking_space } from './parking_space.entity.js';
 import { Reservation } from './reservation.entity.js';
+import { ReservationType } from './reservationType.entity.js';
 
 @Entity()
 export class Garage {
@@ -36,5 +37,9 @@ export class Garage {
   })
   reservations = new Collection<Reservation>(this)
 
+  @OneToMany(() => ReservationType, (reservationType) => reservationType.garage, {
+    cascade: [Cascade.ALL],
+  })
+  reservationTypes = new Collection<ReservationType>(this)
 
 }

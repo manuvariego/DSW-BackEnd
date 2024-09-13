@@ -21,7 +21,7 @@ Content-Type: application/json
 
 
 ### Cuit es primary key
-@cuit = {{createGarage.response.body.data.cuit}}
+@cuit = {{createGarage.response.body.cuit}}
 
 
 ### GET ONE 
@@ -61,7 +61,7 @@ Content-Type: application/json
 }
 
 ### CUIT
-@cuitToDelete = {{createGarageToDelete.response.body.data.cuit}}
+@cuitToDelete = {{createGarageToDelete.response.body.cuit}}
 
 ### DELETE
 DELETE http://localhost:3000/api/garages/{{cuitToDelete}}

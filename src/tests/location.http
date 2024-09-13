@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ###ID
-@id = {{createLocation.response.body.data.id}}
+@id = {{createLocation.response.body.id}}
 
 ### GET ONE 
 http://localhost:3000/api/locations/{{id}}
@@ -44,5 +44,5 @@ Content-Type: application/json
 
 
 ### DELETE
-@idToDelete = {{createLocationToDelete.response.body.data.id}}
+@idToDelete = {{createLocationToDelete.response.body.id}}
 DELETE http://localhost:3000/api/locations/{{idToDelete}}

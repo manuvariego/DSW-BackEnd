@@ -23,7 +23,7 @@ Content-Type: application/json
 
 
 ###ID
-@id = {{createUser.response.body.data.id}}
+@id = {{createUser.response.body.id}}
 
 
 ### modificar un usuario
