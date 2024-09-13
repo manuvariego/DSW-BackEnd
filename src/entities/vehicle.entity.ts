@@ -1,3 +1,4 @@
+import { Reservation } from './reservation.entity.js';
 import { typeVehicle } from './typeVehicle.entity.js';
 import { User } from './user.entity.js';
 import { Rel, Property, ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
@@ -13,7 +14,9 @@ export class Vehicle {
   @ManyToOne(()=> typeVehicle, {nullable: false})
     type!: Rel<typeVehicle>
 
+  @OneToMany(() => Reservation, (reservation) => reservation.vehicle, {
+    cascade: [Cascade.ALL],
+  })
+  reservations = new Collection<Reservation>(this)
 
-  //@ManyToOne({ entity: () => User, nullable: true })
-  //owner?: User;
 }

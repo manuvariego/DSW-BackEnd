@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Vehicle } from "../entities/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
+import { Reservation } from "../entities/reservation.entity.js";
 
 const em= orm.em
 
@@ -8,7 +9,8 @@ function sanitizeVehicleInput(req: Request, res: Response , next: NextFunction){
   req.body.sanitizedInput = {
     license_plate: req.body.license_plate,
     owner: req.body.owner,
-    type: req.body.type
+    type: req.body.type,
+    reservation: req.body.reservation
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

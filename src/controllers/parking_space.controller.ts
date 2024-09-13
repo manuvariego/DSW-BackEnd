@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Parking_space } from "../entities/parking_space.entity.js";
 import { orm } from "../shared/db/orm.js";
+import { Reservation } from "../entities/reservation.entity.js";
 
 
 const em = orm.em
@@ -8,7 +9,8 @@ const em = orm.em
 function sanitizeParking_spaceInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     number: req.body.number,
-    garage: req.body.garage
+    garage: req.body.garage,
+    reservation: req.body.reservation
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

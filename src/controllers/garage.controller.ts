@@ -13,7 +13,8 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
     email: req.body.email,
     priceHour: req.body.priceHour,
     location: req.body.location,
-    parking_space: req.body.parking_space
+    parking_space: req.body.parking_space,
+    reservation: req.body.reservation
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
