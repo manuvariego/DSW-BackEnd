@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Reservation } from "../entities/reservation.entity.js";
 import { Vehicle } from "../entities/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
-import { Parking_space } from "../entities/parking_space.entity.js";
+import { ParkingSpace } from "../entities/parkingSpace.entity.js";
 
 
 const em = orm.em
@@ -14,7 +14,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
     check_out_at: req.body.check_out_at,
     estado: req.body.estado,
     amount: req.body.amount,
-    parking_space: req.body.parking_space
+    parkingSpace: req.body.parkingSpace
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

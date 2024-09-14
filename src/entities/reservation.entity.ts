@@ -2,7 +2,7 @@ import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property
 import { baseEntity } from '../shared/baseEntity.entity.js'
 import { Vehicle } from './vehicle.entity.js';
 import { Garage } from './garage.entity.js';
-import { Parking_space } from './parking_space.entity.js';
+import { ParkingSpace } from './parkingSpace.entity.js';
 
 
 @Entity()
@@ -28,8 +28,8 @@ export class Reservation extends baseEntity {
   @ManyToOne(() => Garage, { nullable: false })
   garage!: Rel<Garage>
 
-  @ManyToOne(() => Parking_space, { nullable: false })
-  parking_space!: Rel<Parking_space>
+  @ManyToOne(() => ParkingSpace, { nullable: false })
+  parkingSpace!: Rel<ParkingSpace>
 
 
 }

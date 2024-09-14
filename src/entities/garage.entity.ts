@@ -1,6 +1,6 @@
 import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel } from '@mikro-orm/core';
 import { Location } from './location.entity.js';
-import { Parking_space } from './parking_space.entity.js';
+import { ParkingSpace } from './parkingSpace.entity.js';
 import { Reservation } from './reservation.entity.js';
 import { ReservationType } from './reservationType.entity.js';
 
@@ -27,10 +27,10 @@ export class Garage {
   @ManyToOne(() => Location, { nullable: false })
   location!: Rel<Location>
 
-  @OneToMany(() => Parking_space, (parking_space) => parking_space.garage, {
+  @OneToMany(() => ParkingSpace, (parkingSpace) => parkingSpace.garage, {
     cascade: [Cascade.ALL],
   })
-  parking_spaces = new Collection<Parking_space>(this)
+  parkingSpaces = new Collection<ParkingSpace>(this)
 
   @OneToMany(() => Reservation, (reservation) => reservation.garage, {
     cascade: [Cascade.ALL],

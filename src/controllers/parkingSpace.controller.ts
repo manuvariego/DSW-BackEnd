@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { Parking_space } from "../entities/parking_space.entity.js";
+import { ParkingSpace } from "../entities/parkingSpace.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { Reservation } from "../entities/reservation.entity.js";
 
 
 const em = orm.em
 
-function sanitizeParking_spaceInput(req: Request, res: Response, next: NextFunction) {
+function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     number: req.body.number,
     garage: req.body.garage,
@@ -24,8 +24,8 @@ function sanitizeParking_spaceInput(req: Request, res: Response, next: NextFunct
 
 async function findAll(req: Request, res: Response) {
   try {
-    const parking_spaces = await em.find(Parking_space, {},)
-    res.status(201).json({ message: 'Parking_space found', data:parking_spaces })
+    const parkingSpaces = await em.find(ParkingSpace, {},)
+    res.status(201).json({ message: 'ParkingSpace found', data:parkingSpaces })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -35,8 +35,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const number = Number.parseInt(req.params.number)
-    const parking_space = await em.findOneOrFail(Parking_space, { number })
-    res.status(201).json({ message: 'parking_space found', data: parking_space })
+    const parkingSpace = await em.findOneOrFail(ParkingSpace, { number })
+    res.status(201).json({ message: 'parkingSpace found', data: parkingSpace })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -44,9 +44,9 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const parking_space = em.create(Parking_space, req.body.sanitizedInput)
+    const parkingSpace = em.create(ParkingSpace, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ Message: 'parking_space created', data:parking_space })
+    res.status(201).json({ Message: 'parkingSpace created', data:parkingSpace })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -55,10 +55,10 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const number = Number.parseInt(req.params.cuit)
-    const parking_spaceToUpdate = await em.findOneOrFail(Parking_space, { number })
-    em.assign(parking_spaceToUpdate , req.body.sanitizedInput)
+    const parkingSpaceToUpdate = await em.findOneOrFail(ParkingSpace, { number })
+    em.assign(parkingSpaceToUpdate , req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'parking_space updated', data: parking_spaceToUpdate })
+    res.status(201).json({ message: 'parkingSpace updated', data: parkingSpaceToUpdate })
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -67,12 +67,12 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
  try {
    const number = req.params.number
-   const parking_space = await em.findOneOrFail(Parking_space, { number: +number },)
-   await em.removeAndFlush(parking_space)
-   res.status(201).json({ message: 'parking_space eliminated' })
+   const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number },)
+   await em.removeAndFlush(parkingSpace)
+   res.status(201).json({ message: 'parkingSpace eliminated' })
  }
  catch (error: any) { res.status(500).json({ message: error.message }) }
 
 }
 
-export { sanitizeParking_spaceInput, findAll, findOne, add, update, eliminate }
+export { sanitizeParkingSpaceInput, findAll, findOne, add, update, eliminate }
