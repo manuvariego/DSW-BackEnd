@@ -16,12 +16,12 @@ Content-Type: application/json
     "email": "cocherRosario@gmail.com",
     "priceHour": 555,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 
 ### Cuit es primary key
-@cuit = {{createGarage.response.body.data.cuit}}
+@cuit = {{createGarage.response.body.cuit}}
 
 
 ### GET ONE 
@@ -40,7 +40,7 @@ Content-Type: application/json
     "email": "cocherSur@gmail.com",
     "priceHour": 200,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 
@@ -57,11 +57,11 @@ Content-Type: application/json
     "email": "cocherC@gmail.com",
     "priceHour": 100,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 ### CUIT
-@cuitToDelete = {{createGarageToDelete.response.body.data.cuit}}
+@cuitToDelete = {{createGarageToDelete.response.body.cuit}}
 
 ### DELETE
 DELETE http://localhost:3000/api/garages/{{cuitToDelete}}

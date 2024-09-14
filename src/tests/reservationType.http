@@ -1,0 +1,48 @@
+### obtener todos los tipos de estadía
+GET http://localhost:3000/api/reservationTypes
+
+
+### obtener un solo tipo de estadía
+GET http://localhost:3000/api/reservationTypes/{{id}}
+
+
+### crear un nuevo tipo de estadía
+# @name createReservationType
+POST http://localhost:3000/api/reservationTypes
+Content-Type: application/json
+
+{
+    "description": "mensual",
+    "price": 3000
+}
+
+###Primarykey
+@id = {{createReservationType.response.body.id}}
+
+### modificar un tipo de estadía 
+PUT http://localhost:3000/api/reservationTypes/{{id}}
+Content-Type: application/json
+
+{
+    "description": "diario",
+    "price": 2000
+}
+
+
+### crear un tipo de estadía TO DELETE
+# @name createReservationTypeToDelete
+POST http://localhost:3000/api/reservationTypes
+Content-Type: application/json
+
+{
+    "description": "quincena",
+    "price": 1000
+}
+
+
+###Primarykey
+@idToDelete = {{createReservationTypeToDelete.response.body.id}}
+
+
+### crear un tipo de estadía
+DELETE http://localhost:3000/api/reservationTypes/{{idToDelete}}

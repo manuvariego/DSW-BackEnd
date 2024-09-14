@@ -13,7 +13,8 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
     email: req.body.email,
     priceHour: req.body.priceHour,
     location: req.body.location,
-    parking_space: req.body.parking_space
+    parkingSpace: req.body.parkingSpace,
+    reservation: req.body.reservation
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -27,7 +28,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
   try {
-    const garages = await em.find(Garage, {}, {populate: ['parking_spaces']})
+    const garages = await em.find(Garage, {}, {populate: ['parkingSpaces']})
     res.status(200).json(garages)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -37,7 +38,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const cuit = Number.parseInt(req.params.cuit)
-    const garage = await em.findOneOrFail(Garage, { cuit }, {populate: ['parking_spaces']})
+    const garage = await em.findOneOrFail(Garage, { cuit }, {populate: ['parkingSpaces']})
     res.status(200).json(garage)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }

@@ -1,0 +1,37 @@
+### obtener todas las reservas
+GET http://localhost:3000/api/reservations
+
+
+### obtener una reserva
+GET http://localhost:3000/api/reservations/{{id}}
+
+
+### crear una nueva reserva
+# @name createReservation
+POST http://localhost:3000/api/reservations
+Content-Type: application/json
+
+{
+    "date_time_reservation": "2024-10-01",
+    "check_in_at": "2024-10-01",
+    "check_out_at": "2024-10-01",
+    "estado": "activo",
+    "amount": 3000
+}
+
+
+###ID
+@id = {{createReservation.response.body.id}}
+
+
+### modificar una reserva
+PUT http://localhost:3000/api/reservations/{{id}}
+Content-Type: application/json
+
+{
+
+}
+
+
+### eliminar una reserva
+DELETE http://localhost:3000/api/reservations/{{id}}
