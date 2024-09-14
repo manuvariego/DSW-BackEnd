@@ -16,7 +16,7 @@ Content-Type: application/json
     "email": "cocherRosario@gmail.com",
     "priceHour": 555,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 
@@ -40,7 +40,7 @@ Content-Type: application/json
     "email": "cocherSur@gmail.com",
     "priceHour": 200,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 
@@ -57,7 +57,7 @@ Content-Type: application/json
     "email": "cocherC@gmail.com",
     "priceHour": 100,
     "location": 1,
-    "parking_space": []  
+    "parkingSpace": []  
 }
 
 ### CUIT
