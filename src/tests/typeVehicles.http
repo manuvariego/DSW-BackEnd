@@ -22,7 +22,7 @@ GET http://localhost:3000/api/typeVehicles/{{id}}
 
 
 # Modificar un tipo de Vehiculo
-PUT http://localhost:3000/api/typeVehicles/{{id}}
+PUT http://localhost:3000/api/typeVehicles/2
 Content-Type: application/json
 
 {
