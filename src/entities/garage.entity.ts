@@ -27,6 +27,9 @@ export class Garage {
     @Property({})
     priceHour!: number;
 
+    @ManyToOne(() => Location, { nullable: false })
+    location!: Rel<Location>
+
     @OneToMany(() => ParkingSpace, (parkingSpace) => parkingSpace.garage, {
         cascade: [Cascade.ALL],
     })

@@ -9,10 +9,10 @@ const em = orm.em
 
 function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
+        dni: req.body.dni,
         name: req.body.name,
         lastname: req.body.lastname,
         password: req.body.password,
-        dni: req.body.dni,
         address: req.body.address,
         email: req.body.email,
         phone_number: req.body.phone_number,
@@ -60,6 +60,21 @@ async function add(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+async function login(req: Request, res: Response) {
+    try {
+        const user = await em.findOneOrFail(User, { dni: req.body.dni })
+        const match = await bcrypt.compare(req.body.password, user.password)
+        if (!match) {
+            return res.status(401).json({ message: 'Invalid credentials' })
+        }
+
+        console.log("test")
+
+    } catch {
+        console.log("Failed")
+    }
+}
+
 async function get_vehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
@@ -95,4 +110,4 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-export { get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate }
+export { login, get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate }
