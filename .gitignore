@@ -4,6 +4,8 @@ coverage
 # API keys and secrets
 .env
 
+pnpm-lock.yaml
+
 # dependency directory
 node_modules
 
