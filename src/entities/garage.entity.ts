@@ -6,40 +6,40 @@ import { ReservationType } from './reservationType.entity.js';
 
 @Entity()
 export class Garage {
-  @PrimaryKey({})
-  cuit!: number;
+    @PrimaryKey({})
+    cuit!: number;
 
-  @Property({})
-  name!: string;
+    @Property({})
+    name!: string;
 
-  @Property({})
-  address!: string;
+    @Property({})
+    password!: string;
 
-  @Property({})
-  phone_number!: string;
+    @Property({})
+    address!: string;
 
-  @Property({})
-  email!: string;
+    @Property({})
+    phone_number!: string;
 
-  @Property({})
-  priceHour!: number;
+    @Property({})
+    email!: string;
 
-  @ManyToOne(() => Location, { nullable: false })
-  location!: Rel<Location>
+    @Property({})
+    priceHour!: number;
 
-  @OneToMany(() => ParkingSpace, (parkingSpace) => parkingSpace.garage, {
-    cascade: [Cascade.ALL],
-  })
-  parkingSpaces = new Collection<ParkingSpace>(this)
+    @OneToMany(() => ParkingSpace, (parkingSpace) => parkingSpace.garage, {
+        cascade: [Cascade.ALL],
+    })
+    parkingSpaces = new Collection<ParkingSpace>(this)
 
-  @OneToMany(() => Reservation, (reservation) => reservation.garage, {
-    cascade: [Cascade.ALL],
-  })
-  reservations = new Collection<Reservation>(this)
+    @OneToMany(() => Reservation, (reservation) => reservation.garage, {
+        cascade: [Cascade.ALL],
+    })
+    reservations = new Collection<Reservation>(this)
 
-  @OneToMany(() => ReservationType, (reservationType) => reservationType.garage, {
-    cascade: [Cascade.ALL],
-  })
-  reservationTypes = new Collection<ReservationType>(this)
+    @OneToMany(() => ReservationType, (reservationType) => reservationType.garage, {
+        cascade: [Cascade.ALL],
+    })
+    reservationTypes = new Collection<ReservationType>(this)
 
 }

@@ -12,6 +12,7 @@ Content-Type: application/json
     "cuit": 666626,
     "name": "CocherRosario",
     "address": "Dorrego 123",
+    "password": "test",
     "phone_number": "444689525",
     "email": "cocherRosario@gmail.com",
     "priceHour": 555,
