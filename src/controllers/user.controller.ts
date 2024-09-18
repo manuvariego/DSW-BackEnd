@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 import { User } from "../entities/user.entity.js";
 import { Vehicle } from "../entities/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
+import jwt, { Secret } from "jsonwebtoken";
+import dotenv from 'dotenv'
 
 
 const em = orm.em
@@ -67,12 +69,19 @@ async function login(req: Request, res: Response) {
         if (!match) {
             return res.status(401).json({ message: 'Invalid credentials' })
         }
+        let time = new Date()
+        const token = jwt.sign({
+            name: req.body.name,
+            type: "user",
+            timeToken: time,
+        }, process.env.JWT_SECRET as Secret)
 
-        console.log("test")
+        return res.status(200).json({
+            message: "Login successful",
+            token: token
+        })
 
-    } catch {
-        console.log("Failed")
-    }
+    } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
 async function get_vehicles(req: Request, res: Response) {
