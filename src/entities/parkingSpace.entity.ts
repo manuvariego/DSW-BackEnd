@@ -1,6 +1,7 @@
 import { Collection, Entity, PrimaryKey, Cascade, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
 import { Garage } from './garage.entity.js';
 import { Reservation } from './reservation.entity.js';
+import { TypeVehicle } from './typeVehicle.entity.js';
 
 @Entity()
 export class ParkingSpace {
@@ -15,5 +16,8 @@ export class ParkingSpace {
     cascade: [Cascade.ALL],
   })
   reservations = new Collection<Reservation>(this)
+
+  @ManyToOne(() => TypeVehicle, { nullable: false })
+  TypeVehicle!: Rel<TypeVehicle>
 
 }

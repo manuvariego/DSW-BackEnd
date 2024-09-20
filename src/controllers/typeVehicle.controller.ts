@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { typeVehicle } from "../entities/typeVehicle.entity.js";
+import { TypeVehicle } from "../entities/typeVehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 
 const em = orm.em
@@ -21,7 +21,7 @@ function sanitizetypeVehicleInput(req: Request, res: Response , next: NextFuncti
 
 async function findAll(req: Request ,res: Response){
   try {  
-    const typeVehicles = await em.find(typeVehicle, {}, {populate:['vehicles']}) 
+    const typeVehicles = await em.find(TypeVehicle, {}, {populate:['vehicles']}) 
 
     res.status(200).json(typeVehicles)
 
@@ -32,7 +32,7 @@ async function findAll(req: Request ,res: Response){
 async function findOne(req: Request ,res: Response){
   try {  
     const id = Number.parseInt(req.params.id);
-    const typevehicle = await em.findOneOrFail(typeVehicle, {id}, {populate:['vehicles']}) 
+    const typevehicle = await em.findOneOrFail(TypeVehicle, {id}, {populate:['vehicles']}) 
 
     res.status(200).json(typevehicle)
 
@@ -42,7 +42,7 @@ async function findOne(req: Request ,res: Response){
 
 async function add(req: Request, res: Response){
   try {
-    const typevehicle = em.create(typeVehicle, req.body.sanitizedInput)
+    const typevehicle = em.create(TypeVehicle, req.body.sanitizedInput)
     await em.flush()
 
     res.status(200).json(typevehicle)
@@ -54,7 +54,7 @@ async function add(req: Request, res: Response){
 async function update(req: Request ,res: Response){
   try {  
     const id = Number.parseInt(req.params.id);
-    const typeVehicleToUpdate = await em.findOneOrFail(typeVehicle, {id})
+    const typeVehicleToUpdate = await em.findOneOrFail(TypeVehicle, {id})
     em.assign(typeVehicleToUpdate, req.body.sanitizedInput)
     await em.flush()
 
@@ -67,7 +67,7 @@ async function update(req: Request ,res: Response){
 async function eliminate(req: Request ,res: Response){
   try{
     const id = Number.parseInt(req.params.id)
-    const typevehicle = await em.findOneOrFail(typeVehicle, { id })
+    const typevehicle = await em.findOneOrFail(TypeVehicle, { id })
     await em.removeAndFlush(typevehicle)
 
     res.status(200).json({message: 'typeVehicle eliminated'})
