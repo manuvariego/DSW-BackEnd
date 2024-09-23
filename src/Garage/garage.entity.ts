@@ -1,8 +1,8 @@
 import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel } from '@mikro-orm/core';
-import { Location } from './location.entity.js';
-import { ParkingSpace } from './parkingSpace.entity.js';
-import { Reservation } from './reservation.entity.js';
-import { ReservationType } from './reservationType.entity.js';
+import { Location } from '../Location/location.entity.js';
+import { ParkingSpace } from '../ParkingSpace/parkingSpace.entity.js';
+import { Reservation } from '../Reservation/reservation.entity.js';
+import { ReservationType } from '../ReservationType/reservationType.entity.js';
 
 @Entity()
 export class Garage {

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { get_vehicles, login, findAll, findOne, update, add, eliminate, sanitizeUserInput } from "../controllers/user.controller.js";
+import { get_vehicles, login, findAll, findOne, update, add, eliminate, sanitizeUserInput } from "./user.controller.js";
 
 export const UserRouter = Router()
 

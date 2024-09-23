@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Garage } from "../entities/garage.entity.js";
+import { Garage } from "./garage.entity.js";
 import { orm } from "../shared/db/orm.js";
 import bcrypt from "bcrypt"
 

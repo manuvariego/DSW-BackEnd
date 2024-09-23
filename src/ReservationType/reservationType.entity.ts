@@ -1,6 +1,6 @@
 import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { baseEntity } from '../shared/baseEntity.entity.js'
-import { Garage } from './garage.entity.js';
+import { Garage } from '../Garage/garage.entity.js';
 
 @Entity()
 export class ReservationType extends baseEntity {

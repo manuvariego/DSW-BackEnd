@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeParkingSpaceInput } from "../controllers/parkingSpace.controller.js";
+import { findAll, findOne, update, add, eliminate, sanitizeParkingSpaceInput } from "./parkingSpace.controller.js";
 
 export const ParkingSpaceRouter = Router()
 

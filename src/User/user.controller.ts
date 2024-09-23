@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { User } from "../entities/user.entity.js";
-import { Vehicle } from "../entities/vehicle.entity.js";
+import { User } from "./user.entity.js";
+import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from 'dotenv'

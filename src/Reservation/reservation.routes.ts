@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeReservationInput } from "../controllers/reservation.controller.js";
+import { findAll, findOne, update, add, eliminate, sanitizeReservationInput } from "./reservation.controller.js";
 
 export const ReservationRouter = Router()
 
