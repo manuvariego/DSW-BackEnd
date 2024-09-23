@@ -19,15 +19,15 @@ Content-Type: application/json
 
 
 ### GET ONE parking_space
-http://localhost:3000/api/parkingSpaces/{{number}}
+http://localhost:3000/api/parkingSpaces/1
 
 
 ### PUT parking_space
-PUT  http://localhost:3000/api/parkingSpaces/{{number}}
+PUT  http://localhost:3000/api/parkingSpaces/1
 Content-Type: application/json
 
 {
-    "number": 2,
+    "number": 8,
     "garage": 888
 }
 

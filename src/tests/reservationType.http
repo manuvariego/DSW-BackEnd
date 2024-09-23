@@ -13,7 +13,8 @@ Content-Type: application/json
 
 {
     "description": "mensual",
-    "price": 3000
+    "price": 3000,
+    "garage": 888
 }
 
 ###Primarykey

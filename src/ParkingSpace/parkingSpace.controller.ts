@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ParkingSpace } from "./parkingSpace.entity.js";
 import { orm } from "../shared/db/orm.js";
-//import { Reservation } from "../entities/reservation.entity.js";
+import { Reservation } from "../Reservation/reservation.entity.js";
 
 
 const em = orm.em

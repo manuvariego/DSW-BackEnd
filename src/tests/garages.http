@@ -9,15 +9,17 @@ Content-Type: application/json
 
 
 {
-    "cuit": 666626,
-    "name": "CocherRosario",
-    "address": "Dorrego 123",
+    "cuit": 123456,
+    "name": "CocheraSanjorge",
+    "address": "españa 123",
     "password": "test",
-    "phone_number": "444689525",
-    "email": "cocherRosario@gmail.com",
-    "priceHour": 555,
+    "phone_number": "444525",
+    "email": "cochera@gmail.com",
+    "priceHour": 450,
     "location": 1,
-    "parkingSpace": []  
+    "parkingSpace": [] ,
+    "reservation": [] ,
+    "reservationType": []  
 }
 
 
