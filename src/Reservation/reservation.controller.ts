@@ -16,7 +16,9 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
         check_out_at: req.body.check_out_at,
         estado: req.body.estado,
         amount: req.body.amount,
-        parkingSpace: req.body.parkingSpace
+        vehicle: req.body.vehicle,
+        garage: req.body.garage,
+        parkingSpace: req.body.parkingSpace,
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -31,6 +33,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 async function findAll(req: Request, res: Response) {
     try {
         const reservations = await em.find(Reservation, {})
+        console.log(reservations)
 
         res.status(200).json(reservations)
 
@@ -59,11 +62,13 @@ async function add(req: Request, res: Response) {
             // Si hay errores, devolver un error 400 con los detalles. 
             return res.status(400).json({ errors: errors.array() });
         }
+        const dateToday = new Date()
+        req.body.date_time_reservation = dateToday
         // const reservation = em.create(Reservation, req.body.sanitizedInput)
         // await em.persistAndFlush(reservation)
 
         // res.status(200).json(reservation)
-        res.status(200).json({ok: true})
+        res.status(200).json({ ok: true })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

@@ -4,16 +4,26 @@ import { getAllGaragesRepository } from "./garage.repository.js";
 
 const getAvailablesBusinnes = async (checkin: Date, checkout: Date, vehicleTypeId: number): Promise<Garage[]> => {
 
-  const params = {checkin: checkin, checkout: checkout, vehicleTypeId: vehicleTypeId};
-  console.log(params);
+    const params = { checkin: checkin, checkout: checkout, vehicleTypeId: vehicleTypeId };
+    console.log(params);
 
-  const reservations = await getAllReservationsRepository(params);
-  console.log('reservations', reservations);
+    //Lists all reservations between two given dates
 
-  const garages = await getAllGaragesRepository();
-  console.log('garages', garages);
+    const reservations = await getAllReservationsRepository(params);
+    console.log('reservations', reservations);
 
-  return new Array<Garage>;
+    //Lists available garages a garage in available if the number of parkingSpaces occupied (reserved) is less than :wq
+    //
+
+    const garages
+
+
+    //const garages = await getAllGaragesRepository();
+    //console.log('garages', garages);
+
+    return new Array<Garage>;
 }
+
+const count
 
 export { getAvailablesBusinnes }
