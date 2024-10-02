@@ -3,11 +3,13 @@ import { Reservation } from "./reservation.entity.js";
 //import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 //import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
+import { validationResult } from 'express-validator';
 
 
 const em = orm.em
 
 function sanitizeReservationInput(req: Request, res: Response, next: NextFunction) {
+    console.log('pasa por aca');
     req.body.sanitizedInput = {
         date_time_reservation: req.body.date_time_reservation,
         check_in_at: req.body.check_in_at,
@@ -49,10 +51,19 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const reservation = em.create(Reservation, req.body.sanitizedInput)
-        await em.persistAndFlush(reservation)
+        //Capturamos los posibles errores que hayan surgido en el validation.ts
+        const errors = validationResult(req);
+        console.log(errors);
 
-        res.status(200).json(reservation)
+        if (!errors.isEmpty()) {
+            // Si hay errores, devolver un error 400 con los detalles. 
+            return res.status(400).json({ errors: errors.array() });
+        }
+        // const reservation = em.create(Reservation, req.body.sanitizedInput)
+        // await em.persistAndFlush(reservation)
+
+        // res.status(200).json(reservation)
+        res.status(200).json({ok: true})
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { Garage } from "./garage.entity.js";
 import { orm } from "../shared/db/orm.js";
 import bcrypt from "bcrypt"
+import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
+import { getAvailablesBusinnes } from "./garage.business.js";
 
 const em = orm.em
 
@@ -80,4 +82,31 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
-export { sanitizeGarageInput, findAll, findOne, add, update, eliminate }
+async function getAvailables(req: Request, res: Response) {
+    try {
+        //validar las fechas ingresadas.
+
+        //se supone que las fechas a continuacion son validas
+        const checkin = new Date(`${req.query.check_in_at}`);
+        const checkout = new Date(`${req.query.check_out_at}`);
+        const licensePlate = `${req.query.license_plate}`;
+
+        const vehicle = await getVehicleBusiness(licensePlate);
+
+        if (vehicle == null){
+            console.log('No encontro el vehiculo');
+            res.status(404).json();
+            return;
+        }
+
+        const garagesAvailables = getAvailablesBusinnes(checkin, checkout, vehicle?.type.id!);
+        
+        res.status(200).json(garagesAvailables);
+
+    } catch (error: any) { res.status(500).json({ message: error.message }) }
+}
+
+
+export { sanitizeGarageInput, findAll, findOne, add, update, eliminate, getAvailables }
+
+

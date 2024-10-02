@@ -12,13 +12,10 @@ POST http://localhost:3000/api/reservations
 Content-Type: application/json
 
 {
-    "date_time_reservation": "2024-10-01",
-    "check_in_at": "2024-10-01",
-    "check_out_at": "2024-10-01",
-    "estado": "activo",
-    "amount": 3000
+    "check_in_at": "2024-12-20 15:30",
+    "check_out_at": "2024-12-20 11:30",
+    "license_plate": "AC798AA"
 }
-
 
 ###ID
 @id = {{createReservation.response.body.id}}
