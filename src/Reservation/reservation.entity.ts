@@ -30,6 +30,4 @@ export class Reservation extends baseEntity {
 
     @ManyToOne(() => ParkingSpace, { nullable: false })
     parkingSpace!: Rel<ParkingSpace>
-
-
 }
