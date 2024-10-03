@@ -5,6 +5,7 @@ import { orm } from "../shared/db/orm.js";
 import bcrypt from "bcrypt"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getAvailablesBusinnes } from "./garage.business.js";
+import { validationResult } from 'express-validator';
 
 const em = orm.em
 
@@ -86,7 +87,12 @@ async function eliminate(req: Request, res: Response) {
 async function getAvailables(req: Request, res: Response) {
     try {
         //validar las fechas ingresadas.
-
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Si hay errores, devolver un error 400 con los detalles. 
+            return res.status(400).json({ errors: errors.array() });
+        }
+        
         //se supone que las fechas a continuacion son validas
         const checkin = new Date(`${req.query.check_in_at}`)
         const checkout = new Date(`${req.query.check_out_at}`)
@@ -95,12 +101,12 @@ async function getAvailables(req: Request, res: Response) {
         const vehicle = await getVehicleBusiness(licensePlate)
 
         if (vehicle == null) {
-            console.log('No encontro el vehiculo');
+            console.log('No se encontro el vehiculo');
             res.status(404).json();
             return;
         }
 
-        const garagesAvailables = getAvailablesBusinnes(checkin, checkout, vehicle?.type.id!);
+        const garagesAvailables = await getAvailablesBusinnes(checkin, checkout, vehicle?.type.id!);
 
         res.status(200).json(garagesAvailables);
 
