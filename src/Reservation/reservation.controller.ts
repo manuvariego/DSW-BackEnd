@@ -4,6 +4,7 @@ import { Reservation } from "./reservation.entity.js";
 import { orm } from "../shared/db/orm.js";
 //import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
 import { validationResult } from 'express-validator';
+import { getAllReservations } from './reservation.repository.js'
 
 
 const em = orm.em
@@ -32,7 +33,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
     try {
-        const reservations = await em.find(Reservation, {})
+        const reservations = getAllReservations()
         console.log(reservations)
 
         res.status(200).json(reservations)
@@ -64,6 +65,7 @@ async function add(req: Request, res: Response) {
         }
         const dateToday = new Date()
         req.body.date_time_reservation = dateToday
+        //req.body.parkingSpace = assignParkingSpace()
         // const reservation = em.create(Reservation, req.body.sanitizedInput)
         // await em.persistAndFlush(reservation)
 
@@ -73,17 +75,6 @@ async function add(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-/*
-async function get_vehicles(req: Request ,res: Response){
-  try {  
-    const id = Number.parseInt(req.params.id)
-    const vehicles = await em.find(Vehicle, {owner:  id})
-    console.log(vehicles)
-
-    res.status(200).json(vehicles)
-
-  } catch (error:any){res.status(500).json({message: error.message})}
-} */
 
 async function update(req: Request, res: Response) {
     try {

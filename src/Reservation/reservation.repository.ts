@@ -9,7 +9,7 @@ interface FilterParams {
     vehicleTypeId?: number;
 }
 
-const getAllReservationsRepository = async (filters: FilterParams): Promise<Reservation[]> => {
+const getAvailableReservations = async (filters: FilterParams): Promise<Reservation[]> => {
     const reservasCocheras = await em.find(Reservation, {
         $or: [
             {
@@ -44,4 +44,10 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
     return reservasCocheras;
 }
 
-export { getAllReservationsRepository }
+const getAllReservations = async (): Promise<Reservation[]> => {
+    const reservations = em.find(Reservation, {})
+    return reservations
+}
+
+
+export { getAllReservations, getAvailableReservations }
