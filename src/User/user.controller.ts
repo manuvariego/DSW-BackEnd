@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { User } from "./user.entity.js";
 import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
+import { getReservationsByUser } from "../Reservation/reservation.repository.js"
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from 'dotenv'
 
@@ -38,6 +39,19 @@ async function findAll(req: Request, res: Response) {
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
+
+
+async function getReservations(req: Request, res: Response) {
+    try {
+        const userId = Number.parseInt(req.params.id)
+        const reservations = getReservationsByUser(userId)
+        console.log(reservations)
+
+        res.status(200).json(reservations)
+
+    } catch (error: any) { res.status(500).json({ message: error.message }) }
+}
+
 
 
 async function findOne(req: Request, res: Response) {
@@ -84,7 +98,7 @@ async function login(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-async function get_vehicles(req: Request, res: Response) {
+async function getVehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const vehicles = await em.find(Vehicle, { owner: id })
@@ -119,4 +133,4 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-export { login, get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate }
+export { login, getVehicles, getReservations, sanitizeUserInput, findAll, findOne, add, update, eliminate }

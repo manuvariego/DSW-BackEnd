@@ -49,5 +49,18 @@ const getAllReservations = async (): Promise<Reservation[]> => {
     return reservations
 }
 
+const getReservationsByUser = async (userId: number): Promise<Reservation[]> => {
+    //const reservations = em.find
+    const reservations = await em.find(Reservation, {
+        vehicle: {
+            owner: userId
+        }
+    })
 
-export { getAllReservations, getAvailableReservations }
+    return reservations
+
+
+}
+
+
+export { getAllReservations, getReservationsByUser, getAvailableReservations }

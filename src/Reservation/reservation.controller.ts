@@ -100,4 +100,6 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+
+
 export { sanitizeReservationInput, findAll, findOne, add, update, eliminate }
