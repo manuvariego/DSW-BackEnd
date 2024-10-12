@@ -3,7 +3,7 @@ GET http://localhost:3000/api/reservationTypes
 
 
 ### obtener un solo tipo de estadía
-GET http://localhost:3000/api/reservationTypes/{{}}
+GET http://localhost:3000/api/reservationTypes/
 
 
 ### crear un nuevo tipo de estadía
@@ -12,19 +12,18 @@ POST http://localhost:3000/api/reservationTypes
 Content-Type: application/json
 
 {
-    "description": "DAY",
+    "description": "HOUR",
     "garage": 888,
-    "price": 8000
+    "price": 1000
     
 }
 
 
 ### modificar un tipo de estadía 
-PUT http://localhost:3000/api/reservationTypes/{{description, garage_cuit}}
+PUT http://localhost:3000/api/reservationTypes/HOUR/888
 Content-Type: application/json
 
 {
-    "description": "diario",
     "price": 2000
 }
 
@@ -41,4 +40,4 @@ Content-Type: application/json
 
 
 ### crear un tipo de estadía
-DELETE http://localhost:3000/api/reservationTypes/{{}}
+DELETE http://localhost:3000/api/reservationTypes/HOUR/888

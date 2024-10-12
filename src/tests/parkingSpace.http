@@ -3,19 +3,15 @@ http://localhost:3000/api/parkingSpaces
 
 
 ### POST a parking_space
-# @name createParking_space
 POST http://localhost:3000/api/parkingSpaces
 Content-Type: application/json
 
 
 {
-    "number": 1,
-    "garage": 888
+    "number": 3,
+    "garage": 888,
+    "TypeVehicle": 1
 }
-
-
-### Number es primary key
-@number = {{createParking_space.response.body.number}}
 
 
 ### GET ONE parking_space
@@ -23,17 +19,15 @@ http://localhost:3000/api/parkingSpaces/1
 
 
 ### PUT parking_space
-PUT  http://localhost:3000/api/parkingSpaces/1
+PUT  http://localhost:3000/api/parkingSpaces/3/888
 Content-Type: application/json
 
 {
-    "number": 8,
-    "garage": 888
+    "TypeVehicle": 2 
 }
 
 
-### POST parking_space TO DELETE
-# @name createGarageToDelete
+###
 POST http://localhost:3000/api/parkingSpaces
 Content-Type: application/json
 
@@ -42,8 +36,6 @@ Content-Type: application/json
     "garage": 888
 }
 
-### CUIT
-@numberToDelete = {{createGarageToDelete.response.body.number}}
 
 ### DELETE parking_space
-DELETE http://localhost:3000/api/parkingSpaces/{{numberToDelete}}
+DELETE http://localhost:3000/api/parkingSpaces/

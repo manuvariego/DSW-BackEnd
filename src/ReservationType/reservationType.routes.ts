@@ -5,7 +5,7 @@ import { findAll, findOne, update, add, eliminate, sanitizeReservationTypeInput 
 export const ReservationTypeRouter = Router()
 
 ReservationTypeRouter.get('/', findAll)
-ReservationTypeRouter.get('/:id', findOne)
+ReservationTypeRouter.get('/:description/:cuitGarage', findOne)
 ReservationTypeRouter.post('/', sanitizeReservationTypeInput, add)
-ReservationTypeRouter.put('/:id', sanitizeReservationTypeInput, update)
-ReservationTypeRouter.delete('/:id', eliminate)
+ReservationTypeRouter.put('/:description/:cuitGarage', sanitizeReservationTypeInput, update)
+ReservationTypeRouter.delete('/:description/:cuitGarage', eliminate)
