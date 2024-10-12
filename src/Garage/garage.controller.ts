@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { Garage } from "./garage.entity.js";
-import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import bcrypt from "bcrypt"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
-import { getAvailablesBusinnes } from "./garage.business.js";
+import { getAvailablesBusiness } from "./garage.business.js";
 import { validationResult } from 'express-validator';
 
 const em = orm.em
@@ -106,7 +105,7 @@ async function getAvailables(req: Request, res: Response) {
             return;
         }
 
-        const garagesAvailables = await getAvailablesBusinnes(checkin, checkout, vehicle?.type.id!);
+        const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
 
         res.status(200).json(garagesAvailables);
 

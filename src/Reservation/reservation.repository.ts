@@ -44,4 +44,12 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
     return reservasCocheras;
 }
 
-export { getAllReservationsRepository }
+
+const createReservationRepository = async (reservation: any) => {
+    reservation = em.create(Reservation, reservation);
+    await em.flush();
+    return reservation;
+}
+
+
+export { getAllReservationsRepository, createReservationRepository }

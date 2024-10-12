@@ -4,6 +4,7 @@ import { Reservation } from "./reservation.entity.js";
 import { orm } from "../shared/db/orm.js";
 //import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
 import { validationResult } from 'express-validator';
+import { createReservationBusiness } from "./reservation.business.js";
 
 
 const em = orm.em
@@ -62,13 +63,15 @@ async function add(req: Request, res: Response) {
             // Si hay errores, devolver un error 400 con los detalles. 
             return res.status(400).json({ errors: errors.array() });
         }
-        const dateToday = new Date()
-        req.body.date_time_reservation = dateToday
-        // const reservation = em.create(Reservation, req.body.sanitizedInput)
-        // await em.persistAndFlush(reservation)
 
-        // res.status(200).json(reservation)
-        res.status(200).json({ ok: true })
+        const checkin = new Date(`${req.body.check_in_at}`);
+        const checkout = new Date(`${req.body.check_out_at}`);
+        const licensePlate = `${req.body.license_plate}`;
+        const cuitGarage = +(`${req.body.cuitGarage}`);
+
+        const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage);
+        
+        res.status(200).json(reservation);
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

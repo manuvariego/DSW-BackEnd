@@ -12,9 +12,10 @@ POST http://localhost:3000/api/reservations
 Content-Type: application/json
 
 {
-    "check_in_at": "2024-12-20 15:30",
-    "check_out_at": "2024-12-20 11:30",
-    "license_plate": "AC798AA"
+    "check_in_at": "2024-10-15T15:30",
+    "check_out_at": "2024-10-15T17:00",
+    "license_plate": "123456",
+    "cuitGarage": 888
 }
 
 ###ID

@@ -34,7 +34,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservationType = await em.findOneOrFail(ReservationType, { id })
+        const reservationType = await em.findOneOrFail(ReservationType, {})
 
         res.status(200).json(reservationType)
 
@@ -56,7 +56,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservationTypeToUpdate = await em.findOneOrFail(ReservationType, { id })
+        const reservationTypeToUpdate = await em.findOneOrFail(ReservationType, {})
         em.assign(reservationTypeToUpdate, req.body.sanitizedInput)
         await em.flush()
 
@@ -69,7 +69,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservationType = await em.findOneOrFail(ReservationType, { id })
+        const reservationType = await em.findOneOrFail(ReservationType, {})
         await em.removeAndFlush(reservationType)
 
         res.status(200).json(ReservationType)
