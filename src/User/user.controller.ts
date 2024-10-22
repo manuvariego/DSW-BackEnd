@@ -5,6 +5,7 @@ import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from 'dotenv'
+import { Reservation } from "../Reservation/reservation.entity.js";
 
 
 const em = orm.em
@@ -84,6 +85,19 @@ async function login(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+async function get_reservations(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id)
+        const reservations = await em.find(Reservation, {vehicle:{owner: id} })
+        console.log(reservations)
+
+        res.status(200).json(reservations)
+
+    } catch (error: any) { res.status(500).json({ message: error.message }) }
+}
+
+
+
 async function get_vehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
@@ -119,4 +133,4 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-export { login, get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate }
+export { login, get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, get_reservations }

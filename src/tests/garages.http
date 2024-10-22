@@ -68,3 +68,6 @@ Content-Type: application/json
 
 ### DELETE
 DELETE http://localhost:3000/api/garages/{{cuitToDelete}}
+
+### GET availables garages
+GET http://localhost:3000/api/garages/availables?check_in_at=2024-12-20%2015:30&check_out_at=2024-12-20%2016:30&license_plate=123456

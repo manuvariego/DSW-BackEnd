@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Vehicle } from "./vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
+import { getVehicleBusiness } from "./vehicle.business.js";
 //import { Reservation } from "../Reservation/reservation.entity.js";
 
 const em = orm.em
@@ -35,9 +36,14 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
-        const vehicle = await em.findOneOrFail(Vehicle, { license_plate },)
+        
+        const vehicle = await getVehicleBusiness(license_plate);
 
-        res.status(200).json(vehicle)
+        if (vehicle == null) {
+            res.status(404).json({})    
+        } else {
+            res.status(200).json(vehicle)
+        }
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

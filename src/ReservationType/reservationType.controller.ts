@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ReservationType } from "./reservationType.entity.js";
+import { ReservationType, typeCode } from "./reservationType.entity.js";
 import { orm } from "../shared/db/orm.js";
 //import { Garage } from "../entities/garage.entity.js";
 
@@ -33,8 +33,9 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const reservationType = await em.findOneOrFail(ReservationType, { id })
+        const description: typeCode = req.params.description as typeCode
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const reservationType = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
 
         res.status(200).json(reservationType)
 
@@ -55,8 +56,9 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const reservationTypeToUpdate = await em.findOneOrFail(ReservationType, { id })
+        const description: typeCode = req.params.description as typeCode
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const reservationTypeToUpdate = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
         em.assign(reservationTypeToUpdate, req.body.sanitizedInput)
         await em.flush()
 
@@ -68,8 +70,9 @@ async function update(req: Request, res: Response) {
 
 async function eliminate(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const reservationType = await em.findOneOrFail(ReservationType, { id })
+        const description: typeCode = req.params.description as typeCode
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const reservationType = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
         await em.removeAndFlush(reservationType)
 
         res.status(200).json(ReservationType)

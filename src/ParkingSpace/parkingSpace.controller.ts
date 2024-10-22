@@ -36,7 +36,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
-        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number })
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number, garage: {cuit: cuitGarage} })
         res.status(201).json(parkingSpace)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -56,7 +57,8 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
-        const parkingSpaceToUpdate = await em.findOneOrFail(ParkingSpace, { number })
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const parkingSpaceToUpdate = await em.findOneOrFail(ParkingSpace, { number, garage: {cuit: cuitGarage} })
         em.assign(parkingSpaceToUpdate, req.body.sanitizedInput)
         await em.flush()
         res.status(201).json(parkingSpaceToUpdate)
@@ -67,8 +69,9 @@ async function update(req: Request, res: Response) {
 
 async function eliminate(req: Request, res: Response) {
     try {
-        const number = req.params.number
-        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number },)
+        const number = Number.parseInt(req.params.number)
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number, garage: {cuit: cuitGarage} },)
         await em.removeAndFlush(parkingSpace)
         res.status(201).json({ message: 'parkingSpace eliminated' })
     }
