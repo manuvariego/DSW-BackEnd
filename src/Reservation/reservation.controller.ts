@@ -76,17 +76,6 @@ async function add(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-/*
-async function get_vehicles(req: Request ,res: Response){
-  try {  
-    const id = Number.parseInt(req.params.id)
-    const vehicles = await em.find(Vehicle, {owner:  id})
-    console.log(vehicles)
-
-    res.status(200).json(vehicles)
-
-  } catch (error:any){res.status(500).json({message: error.message})}
-} */
 
 async function update(req: Request, res: Response) {
     try {

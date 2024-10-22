@@ -15,7 +15,6 @@ Content-Type: application/json
     "password": "test",
     "phone_number": "444525",
     "email": "cochera@gmail.com",
-    "priceHour": 450,
     "location": 1,
     "parkingSpace": [] ,
     "reservation": [] ,
@@ -41,7 +40,6 @@ Content-Type: application/json
     "address": "Colon 2400",
     "phone_number": "577735851",
     "email": "cocherSur@gmail.com",
-    "priceHour": 200,
     "location": 1,
     "parkingSpace": []  
 }
@@ -58,7 +56,6 @@ Content-Type: application/json
     "address": "Dorrego 1400",
     "phone_number": "54235851",
     "email": "cocherC@gmail.com",
-    "priceHour": 100,
     "location": 1,
     "parkingSpace": []  
 }
