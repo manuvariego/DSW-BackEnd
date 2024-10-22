@@ -13,8 +13,8 @@ POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "license_plate": "123456",
-    "owner": 1,
+    "license_plate": "777",
+    "owner": 19,
     "type": 2
 }
 

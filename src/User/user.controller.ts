@@ -6,6 +6,7 @@ import { orm } from "../shared/db/orm.js";
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from 'dotenv'
 import { Reservation } from "../Reservation/reservation.entity.js";
+import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.business.js";
 
 
 const em = orm.em
@@ -85,20 +86,17 @@ async function login(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-async function get_reservations(req: Request, res: Response) {
+async function getActiveReservations(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const reservations = await em.find(Reservation, {vehicle:{owner: id} })
-        console.log(reservations)
-
-        res.status(200).json(reservations)
+        const userId = Number.parseInt(req.params.id)
+        const activeReservations = await getActiveReservationsByUserBusiness(userId)
+        res.status(200).json(activeReservations)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
 
-
-async function get_vehicles(req: Request, res: Response) {
+async function getVehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const vehicles = await em.find(Vehicle, { owner: id })
@@ -133,4 +131,4 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-export { login, get_vehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, get_reservations }
+export { login, getVehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, getActiveReservations }

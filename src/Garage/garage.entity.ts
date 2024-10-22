@@ -24,9 +24,6 @@ export class Garage {
     @Property({})
     email!: string;
 
-    @Property({})
-    priceHour!: number;
-
     @ManyToOne(() => Location, { nullable: false })
     location!: Rel<Location>
 

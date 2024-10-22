@@ -31,9 +31,10 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
                 check_out_at: {
                     $gte: filters.checkout
                 }
-            }
+            },
         ],
 
+        estado: 'activa',
         parkingSpace: {
             TypeVehicle: {
                 id: filters.vehicleTypeId
@@ -52,4 +53,14 @@ const createReservationRepository = async (reservation: any) => {
 }
 
 
-export { getAllReservationsRepository, createReservationRepository }
+const getActiveReservationsByUserRepository = async(userId: number): Promise<Reservation[]>=> {
+    return em.find(Reservation, {
+        vehicle: {
+            owner: userId
+        },
+        estado:'activa'
+    });
+}
+
+
+export { getAllReservationsRepository, createReservationRepository, getActiveReservationsByUserRepository }
