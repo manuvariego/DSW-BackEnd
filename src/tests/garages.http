@@ -13,7 +13,7 @@ Content-Type: application/json
     "name": "CocheraSanjorge",
     "address": "españa 123",
     "password": "test",
-    "phone_number": "444525",
+    "phoneNumber": "444525",
     "email": "cochera@gmail.com",
     "location": 1,
     "parkingSpace": [] ,
@@ -38,7 +38,7 @@ Content-Type: application/json
     "cuit": 888,
     "name": "CocheraSur",
     "address": "Colon 2400",
-    "phone_number": "577735851",
+    "phoneNumber": "577735851",
     "email": "cocherSur@gmail.com",
     "location": 1,
     "parkingSpace": []  
@@ -54,7 +54,7 @@ Content-Type: application/json
     "cuit": 7777,
     "name": "CocheraCentro",
     "address": "Dorrego 1400",
-    "phone_number": "54235851",
+    "phoneNumber": "54235851",
     "email": "cocherC@gmail.com",
     "location": 1,
     "parkingSpace": []  
