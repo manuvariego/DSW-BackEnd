@@ -14,7 +14,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
         name: req.body.name,
         password: req.body.password,
         address: req.body.address,
-        phone_number: req.body.phone_number,
+        phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         location: req.body.location,
         parking_space: req.body.parking_space
