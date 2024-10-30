@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { Reservation } from "./reservation.entity.js";
 //import { Vehicle } from "../Vehicle/vehicle.entity.js";
-import { orm } from "../shared/db/orm.js";
 //import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
 import { validationResult } from 'express-validator';
 import { createReservationBusiness } from "./reservation.business.js";
+import { reservation } from "./reservation.repository.js"
 
-
-const em = orm.em
+const reservationRepository = new reservation()
 
 function sanitizeReservationInput(req: Request, res: Response, next: NextFunction) {
     console.log('pasa por aca');
@@ -33,7 +32,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
     try {
-        const reservations = await em.find(Reservation, {})
+        const reservations = await reservationRepository.getAll()
         console.log(reservations)
 
         res.status(200).json(reservations)
@@ -45,7 +44,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservation = await em.findOneOrFail(Reservation, { id })
+        const reservation = reservationRepository.getOne(id)
 
         res.status(200).json(reservation)
 
@@ -64,13 +63,14 @@ async function add(req: Request, res: Response) {
             return res.status(400).json({ errors: errors.array() });
         }
 
+        //Se deberia poder verificar si estan bien las fechas?
         const checkin = new Date(`${req.body.check_in_at}`);
         const checkout = new Date(`${req.body.check_out_at}`);
         const licensePlate = `${req.body.license_plate}`;
         const cuitGarage = +(`${req.body.cuitGarage}`);
 
         const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage);
-        
+
         res.status(200).json(reservation);
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -80,11 +80,9 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservationToUpdate = await em.findOneOrFail(Reservation, { id })
-        em.assign(reservationToUpdate, req.body.sanitizedInput)
-        await em.flush()
+        const updatedReservation = reservationRepository.update(req.body.sanitizedInput, id)
 
-        res.status(200).json(reservationToUpdate)
+        res.status(200).json(updatedReservation)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -93,9 +91,8 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservation = em.getReference(Reservation, id)
-        await em.removeAndFlush(reservation)
-
+        const removedReservation = reservationRepository.remove(id)
+        console.log("Removed Reservation", removedReservation)
         res.status(200).json({ message: 'Reserva eliminada' })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }

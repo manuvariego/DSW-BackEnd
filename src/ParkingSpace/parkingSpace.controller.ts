@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { ParkingSpace } from "./parkingSpace.entity.js";
-import { orm } from "../shared/db/orm.js";
-import { Reservation } from "../Reservation/reservation.entity.js";
+import { parkingspace } from "./parkingSpace.repository.js"
 
 
-const em = orm.em
+const parkingSpaceRepository = new parkingspace()
 
 function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -25,7 +23,7 @@ function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFuncti
 
 async function findAll(req: Request, res: Response) {
     try {
-        const parkingSpaces = await em.find(ParkingSpace, {},)
+        const parkingSpaces = await parkingSpaceRepository.getAll()
         res.status(201).json(parkingSpaces)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -35,9 +33,11 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
+
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number, garage: {cuit: cuitGarage} })
+        const parkingSpace = await parkingSpaceRepository.getOne(number, cuitGarage)
+
         res.status(201).json(parkingSpace)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -46,8 +46,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const parkingSpace = em.create(ParkingSpace, req.body.sanitizedInput)
-        await em.flush()
+        const parkingSpace = parkingSpaceRepository.create(req.body.sanitizedInput)
         res.status(201).json(parkingSpace)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -58,9 +57,8 @@ async function update(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpaceToUpdate = await em.findOneOrFail(ParkingSpace, { number, garage: {cuit: cuitGarage} })
-        em.assign(parkingSpaceToUpdate, req.body.sanitizedInput)
-        await em.flush()
+        const parkingSpaceToUpdate = await parkingSpaceRepository.update(req.body.sanitizedInput, number, cuitGarage)
+        console.log("Updated Parking Space", parkingSpaceToUpdate)
         res.status(201).json(parkingSpaceToUpdate)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -71,8 +69,8 @@ async function eliminate(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number, garage: {cuit: cuitGarage} },)
-        await em.removeAndFlush(parkingSpace)
+        const removedParkingSpace = await parkingSpaceRepository.remove(number, cuitGarage)
+        console.log("Removed parking space", removedParkingSpace)
         res.status(201).json({ message: 'parkingSpace eliminated' })
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }

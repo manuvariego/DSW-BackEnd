@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { Garage } from "./garage.entity.js";
-import { orm } from "../shared/db/orm.js";
+import { garage } from "./garage.repository.js";
 import bcrypt from "bcrypt"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getAvailablesBusiness } from "./garage.business.js";
 import { validationResult } from 'express-validator';
 
-const em = orm.em
+
+const garageRepository = new garage()
 
 function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -31,7 +31,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
     try {
-        const garages = await em.find(Garage, {}, { populate: ['parkingSpaces'] })
+        const garages = await garageRepository.getAll()
         res.status(200).json(garages)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -40,8 +40,8 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
-        const cuit = Number.parseInt(req.params.cuit)
-        const garage = await em.findOneOrFail(Garage, { cuit }, { populate: ['parkingSpaces'] })
+        const cuit = Number.parseInt(req.params.id)
+        const garage = await garageRepository.getOne(cuit)
         res.status(200).json(garage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -51,8 +51,7 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
     try {
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
-        const garage = em.create(Garage, req.body.sanitizedInput)
-        await em.flush()
+        await garageRepository.create(req.body.sanitizedInput)
         res.status(200).json(garage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -62,10 +61,8 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
-        const garageToUpdate = await em.findOneOrFail(Garage, { cuit })
-        em.assign(garageToUpdate, req.body.sanitizedInput)
-        await em.flush()
-        res.status(200).json(garageToUpdate)
+        const updatedGarage = garageRepository.update(req.body.sanitizedInput, cuit)
+        res.status(200).json(updatedGarage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -73,9 +70,9 @@ async function update(req: Request, res: Response) {
 
 async function eliminate(req: Request, res: Response) {
     try {
-        const cuit = req.params.cuit
-        const garage = await em.findOneOrFail(Garage, { cuit: +cuit },)
-        await em.removeAndFlush(garage)
+        const cuit = Number.parseInt(req.params.cuit)
+        const removedGarage = garageRepository.remove(cuit)
+        console.log("Removed Garage", removedGarage)
         res.status(200).json({ message: 'Garage eliminated' })
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -90,7 +87,7 @@ async function getAvailables(req: Request, res: Response) {
             // Si hay errores, devolver un error 400 con los detalles. 
             return res.status(400).json({ errors: errors.array() });
         }
-        
+
         //se supone que las fechas a continuacion son validas
         const checkin = new Date(`${req.query.check_in_at}`)
         const checkout = new Date(`${req.query.check_out_at}`)
