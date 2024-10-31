@@ -7,8 +7,10 @@ import jwt, { Secret } from "jsonwebtoken";
 import dotenv from 'dotenv'
 import { Reservation } from "../Reservation/reservation.entity.js";
 import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.business.js";
+import { user } from "./user.repository.js"
 
 
+const userRepository = new user()
 const em = orm.em
 
 function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
@@ -34,8 +36,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
     try {
-        const users = await em.find(User, {}, { populate: ['vehicles'] })
-
+        const users = await userRepository.getAll()
         res.status(200).json(users)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -45,7 +46,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const user = await em.findOneOrFail(User, { id }, { populate: ['vehicles'] })
+        const user = await userRepository.getOne(id)
 
         res.status(200).json(user)
 
@@ -56,8 +57,7 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
     try {
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
-        const user = em.create(User, req.body.sanitizedInput)
-        await em.persistAndFlush(user)
+        const user = await userRepository.create(req.body.sanitizedInput)
 
         res.status(200).json(user)
 
@@ -110,11 +110,9 @@ async function getVehicles(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const userToUpdate = await em.findOneOrFail(User, { id })
-        em.assign(userToUpdate, req.body.sanitizedInput)
-        await em.flush()
+        const updatedUser = await userRepository.update(req.body.sanitizedInput, id)
 
-        res.status(200).json(userToUpdate)
+        res.status(200).json(updatedUser)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -123,8 +121,8 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const user = em.getReference(User, id)
-        await em.removeAndFlush(user)
+        const removedUser = userRepository.remove(id)
+        console.log("Removed User", removedUser)
 
         res.status(200).json({ message: 'User eliminated' })
 
