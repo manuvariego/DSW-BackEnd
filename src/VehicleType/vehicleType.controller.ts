@@ -5,8 +5,7 @@ const TypeVehicleRepository = new typevehicleRepository()
 
 function sanitizetypeVehicleInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
-        name: req.body.name,
-        vehicles: req.body.vehicles
+        name: req.body.name
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -43,7 +42,7 @@ async function add(req: Request, res: Response) {
     try {
         const typevehicle = await TypeVehicleRepository.create(req.body.sanitizedInput)
 
-        res.status(200).json(typevehicle)
+        res.status(201).json(typevehicle)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

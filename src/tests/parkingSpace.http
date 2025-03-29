@@ -8,7 +8,7 @@ Content-Type: application/json
 
 
 {
-    "number": 3,
+    "number": 6,
     "garage": 888,
     "TypeVehicle": 1
 }

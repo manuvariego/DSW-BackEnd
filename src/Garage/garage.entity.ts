@@ -19,7 +19,7 @@ export class Garage {
     address!: string;
 
     @Property({})
-    phone_number!: string;
+    phoneNumber!: string;
 
     @Property({})
     email!: string;

@@ -17,7 +17,7 @@ Content-Type: application/json
     "dni": "999666",
     "address": "Moreno 100",
     "email": "marta@gmail.com",
-    "phone_number": "3777772",
+    "phoneNumber": "3777772",
     "vehicle": []
 }
 
@@ -36,7 +36,7 @@ Content-Type: application/json
     "dni": "45656415",
     "address": "España 1800",
     "mail": "candetanchi@gmail.com",
-    "phone_number": "3413654987",
+    "phoneNumber": "3413654987",
     "vehicle": []
 }
 

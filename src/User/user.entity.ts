@@ -25,7 +25,7 @@ export class User extends baseEntity {
     email!: string
 
     @Property()
-    phone_number!: string
+    phoneNumber!: string
 
     @OneToMany(() => Vehicle, (vehicle) => vehicle.owner, {
         cascade: [Cascade.ALL],

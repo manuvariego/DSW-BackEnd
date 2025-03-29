@@ -19,7 +19,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
         password: req.body.password,
         address: req.body.address,
         email: req.body.email,
-        phone_number: req.body.phone_number,
+        phoneNumber: req.body.phoneNumber,
         vehicle: req.body.vehicle
     }
 
