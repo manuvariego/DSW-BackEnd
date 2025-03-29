@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { location } from './location.repository.js'
+import { locationRepository } from './location.repository.js'
 
-const locationsRepository = new location()
+const LocationsRepository = new locationRepository()
 
 function sanitizeLocationInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -20,7 +20,7 @@ function sanitizeLocationInput(req: Request, res: Response, next: NextFunction) 
 
 async function findAll(req: Request, res: Response) {
     try {
-        const locations = await locationsRepository.getAll()
+        const locations = await LocationsRepository.getAll()
 
         res.status(200).json(locations)
 
@@ -30,7 +30,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const location = await locationsRepository.getOne(id)
+        const location = await LocationsRepository.getOne(id)
 
         res.status(200).json(location)
 
@@ -39,7 +39,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const location = locationsRepository.create(req.body.sanitizedInput)
+        const location = LocationsRepository.create(req.body.sanitizedInput)
         res.status(200).json(location)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -48,7 +48,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const updatedLocation = locationsRepository.update(req.body.sanitizedInput, id)
+        const updatedLocation = LocationsRepository.update(req.body.sanitizedInput, id)
         console.log("Location Updated", updatedLocation)
 
         res.status(200).json({ message: 'Location updated' })
@@ -60,7 +60,7 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const removedLocation = locationsRepository.remove(id)
+        const removedLocation = LocationsRepository.remove(id)
         console.log("Removed Location", removedLocation)
 
         res.status(200).send({ message: 'Location deleted' })

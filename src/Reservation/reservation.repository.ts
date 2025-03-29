@@ -9,7 +9,7 @@ interface FilterParams {
     vehicleTypeId?: number;
 }
 
-export class reservation {
+export class reservationRepository {
     async getAll(): Promise<Reservation[]> {
         const reservations = await em.find(Reservation, {})
         return reservations

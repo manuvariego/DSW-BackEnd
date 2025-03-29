@@ -2,16 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { User } from "./user.entity.js";
 import { Vehicle } from "../Vehicle/vehicle.entity.js";
-import { orm } from "../shared/db/orm.js";
 import jwt, { Secret } from "jsonwebtoken";
-import dotenv from 'dotenv'
-import { Reservation } from "../Reservation/reservation.entity.js";
-import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.business.js";
-import { user } from "./user.repository.js"
+//import dotenv from 'dotenv'
+//import { Reservation } from "../Reservation/reservation.entity.js";
+import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.service.js";
+import { userRepository } from "./user.repository.js"
 
 
-const userRepository = new user()
-const em = orm.em
+const UserRepository = new userRepository()
 
 function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -36,7 +34,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
     try {
-        const users = await userRepository.getAll()
+        const users = await UserRepository.getAll()
         res.status(200).json(users)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -46,7 +44,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const user = await userRepository.getOne(id)
+        const user = await UserRepository.getOne(id)
 
         res.status(200).json(user)
 
@@ -57,7 +55,7 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
     try {
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
-        const user = await userRepository.create(req.body.sanitizedInput)
+        const user = await UserRepository.create(req.body.sanitizedInput)
 
         res.status(200).json(user)
 
@@ -110,7 +108,7 @@ async function getVehicles(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const updatedUser = await userRepository.update(req.body.sanitizedInput, id)
+        const updatedUser = await UserRepository.update(req.body.sanitizedInput, id)
 
         res.status(200).json(updatedUser)
 
@@ -121,7 +119,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const removedUser = userRepository.remove(id)
+        const removedUser = UserRepository.remove(id)
         console.log("Removed User", removedUser)
 
         res.status(200).json({ message: 'User eliminated' })

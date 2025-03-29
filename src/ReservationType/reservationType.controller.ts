@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ReservationType, typeCode } from "./reservationType.entity.js";
-import { orm } from "../shared/db/orm.js";
-//import { Garage } from "../entities/garage.entity.js";
+import { reservationTypeRepository } from "./reservationType.repository.js";
 
-const em = orm.em
+const ReservationTypeRepository = new reservationTypeRepository()
 
 function sanitizeReservationTypeInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -23,7 +22,7 @@ function sanitizeReservationTypeInput(req: Request, res: Response, next: NextFun
 
 async function findAll(req: Request, res: Response) {
     try {
-        const reservationTypes = await em.find(ReservationType, {},)
+        const reservationTypes = await ReservationTypeRepository.getAll()
 
         res.status(200).json(reservationTypes)
 
@@ -35,7 +34,7 @@ async function findOne(req: Request, res: Response) {
     try {
         const description: typeCode = req.params.description as typeCode
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const reservationType = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
+        const reservationType = await ReservationTypeRepository.getOne(cuitGarage, description)
 
         res.status(200).json(reservationType)
 
@@ -45,10 +44,9 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const reservationType = em.create(ReservationType, req.body.sanitizedInput)
-        await em.flush()
+        const reservationType = await ReservationTypeRepository.create(req.body.sanitizedInput)
 
-        res.status(200).json(ReservationType)
+        res.status(200).json(reservationType)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -58,11 +56,9 @@ async function update(req: Request, res: Response) {
     try {
         const description: typeCode = req.params.description as typeCode
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const reservationTypeToUpdate = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
-        em.assign(reservationTypeToUpdate, req.body.sanitizedInput)
-        await em.flush()
+        const reservationTypeToUpdate = await ReservationTypeRepository.update(req.body.sanitizedInput, cuitGarage, description)
 
-        res.status(200).json(ReservationType)
+        res.status(200).json(reservationTypeToUpdate)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -72,10 +68,9 @@ async function eliminate(req: Request, res: Response) {
     try {
         const description: typeCode = req.params.description as typeCode
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const reservationType = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
-        await em.removeAndFlush(reservationType)
+        const reservationType = await ReservationTypeRepository.remove(description, cuitGarage)
 
-        res.status(200).json(ReservationType)
+        res.status(200).json(reservationType)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 

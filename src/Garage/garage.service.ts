@@ -1,20 +1,20 @@
-import { getAllParkingSpace } from "../ParkingSpace/parkingSpace.business.js";
+import { getAllParkingSpace } from "../ParkingSpace/parkingSpace.service.js";
 //import { getAllReservationsRepository } from "../Reservation/reservation.repository.js";
-import { getPriceByGarageBusiness } from "../ReservationType/reservationType.business.js";
+import { getPriceByGarageBusiness } from "../ReservationType/reservationType.service.js";
 import { Garage } from "./garage.entity.js";
 //import { getAllGaragesRepository } from "./garage.repository.js";
-import { garage } from "./garage.repository.js"
-import { reservation } from "../Reservation/reservation.repository.js"
+import { garageRepository } from "./garage.repository.js"
+import { reservationRepository } from "../Reservation/reservation.repository.js"
 
 
-const reservationRepository = new reservation()
-const garageRepository = new garage()
+const ReservationRepository = new reservationRepository()
+const GarageRepository = new garageRepository()
 
 const getAvailablesBusiness = async (checkin: Date, checkout: Date, vehicleTypeId: number): Promise<Garage[]> => {
 
     const params = { checkin: checkin, checkout: checkout, vehicleTypeId: vehicleTypeId };
 
-    const reservations = await reservationRepository.getReservationsByDate(params)
+    const reservations = await ReservationRepository.getReservationsByDate(params)
 
     const countReservationByGarage = reservations.reduce<Record<number, number>>((acc, reservation) => {
         const { garage } = reservation;
@@ -30,7 +30,7 @@ const getAvailablesBusiness = async (checkin: Date, checkout: Date, vehicleTypeI
         return acc;   // devuelve esto el contador {101: 2, 102: 2, 103: 1 }
     }, {}); // Iniciamos con un objeto vacío
 
-    const garages = await garageRepository.getAll()
+    const garages = await GarageRepository.getAll()
 
     const availables = garages.filter(x =>
         (countReservationByGarage[x.cuit] === undefined && x.parkingSpaces.exists(ps => ps.TypeVehicle.id === vehicleTypeId)) ||
@@ -43,7 +43,7 @@ const getParkingSpaceAvailable = async (checkin: Date, checkout: Date, vehicleTy
     const params = { checkin: checkin, checkout: checkout, vehicleTypeId: vehicleTypeId };
     const parkingSpaces = await getAllParkingSpace(vehicleTypeId, cuitGarage)
     const parkingSpaceNumbers = parkingSpaces.map(x => x.number)
-    const reservations = await reservationRepository.getReservationsByDate(params)
+    const reservations = await ReservationRepository.getReservationsByDate(params)
     const parkingSpaceNumberReserved = reservations.filter(x => x.garage.cuit === cuitGarage && x.vehicle.type.id === vehicleTypeId).map(x => x.parkingSpace.number)
     const parkingSpaceAvailables = parkingSpaceNumbers.filter(num => !parkingSpaceNumberReserved.includes(num))
     if (parkingSpaceAvailables != null && parkingSpaceAvailables.length > 0) {

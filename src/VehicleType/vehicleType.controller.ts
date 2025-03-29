@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { typeVehicle } from "./vehicleType.entity.js";
-import { orm } from "../shared/db/orm.js";
-import { typevehicle } from "./vehicleType.repository.js"
+import { typevehicleRepository } from "./vehicleType.repository.js"
 
-const em = orm.em
-const typeVehicleRepository = new typevehicle()
+const TypeVehicleRepository = new typevehicleRepository()
 
 function sanitizetypeVehicleInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -23,7 +20,7 @@ function sanitizetypeVehicleInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
     try {
-        const typevehicles = await typeVehicleRepository.getAll()
+        const typevehicles = await TypeVehicleRepository.getAll()
 
         res.status(200).json(typevehicles)
 
@@ -34,7 +31,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const typevehicle = await typeVehicleRepository.getOne(id)
+        const typevehicle = await TypeVehicleRepository.getOne(id)
 
         res.status(200).json(typevehicle)
 
@@ -44,7 +41,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const typevehicle = await typeVehicleRepository.create(req.body.sanitizedInput)
+        const typevehicle = await TypeVehicleRepository.create(req.body.sanitizedInput)
 
         res.status(200).json(typevehicle)
 
@@ -55,7 +52,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const updatedTypeVehicle = await typeVehicleRepository.update(req.body.sanitizedInput, id)
+        const updatedTypeVehicle = await TypeVehicleRepository.update(req.body.sanitizedInput, id)
 
         res.status(200).json(updatedTypeVehicle)
 
@@ -66,7 +63,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const typevehicle = await typeVehicleRepository.remove(id)
+        const typevehicle = await TypeVehicleRepository.remove(id)
         console.log("Removed Type Vehicle", typevehicle)
 
         res.status(200).json({ message: 'typeVehicle eliminated' })

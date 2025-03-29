@@ -3,7 +3,7 @@ import { orm } from "../shared/db/orm.js";
 
 const em = orm.em
 
-export class location {
+export class locationRepository {
     async getAll(): Promise<Location[]> {
         const locations = await em.find(Location, {}, { populate: ['garages'] })
         return locations

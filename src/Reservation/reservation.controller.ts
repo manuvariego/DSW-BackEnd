@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { Reservation } from "./reservation.entity.js";
-//import { Vehicle } from "../Vehicle/vehicle.entity.js";
-//import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
 import { validationResult } from 'express-validator';
-import { createReservationBusiness } from "./reservation.business.js";
-import { reservation } from "./reservation.repository.js"
+import { createReservationBusiness } from "./reservation.service.js";
+import { reservationRepository } from "./reservation.repository.js"
 
-const reservationRepository = new reservation()
+const ReservationRepository = new reservationRepository()
 
 function sanitizeReservationInput(req: Request, res: Response, next: NextFunction) {
     console.log('pasa por aca');
@@ -32,7 +29,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
     try {
-        const reservations = await reservationRepository.getAll()
+        const reservations = await ReservationRepository.getAll()
         console.log(reservations)
 
         res.status(200).json(reservations)
@@ -44,7 +41,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const reservation = reservationRepository.getOne(id)
+        const reservation = ReservationRepository.getOne(id)
 
         res.status(200).json(reservation)
 
@@ -80,7 +77,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const updatedReservation = reservationRepository.update(req.body.sanitizedInput, id)
+        const updatedReservation = ReservationRepository.update(req.body.sanitizedInput, id)
 
         res.status(200).json(updatedReservation)
 
@@ -91,7 +88,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
-        const removedReservation = reservationRepository.remove(id)
+        const removedReservation = ReservationRepository.remove(id)
         console.log("Removed Reservation", removedReservation)
         res.status(200).json({ message: 'Reserva eliminada' })
 

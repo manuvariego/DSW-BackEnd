@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { parkingspace } from "./parkingSpace.repository.js"
+import { parkingspaceRepository } from "./parkingSpace.repository.js"
 
 
-const parkingSpaceRepository = new parkingspace()
+const ParkingSpaceRepository = new parkingspaceRepository()
 
 function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -23,7 +23,7 @@ function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFuncti
 
 async function findAll(req: Request, res: Response) {
     try {
-        const parkingSpaces = await parkingSpaceRepository.getAll()
+        const parkingSpaces = await ParkingSpaceRepository.getAll()
         res.status(201).json(parkingSpaces)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -36,7 +36,7 @@ async function findOne(req: Request, res: Response) {
 
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpace = await parkingSpaceRepository.getOne(number, cuitGarage)
+        const parkingSpace = await ParkingSpaceRepository.getOne(number, cuitGarage)
 
         res.status(201).json(parkingSpace)
     }
@@ -46,7 +46,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const parkingSpace = parkingSpaceRepository.create(req.body.sanitizedInput)
+        const parkingSpace = ParkingSpaceRepository.create(req.body.sanitizedInput)
         res.status(201).json(parkingSpace)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -57,7 +57,7 @@ async function update(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpaceToUpdate = await parkingSpaceRepository.update(req.body.sanitizedInput, number, cuitGarage)
+        const parkingSpaceToUpdate = await ParkingSpaceRepository.update(req.body.sanitizedInput, number, cuitGarage)
         console.log("Updated Parking Space", parkingSpaceToUpdate)
         res.status(201).json(parkingSpaceToUpdate)
     }
@@ -69,7 +69,7 @@ async function eliminate(req: Request, res: Response) {
     try {
         const number = Number.parseInt(req.params.number)
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const removedParkingSpace = await parkingSpaceRepository.remove(number, cuitGarage)
+        const removedParkingSpace = await ParkingSpaceRepository.remove(number, cuitGarage)
         console.log("Removed parking space", removedParkingSpace)
         res.status(201).json({ message: 'parkingSpace eliminated' })
     }

@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { garage } from "./garage.repository.js";
+import { garageRepository } from "./garage.repository.js";
 import bcrypt from "bcrypt"
-import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
-import { getAvailablesBusiness } from "./garage.business.js";
+import { getVehicleBusiness } from "../Vehicle/vehicle.service.js";
+import { getAvailablesBusiness } from "./garage.service.js";
 import { validationResult } from 'express-validator';
 
 
-const garageRepository = new garage()
+const GarageRepository = new garageRepository()
 
 function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -31,7 +31,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
 
 async function findAll(req: Request, res: Response) {
     try {
-        const garages = await garageRepository.getAll()
+        const garages = await GarageRepository.getAll()
         res.status(200).json(garages)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -41,7 +41,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.id)
-        const garage = await garageRepository.getOne(cuit)
+        const garage = await GarageRepository.getOne(cuit)
         res.status(200).json(garage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -51,7 +51,7 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
     try {
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
-        await garageRepository.create(req.body.sanitizedInput)
+        const garage = await GarageRepository.create(req.body.sanitizedInput)
         res.status(200).json(garage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -61,7 +61,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
-        const updatedGarage = garageRepository.update(req.body.sanitizedInput, cuit)
+        const updatedGarage = GarageRepository.update(req.body.sanitizedInput, cuit)
         res.status(200).json(updatedGarage)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -71,7 +71,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
-        const removedGarage = garageRepository.remove(cuit)
+        const removedGarage = GarageRepository.remove(cuit)
         console.log("Removed Garage", removedGarage)
         res.status(200).json({ message: 'Garage eliminated' })
     }

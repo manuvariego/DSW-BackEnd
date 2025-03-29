@@ -1,10 +1,10 @@
-import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
-import { getPriceForReservationBusiness, getParkingSpaceAvailable } from "../Garage/garage.business.js";
+import { getVehicleBusiness } from "../Vehicle/vehicle.service.js";
+import { getPriceForReservationBusiness, getParkingSpaceAvailable } from "../Garage/garage.service.js";
 import { Reservation } from "./reservation.entity.js";
-import { reservation } from "./reservation.repository.js"
+import { reservationRepository } from "./reservation.repository.js"
 
 
-const reservationRepository = new reservation()
+const ReservationRepository = new reservationRepository()
 
 const createReservationBusiness = async (checkin: Date, checkout: Date, licensePlate: string, cuitGarage: number) => {
     const vehicle = await getVehicleBusiness(licensePlate);
@@ -28,7 +28,7 @@ const createReservationBusiness = async (checkin: Date, checkout: Date, licenseP
             vehicle: licensePlate
         };
 
-        const result = await reservationRepository.create(reservation)
+        const result = await ReservationRepository.create(reservation)
         return result;
     }
 
@@ -36,7 +36,7 @@ const createReservationBusiness = async (checkin: Date, checkout: Date, licenseP
 }
 
 const getActiveReservationsByUserBusiness = async (userId: number): Promise<Reservation[]> => {
-    return await reservationRepository.getActiveReservationsByUser(userId);
+    return await ReservationRepository.getActiveReservationsByUser(userId);
 }
 
 
