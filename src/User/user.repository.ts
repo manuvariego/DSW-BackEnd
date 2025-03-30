@@ -1,4 +1,5 @@
 import { User } from "./user.entity.js";
+import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 
 const em = orm.em
@@ -31,6 +32,12 @@ export class userRepository {
         const user = await em.findOneOrFail(User, { id })
         await em.removeAndFlush(user)
         return user
+    }
+
+
+    async vehicles(id: number): Promise<Vehicle[]> {
+        const vehicles = await em.find(Vehicle, { owner: id })
+        return vehicles
     }
 
 }

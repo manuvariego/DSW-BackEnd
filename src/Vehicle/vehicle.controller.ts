@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { vehicleRepository } from "./vehicle.repository.js"
+import { AuthRequest } from "../middlewares/auth.js"
 
 const VehicleRepository = new vehicleRepository()
 
-function sanitizeVehicleInput(req: Request, res: Response, next: NextFunction) {
+function sanitizeVehicleInput(req: AuthRequest, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
         license_plate: req.body.license_plate,
-        owner: req.body.owner,
+        //I think this makes sense? 
+        owner: req.user?.userId,
         type: req.body.type,
         reservation: req.body.reservation
     }

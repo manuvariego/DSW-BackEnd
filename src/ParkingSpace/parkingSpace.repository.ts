@@ -9,6 +9,11 @@ export class parkingspaceRepository {
         return parkingspaces
     }
 
+    async getAllByGarage(number: number, cuitGarage: number): Promise<ParkingSpace[]> {
+        const parkingspaces = await em.find(ParkingSpace, { number, garage: { cuit: cuitGarage } })
+        return parkingspaces
+    }
+
     async getOne(number: number, cuitGarage: number): Promise<ParkingSpace> {
         const parkingspace = await em.findOneOrFail(ParkingSpace, { number, garage: { cuit: cuitGarage } })
         return parkingspace
@@ -28,7 +33,7 @@ export class parkingspaceRepository {
     }
 
     async remove(number: number, cuitGarage: number): Promise<ParkingSpace> {
-        const parkingspace = await em.findOneOrFail(ParkingSpace, { number })
+        const parkingspace = await em.findOneOrFail(ParkingSpace, { number, garage: { cuit: cuitGarage } })
         await em.removeAndFlush(parkingspace)
         return parkingspace
     }
