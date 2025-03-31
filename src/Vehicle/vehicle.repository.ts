@@ -15,9 +15,9 @@ export class vehicleRepository {
     }
 
     async create(vehicle: any) {
-        vehicle = em.create(Vehicle, vehicle)
+        const vehicleCreated = em.create(Vehicle, vehicle)
         await em.flush()
-        return vehicle
+        return vehicleCreated
     }
 
     async update(vehicle: any, license_plate: string): Promise<Vehicle> {

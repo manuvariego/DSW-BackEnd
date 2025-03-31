@@ -35,7 +35,7 @@ export class userRepository {
     }
 
 
-    async vehicles(id: number): Promise<Vehicle[]> {
+    async getVehicles(id: number): Promise<Vehicle[]> {
         const vehicles = await em.find(Vehicle, { owner: id })
         return vehicles
     }

@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.service.js";
 import { userRepository } from "./user.repository.js"
-import { AuthRequest } from "../middlewares/auth.js"
 
 
 const UserRepository = new userRepository()
@@ -40,8 +39,8 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const user = await UserRepository.getOne(id)
+        const userId = res.locals.user.id
+        const user = await UserRepository.getOne(userId)
 
         res.status(200).json(user)
 
@@ -61,13 +60,16 @@ async function add(req: Request, res: Response) {
 
 async function login(req: Request, res: Response) {
     try {
+
         //Cambiar esto los busca por id no por DNI
         const userId = Number.parseInt(req.body.id)
         const user = await UserRepository.getOne(userId)
+
         const match = await bcrypt.compare(req.body.password, user.password)
         if (!match) {
             return res.status(401).json({ message: 'Invalid credentials' })
         }
+
         const token = jwt.sign({
             userId: user.id,
             name: user.name,
@@ -92,19 +94,16 @@ async function getActiveReservations(req: Request, res: Response) {
 }
 
 
-async function getVehicles(req: AuthRequest, res: Response) {
+async function getVehicles(req: Request, res: Response) {
     try {
-        const userIdToken = Number.parseInt(req.user?.userId)
-        console.log(userIdToken)
-        const userIdParams = Number.parseInt(req.params.id)
-        console.log(userIdParams)
-        if (userIdToken != userIdParams) {
-            return res.status(403).json({
-                message: "Forbidden. You can only access your own vehicles"
-            })
+        const userIdToken = Number.parseInt(res.locals.user.userId)
+        const userId = Number.parseInt(req.params.id)
+        if (userId != userIdToken) {
+            return res.status(403).json({ message: "Forbidden you can only access your own vehicles" })
+
         }
 
-        const userVehicles = await UserRepository.vehicles(userIdParams)
+        const userVehicles = await UserRepository.getVehicles(userIdToken)
         console.log(userVehicles)
 
         res.status(200).json(userVehicles)

@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { vehicleRepository } from "./vehicle.repository.js"
-import { AuthRequest } from "../middlewares/auth.js"
 
 const VehicleRepository = new vehicleRepository()
 
-function sanitizeVehicleInput(req: AuthRequest, res: Response, next: NextFunction) {
+function sanitizeVehicleInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
         license_plate: req.body.license_plate,
         //I think this makes sense? 
-        owner: req.user?.userId,
+        owner: res.locals.user.userId,
+        //This should be automatically assigned?
         type: req.body.type,
         reservation: req.body.reservation
     }
@@ -50,7 +50,8 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
-        const vehicle = VehicleRepository.create(req.body.sanitizedInput)
+        const vehicle = await VehicleRepository.create(req.body.sanitizedInput)
+        console.log(vehicle)
         res.status(200).json(vehicle)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
