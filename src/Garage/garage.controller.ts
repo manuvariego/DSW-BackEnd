@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { garageRepository } from "./garage.repository.js";
 import bcrypt from "bcrypt"
+import jwt, { Secret } from "jsonwebtoken";
 import { getVehicleBusiness } from "../Vehicle/vehicle.service.js";
 import { getAvailablesBusiness } from "./garage.service.js";
 import { validationResult } from 'express-validator';
@@ -17,7 +18,7 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         location: req.body.location,
-        parking_space: req.body.parking_space
+        parking_space: req.body.parking_space,
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -40,7 +41,7 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
-        const cuit = Number.parseInt(req.params.id)
+        const cuit = Number.parseInt(res.locals.garage.garageCuit)
         const garage = await GarageRepository.getOne(cuit)
         res.status(200).json(garage)
     }
@@ -79,6 +80,31 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
+async function login(req: Request, res: Response) {
+    try {
+
+        const garageCuit = Number.parseInt(req.body.cuit)
+        const garage = await GarageRepository.getOne(garageCuit)
+
+        const match = await bcrypt.compare(req.body.password, garage.password)
+        if (!match) {
+            return res.status(401).json({ message: 'Invalid credentials' })
+        }
+
+        const token = jwt.sign({
+            garageCuit: garage.cuit,
+            name: garage.name,
+            type: "garage",
+        }, process.env.JWT_SECRET as Secret, { expiresIn: '1h' })
+
+        return res.status(200).json({
+            message: "Login successful",
+            token: token
+        })
+
+    } catch (error: any) { res.status(500).json({ message: error.message }) }
+}
+
 async function getAvailables(req: Request, res: Response) {
     try {
         //validar las fechas ingresadas.
@@ -109,6 +135,6 @@ async function getAvailables(req: Request, res: Response) {
 }
 
 
-export { sanitizeGarageInput, findAll, findOne, add, update, eliminate, getAvailables }
+export { login, sanitizeGarageInput, findAll, findOne, add, update, eliminate, getAvailables }
 
 
