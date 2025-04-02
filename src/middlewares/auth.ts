@@ -16,9 +16,17 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const decoded = jwt.verify(token, SECRET_KEY)
-        res.locals.user = decoded
-        next()
+        if (typeof decoded == "object") {
+            if (decoded.type == "user") {
+                res.locals.user = decoded
+            } else {
+                res.locals.garage = decoded
+            }
+            next()
+        }
     } catch (err) {
+
+
         return res.status(401).json({ message: "Invalid token" })
     }
 };

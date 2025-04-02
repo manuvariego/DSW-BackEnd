@@ -33,9 +33,8 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
     try {
-
         const number = Number.parseInt(req.params.number)
-        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const cuitGarage = Number.parseInt(res.locals.garage.garageCuit)
         const parkingSpace = await ParkingSpaceRepository.getOne(number, cuitGarage)
 
         res.status(201).json(parkingSpace)

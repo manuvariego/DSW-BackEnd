@@ -86,12 +86,20 @@ async function login(req: Request, res: Response) {
 
 async function getActiveReservations(req: Request, res: Response) {
     try {
-        const userId = Number.parseInt(req.params.id)
+        const userId = Number.parseInt(res.locals.user.userId)
         const activeReservations = await getActiveReservationsByUserBusiness(userId)
         res.status(200).json(activeReservations)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
+
+// async function getUserReservations(req: Request, res: Response) {
+//     try {
+//         const userIdToken = Number.parseInt(res.locals.user.userId)
+//         const reservations = await UserRepository.getReservations()
+//
+//     } catch (error: any) { res.status(500).json({ message: error.message }) }
+// }
 
 
 async function getVehicles(req: Request, res: Response) {

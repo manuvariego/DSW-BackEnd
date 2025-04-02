@@ -1,5 +1,6 @@
 import { User } from "./user.entity.js";
 import { Vehicle } from "../Vehicle/vehicle.entity.js";
+import { Reservation } from "../Reservation/reservation.entity.js"
 import { orm } from "../shared/db/orm.js";
 
 const em = orm.em
@@ -39,5 +40,10 @@ export class userRepository {
         const vehicles = await em.find(Vehicle, { owner: id })
         return vehicles
     }
+
+    // async getReservations(id: number): Promise<Reservation[]> {
+    //     const reservations = await em.find(Reservation, { user: id })
+    //     return reservations
+    // }
 
 }
