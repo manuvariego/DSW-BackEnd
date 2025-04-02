@@ -11,7 +11,7 @@ import { typeVehicleRouter } from './VehicleType/vehicleType.routes.js'
 import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
-import { auth } from './middlewares/auth.js'
+// import { auth } from './middlewares/auth.js'
 import cors from 'cors'
 
 const app = express()

@@ -1,8 +1,6 @@
 import { getAllParkingSpace } from "../ParkingSpace/parkingSpace.service.js";
-//import { getAllReservationsRepository } from "../Reservation/reservation.repository.js";
 import { getPriceByGarageBusiness } from "../ReservationType/reservationType.service.js";
 import { Garage } from "./garage.entity.js";
-//import { getAllGaragesRepository } from "./garage.repository.js";
 import { garageRepository } from "./garage.repository.js"
 import { reservationRepository } from "../Reservation/reservation.repository.js"
 
@@ -30,6 +28,7 @@ const getAvailablesBusiness = async (checkin: Date, checkout: Date, vehicleTypeI
         return acc;   // devuelve esto el contador {101: 2, 102: 2, 103: 1 }
     }, {}); // Iniciamos con un objeto vacío
 
+    //This would explode with many garages no ? Better to filter in the query itself
     const garages = await GarageRepository.getAll()
 
     const availables = garages.filter(x =>
