@@ -7,15 +7,16 @@ services:
     container_name: dsw_backend
 
     env_file: ./.env
+
     environment: 
-      - DBHOST=dsw_backend
+      - DBHOST=dsw_database
 
     ports: 
       - '3000:3000'
 
-    # depends_on:
-    #   mariadb:
-    #     condition: service_healthy
+    depends_on:
+      db:
+        condition: service_healthy
       
 
   db:
@@ -37,7 +38,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-p$DBPASS"]
       interval: 10s
       retries: 5
       start_period: 20s
