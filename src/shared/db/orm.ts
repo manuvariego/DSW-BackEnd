@@ -4,12 +4,14 @@ import { MySqlDriver } from '@mikro-orm/mysql';
 import dotenv from 'dotenv';
 
 dotenv.config()
+
+
 export const orm = await MikroORM.init({
     entities: ['dist/**/*.entity.js'],
     entitiesTs: ['src/**/*.entity.ts'],
     driver: MySqlDriver,
     dbName: 'CocherasUTN',
-    clientUrl: `mysql://${process.env.DBUSER}:${process.env.DBPASS}@localhost:3306/CocherasUTN`,
+    clientUrl: `mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@localhost:3306/CocherasUTN`,
     highlighter: new SqlHighlighter(),
     debug: true,
     schemaGenerator: {     //No utilizar nunca en produccion

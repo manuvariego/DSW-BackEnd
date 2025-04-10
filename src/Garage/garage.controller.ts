@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Garage } from "./garage.entity.js";
 import { orm } from "../shared/db/orm.js";
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getAvailablesBusiness } from "./garage.business.js";
 import { validationResult } from 'express-validator';

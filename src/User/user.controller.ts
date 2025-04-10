@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User } from "./user.entity.js";
 import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
@@ -20,7 +20,8 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
         address: req.body.address,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        vehicle: req.body.vehicle
+        vehicle: req.body.vehicle,
+        role: req.body.role
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
