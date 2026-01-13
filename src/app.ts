@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import express from 'express'
-
+import 'dotenv/config'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { UserRouter } from './User/user.routes.js'
