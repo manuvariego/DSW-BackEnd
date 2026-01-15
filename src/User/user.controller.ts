@@ -83,14 +83,7 @@ async function login(req: Request, res: Response) {
 
         return res.status(200).json({
             message: "Login successful",
-            token: token,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                dni: user.dni, 
-                type: user.role
-            }
+            token: token
         })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -111,7 +104,6 @@ async function getVehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const vehicles = await em.find(Vehicle, { owner: id })
-        console.log(vehicles)
 
         res.status(200).json(vehicles)
 
@@ -123,6 +115,12 @@ async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const userToUpdate = await em.findOneOrFail(User, { id })
+
+        // Hash password if it's being updated
+        if (req.body.sanitizedInput.password) {
+            req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
+        }
+
         em.assign(userToUpdate, req.body.sanitizedInput)
         await em.flush()
 

@@ -48,7 +48,7 @@ async function add(req: Request, res: Response) {
         const reservationType = em.create(ReservationType, req.body.sanitizedInput)
         await em.flush()
 
-        res.status(200).json(ReservationType)
+        res.status(201).json(reservationType)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -62,7 +62,7 @@ async function update(req: Request, res: Response) {
         em.assign(reservationTypeToUpdate, req.body.sanitizedInput)
         await em.flush()
 
-        res.status(200).json(ReservationType)
+        res.status(200).json(reservationTypeToUpdate)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -75,7 +75,7 @@ async function eliminate(req: Request, res: Response) {
         const reservationType = await em.findOneOrFail(ReservationType, {description, garage: {cuit: cuitGarage}})
         await em.removeAndFlush(reservationType)
 
-        res.status(200).json(ReservationType)
+        res.status(200).json({ message: 'ReservationType deleted successfully' })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 

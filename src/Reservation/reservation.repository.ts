@@ -1,5 +1,5 @@
 import { orm } from "../shared/db/orm.js";
-import { Reservation } from "./reservation.entity.js";
+import { Reservation, ReservationStatus } from "./reservation.entity.js";
 
 const em = orm.em
 
@@ -34,7 +34,7 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
             },
         ],
 
-        estado: 'activa',
+        estado: ReservationStatus.ACTIVE,
         parkingSpace: {
             TypeVehicle: {
                 id: filters.vehicleTypeId
@@ -58,7 +58,7 @@ const getActiveReservationsByUserRepository = async(userId: number): Promise<Res
         vehicle: {
             owner: userId
         },
-        estado:'activa'
+        estado: ReservationStatus.ACTIVE
     });
 }
 
