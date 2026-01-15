@@ -73,14 +73,23 @@ async function login(req: Request, res: Response) {
         }
         let time = new Date()
         const token = jwt.sign({
-            name: req.body.name,
+            userId: user.id,
+            dni: user.dni,
+            name: user.name,
             type: "user",
             timeToken: time,
         }, process.env.JWT_SECRET as Secret)
 
         return res.status(200).json({
             message: "Login successful",
-            token: token
+            token: token,
+            user: {
+                id: user.id,
+                dni: user.dni,
+                name: user.name,
+                lastname: user.lastname,
+                email: user.email
+            }
         })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -100,7 +109,6 @@ async function getVehicles(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const vehicles = await em.find(Vehicle, { owner: id })
-        console.log(vehicles)
 
         res.status(200).json(vehicles)
 
@@ -111,6 +119,12 @@ async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id)
         const userToUpdate = await em.findOneOrFail(User, { id })
+
+        // Hash password if it's being updated
+        if (req.body.sanitizedInput.password) {
+            req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
+        }
+
         em.assign(userToUpdate, req.body.sanitizedInput)
         await em.flush()
 

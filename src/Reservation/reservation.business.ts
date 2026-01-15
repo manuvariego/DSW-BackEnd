@@ -1,7 +1,7 @@
 import { createReservationRepository, getActiveReservationsByUserRepository } from "./reservation.repository.js";
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getPriceForReservationBusiness, getParkingSpaceAvailable } from "../Garage/garage.business.js";
-import { Reservation } from "./reservation.entity.js";
+import { Reservation, ReservationStatus } from "./reservation.entity.js";
 
 
 const createReservationBusiness = async (checkin: Date, checkout: Date, licensePlate: string, cuitGarage: number) => {
@@ -19,7 +19,7 @@ const createReservationBusiness = async (checkin: Date, checkout: Date, licenseP
       date_time_reservation: new Date(),
       check_in_at: checkin,
       check_out_at: checkout,
-      estado: 'activa',
+      estado: ReservationStatus.ACTIVE,
       amount: price,
       garage: cuitGarage,
       parkingSpace: {number: parkingSpaceNumber, garage: cuitGarage},

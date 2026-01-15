@@ -63,6 +63,12 @@ async function update(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
         const garageToUpdate = await em.findOneOrFail(Garage, { cuit })
+
+        // Hash password if it's being updated
+        if (req.body.sanitizedInput.password) {
+            req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
+        }
+
         em.assign(garageToUpdate, req.body.sanitizedInput)
         await em.flush()
         res.status(200).json(garageToUpdate)
@@ -99,8 +105,7 @@ async function getAvailables(req: Request, res: Response) {
         const vehicle = await getVehicleBusiness(licensePlate)
 
         if (vehicle == null) {
-            console.log('No se encontro el vehiculo');
-            res.status(404).json();
+            res.status(404).json({ message: 'Vehicle not found' });
             return;
         }
 

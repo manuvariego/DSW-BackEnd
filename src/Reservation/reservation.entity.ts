@@ -4,6 +4,11 @@ import { Vehicle } from '../Vehicle/vehicle.entity.js';
 import { Garage } from '../Garage/garage.entity.js';
 import { ParkingSpace } from '../ParkingSpace/parkingSpace.entity.js';
 
+export enum ReservationStatus {
+    ACTIVE = 'activa',
+    CANCELLED = 'cancelada',
+    COMPLETED = 'completada'
+}
 
 @Entity()
 export class Reservation extends baseEntity {
@@ -16,8 +21,8 @@ export class Reservation extends baseEntity {
     @Property({ type: 'datetime' })
     check_out_at!: Date;
 
-    @Property({})
-    estado!: string;
+    @Property({ default: ReservationStatus.ACTIVE })
+    estado: ReservationStatus = ReservationStatus.ACTIVE;
 
     @Property({})
     amount!: number;
