@@ -19,7 +19,8 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
         address: req.body.address,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        vehicle: req.body.vehicle
+        vehicle: req.body.vehicle,
+        role: req.body.role
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -63,6 +64,7 @@ async function add(req: Request, res: Response) {
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
+
 async function login(req: Request, res: Response) {
     try {
         const user = await em.findOneOrFail(User, { dni: req.body.dni })
@@ -72,27 +74,20 @@ async function login(req: Request, res: Response) {
         }
         let time = new Date()
         const token = jwt.sign({
-            userId: user.id,
-            dni: user.dni,
-            name: user.name,
-            type: "user",
+            id: user.id,
+            name: req.body.name,
+            type: user.role,
             timeToken: time,
-        }, process.env.JWT_SECRET as Secret)
+        }, process.env.JWT_SECRET || 'palabra_secreta'as Secret)
 
         return res.status(200).json({
             message: "Login successful",
-            token: token,
-            user: {
-                id: user.id,
-                dni: user.dni,
-                name: user.name,
-                lastname: user.lastname,
-                email: user.email
-            }
+            token: token
         })
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
+
 
 async function getActiveReservations(req: Request, res: Response) {
     try {
@@ -113,6 +108,7 @@ async function getVehicles(req: Request, res: Response) {
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
+
 
 async function update(req: Request, res: Response) {
     try {
@@ -143,5 +139,6 @@ async function eliminate(req: Request, res: Response) {
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
+
 
 export { login, getVehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, getActiveReservations }

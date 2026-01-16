@@ -20,9 +20,4 @@ export class ParkingSpace {
     @ManyToOne(() => typeVehicle, { nullable: false })
     TypeVehicle!: Rel<typeVehicle>
 
-    //@PrimaryKey({ name: 'cuit' })
-    //get cuit(): number {
-    //    return this.garage.cuit;
-    //}
-
 }
