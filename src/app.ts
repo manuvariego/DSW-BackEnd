@@ -12,6 +12,7 @@ import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
 //import { auth } from './middlewares/auth.js'
+import 'dotenv/config';
 import cors from 'cors'
 
 const app = express()

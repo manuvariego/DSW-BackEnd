@@ -5,6 +5,7 @@ import { orm } from "../shared/db/orm.js";
 //import { ParkingSpace } from "../ParkingSpace/parkingSpace.entity.js";
 import { validationResult } from 'express-validator';
 import { createReservationBusiness } from "./reservation.business.js";
+import { sendReservationEmail } from "../shared/mail.service.js";
 
 
 const em = orm.em
@@ -70,6 +71,15 @@ async function add(req: Request, res: Response) {
         const cuitGarage = +(`${req.body.cuitGarage}`);
 
         const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage);
+
+        const fullReservation = await em.findOne(Reservation, { id: reservation.id }, {
+            populate: ['vehicle.owner', 'garage'] 
+        });
+
+        if (fullReservation && fullReservation.vehicle && fullReservation.vehicle.owner) {
+            const userEmail = fullReservation.vehicle.owner.email;
+            await sendReservationEmail(userEmail, fullReservation);
+        }
         
         res.status(200).json(reservation);
 
