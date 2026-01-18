@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getAvailablesBusiness } from "./garage.business.js";
 import { validationResult } from 'express-validator';
+import { handleError } from "../shared/errors/errorHandler.js";
 
 const em = orm.em
 
@@ -34,7 +35,7 @@ async function findAll(req: Request, res: Response) {
         const garages = await em.find(Garage, {}, { populate: ['parkingSpaces'] })
         res.status(200).json(garages)
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
+    catch (error: any) { handleError(error, res) }
 }
 
 
@@ -44,7 +45,7 @@ async function findOne(req: Request, res: Response) {
         const garage = await em.findOneOrFail(Garage, { cuit }, { populate: ['parkingSpaces'] })
         res.status(200).json(garage)
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
+    catch (error: any) { handleError(error, res) }
 }
 
 
@@ -53,9 +54,9 @@ async function add(req: Request, res: Response) {
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
         const garage = em.create(Garage, req.body.sanitizedInput)
         await em.flush()
-        res.status(200).json(garage)
+        res.status(201).json(garage)
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
+    catch (error: any) { handleError(error, res) }
 }
 
 
@@ -73,7 +74,7 @@ async function update(req: Request, res: Response) {
         await em.flush()
         res.status(200).json(garageToUpdate)
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
+    catch (error: any) { handleError(error, res) }
 }
 
 
@@ -84,20 +85,16 @@ async function eliminate(req: Request, res: Response) {
         await em.removeAndFlush(garage)
         res.status(200).json({ message: 'Garage eliminated' })
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
-
+    catch (error: any) { handleError(error, res) }
 }
 
 async function getAvailables(req: Request, res: Response) {
     try {
-        //validar las fechas ingresadas.
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // Si hay errores, devolver un error 400 con los detalles. 
             return res.status(400).json({ errors: errors.array() });
         }
-        
-        //se supone que las fechas a continuacion son validas
+
         const checkin = new Date(`${req.query.check_in_at}`)
         const checkout = new Date(`${req.query.check_out_at}`)
         const licensePlate = `${req.query.license_plate}`
@@ -105,15 +102,12 @@ async function getAvailables(req: Request, res: Response) {
         const vehicle = await getVehicleBusiness(licensePlate)
 
         if (vehicle == null) {
-            res.status(404).json({ message: 'Vehicle not found' });
-            return;
+            return res.status(404).json({ message: 'Vehicle not found' });
         }
 
         const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
-
         res.status(200).json(garagesAvailables);
-
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
