@@ -1,10 +1,11 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeVehicleInput } from "./vehicle.controller.js";
+import { findAll, findOne, findByOwner, update, add, eliminate, sanitizeVehicleInput } from "./vehicle.controller.js";
 
 export const VehicleRouter = Router()
 
 VehicleRouter.get('/', findAll)
+VehicleRouter.get('/owner/:ownerId', findByOwner)
 VehicleRouter.get('/:license_plate', findOne)
 VehicleRouter.post('/', sanitizeVehicleInput, add)
 VehicleRouter.put('/:license_plate', sanitizeVehicleInput, update)

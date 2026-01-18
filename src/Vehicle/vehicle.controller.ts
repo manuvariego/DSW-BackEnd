@@ -49,12 +49,23 @@ async function findOne(req: Request, res: Response) {
 }
 
 
+async function findByOwner(req: Request, res: Response) {
+    try {
+        const ownerId = Number(req.params.ownerId);
+        const vehicles = await em.find(Vehicle, { owner: { id: ownerId } }, { populate: ['type'] });
+        res.status(200).json(vehicles);
+    } catch (error: any) { 
+        res.status(500).json({ message: error.message }) 
+    }
+}
+
+
 async function add(req: Request, res: Response) {
     try {
         const vehicle = em.create(Vehicle, req.body.sanitizedInput)
         await em.flush()
 
-        res.status(200).json(vehicle)
+        res.status(201).json(vehicle)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }
@@ -85,5 +96,5 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
-export { sanitizeVehicleInput, findAll, findOne, add, update, eliminate }
+export { sanitizeVehicleInput, findAll, findOne, findByOwner, add, update, eliminate }
 

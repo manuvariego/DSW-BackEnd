@@ -27,6 +27,9 @@ export class User extends baseEntity {
     @Property()
     phoneNumber!: string
 
+    @Property()
+    role!: string
+
     @OneToMany(() => Vehicle, (vehicle) => vehicle.owner, {
         cascade: [Cascade.ALL],
     })

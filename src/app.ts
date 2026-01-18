@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import express from 'express'
-
+import 'dotenv/config'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { UserRouter } from './User/user.routes.js'
@@ -11,6 +11,7 @@ import { typeVehicleRouter } from './VehicleType/vehicleType.routes.js'
 import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
+import { authRouter } from './Auth/auth.routes.js'
 //import { auth } from './middlewares/auth.js'
 import cors from 'cors'
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 
 })
 
+app.use('/api/auth', authRouter)
 
 app.use('/api/users', UserRouter)
 
