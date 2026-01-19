@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import 'reflect-metadata'
 import express from 'express'
 import 'dotenv/config'
@@ -13,7 +14,6 @@ import { ReservationTypeRouter } from './ReservationType/reservationType.routes.
 import { ReservationRouter } from './Reservation/reservation.routes.js'
 import { authRouter } from './Auth/auth.routes.js'
 //import { auth } from './middlewares/auth.js'
-import 'dotenv/config';
 import cors from 'cors'
 
 const app = express()

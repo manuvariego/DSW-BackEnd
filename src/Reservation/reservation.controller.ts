@@ -72,6 +72,7 @@ async function add(req: Request, res: Response) {
         }
         
         res.status(200).json(reservation);
+
     } catch (error: any) { handleError(error, res) }
 }
 
