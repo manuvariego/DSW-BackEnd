@@ -1,8 +1,5 @@
 import nodemailer from 'nodemailer';
 
-console.log("📧 MAIL_USER cargado:", process.env.MAIL_USER);
-console.log("🔑 MAIL_PASS cargado:", process.env.MAIL_PASS ? "SÍ (Oculto)" : "NO (Undefined)");
-
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
   auth: {
