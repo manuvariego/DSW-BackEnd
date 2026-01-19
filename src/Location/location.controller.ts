@@ -43,7 +43,7 @@ async function add(req: Request, res: Response) {
         const location = em.create(Location, req.body.sanitizedInput)
         await em.flush()
 
-        res.status(200).json(location)
+        res.status(201).json(location)
 
     } catch (error: any) { res.status(500).json({ message: error.message }) }
 }

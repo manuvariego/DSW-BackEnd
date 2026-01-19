@@ -11,6 +11,7 @@ import { typeVehicleRouter } from './VehicleType/vehicleType.routes.js'
 import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
+import { authRouter } from './Auth/auth.routes.js'
 //import { auth } from './middlewares/auth.js'
 import 'dotenv/config';
 import cors from 'cors'
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 
 })
 
+app.use('/api/auth', authRouter)
 
 app.use('/api/users', UserRouter)
 
