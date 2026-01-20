@@ -1,0 +1,74 @@
+### GET all services
+GET http://localhost:3000/api/services
+
+
+### POST a Service
+# @name createService
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+    "code": "CERA", 
+    "description": "Aplicación de cera para protección de pintura",
+    "price": 5000
+}
+
+
+### Guardamos el ID del servicio creado en una variable
+@serviceId = {{createService.response.body.data.id}}
+# NOTA: Si tu respuesta devuelve el objeto directo (sin "data"), usa: {{createService.response.body.id}}
+
+
+### GET ONE 
+GET http://localhost:3000/api/services/{{serviceId}}
+
+
+### PUT (Actualizar precio o descripción)
+PUT http://localhost:3000/api/services/{{serviceId}}
+Content-Type: application/json
+
+{
+    "description": "Lavado Completo + Cera",
+    "price": 6500
+}
+
+
+### POST Service TO DELETE (Creamos uno temporal para borrarlo)
+# @name createServiceToDelete
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+    "description": "Servicio de Prueba Borrar",
+    "price": 100
+}
+
+### ID to Delete
+@idToDelete = {{createServiceToDelete.response.body.data.id}}
+# NOTA: Ajustar si tu response no tiene "data"
+
+### DELETE
+DELETE http://localhost:3000/api/services/{{idToDelete}}
+
+
+
+
+### POST Crear Servicio Válido
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+    "code": "LAVADO_BASIC", 
+    "description": "Solo exterior con agua a presión",
+    "price": 3000
+}
+
+### POST Crear Servicio INVÁLIDO (Para probar el error)
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+    "code": "MASAJE_PIES", 
+    "description": "...",
+    "price": 1000
+}

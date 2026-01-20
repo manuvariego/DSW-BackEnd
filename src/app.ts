@@ -13,7 +13,7 @@ import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
 import { authRouter } from './Auth/auth.routes.js'
-//import { auth } from './middlewares/auth.js'
+import { serviceRouter } from './Services/service.routes.js'
 import cors from 'cors'
 
 const app = express()
@@ -50,6 +50,8 @@ app.use('/api/parkingSpaces', ParkingSpaceRouter)
 app.use('/api/reservationTypes', ReservationTypeRouter)
 
 app.use('/api/reservations', ReservationRouter)
+
+app.use('/api/services', serviceRouter)
 
 
 app.use((_, res) => {
