@@ -3,8 +3,9 @@ coverage
 
 # API keys and secrets
 .env
+.env.example
 
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
 # dependency directory
 node_modules
