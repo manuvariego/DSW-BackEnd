@@ -20,7 +20,7 @@ app.use(express.json())
 
 const corsOptions = {
     origin: 'http://localhost:4200', // Permitir solicitudes desde este origen
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Métodos permitidos
     allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
 };
 

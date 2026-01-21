@@ -46,6 +46,19 @@ async function findOne(req: Request, res: Response) {
 }
 
 
+async function findByUser(req: Request, res: Response) {
+    try {
+        const userId = Number.parseInt(req.params.userId);
+        const reservations = await em.find(
+            Reservation, 
+            { vehicle: { owner: { id: userId } } },
+            { populate: ['vehicle', 'garage', 'parkingSpace'] }
+        );
+        res.status(200).json(reservations);
+    } catch (error: any) { handleError(error, res) }
+}
+
+
 async function add(req: Request, res: Response) {
     try {
         const errors = validationResult(req);
@@ -85,4 +98,15 @@ async function eliminate(req: Request, res: Response) {
     } catch (error: any) { handleError(error, res) }
 }
 
-export { sanitizeReservationInput, findAll, findOne, add, update, eliminate }
+
+async function cancel(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id)
+        const reservation = await em.findOneOrFail(Reservation, { id })
+        reservation.estado = 'cancelada' as any
+        await em.flush()
+        res.status(200).json({ message: 'Reserva cancelada', reservation })
+    } catch (error: any) { handleError(error, res) }
+}
+
+export { sanitizeReservationInput, findAll, findOne, findByUser, add, update, eliminate, cancel }
