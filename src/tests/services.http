@@ -8,9 +8,9 @@ POST http://localhost:3000/api/services
 Content-Type: application/json
 
 {
-    "code": "CERA", 
-    "description": "Aplicación de cera para protección de pintura",
-    "price": 5000
+    "code": "ASPIRADO", 
+    "description": "Aspirado completo del vehículo",
+    "price": 4000
 }
 
 

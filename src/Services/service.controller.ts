@@ -7,7 +7,7 @@ function sanitizeServiceInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
         description: req.body.description,
         price: req.body.price,
-        code: req.body.code
+        garageCuit: req.body.garageCuit
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -42,7 +42,7 @@ async function add(req: Request, res: Response) {
         const input = req.body.sanitizedInput;
         
         const newService = await serviceBusiness.createService(
-            input.code,
+            input.garageCuit, 
             input.description, 
             Number(input.price)
         );

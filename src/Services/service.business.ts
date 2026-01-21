@@ -1,5 +1,8 @@
-import { ServiceCode } from "./service.entity.js";
+import { Garage } from "../Garage/garage.entity.js";
 import * as serviceRepository from "./service.repository.js";
+import { EntityManager } from "@mikro-orm/core";
+import { RequestContext } from "@mikro-orm/core";
+
 
 async function getAllServices() {
 return await serviceRepository.findAll();
@@ -9,24 +12,25 @@ async function getServiceById(id: number) {
 return await serviceRepository.findOne(id);
 }
 
-const ALLOWED_CODES: ServiceCode[] = ['LAVADO_BASIC', 'LAVADO_PREMIUM', 'CERA', 'AIRE', 'ASPIRADO'];
+async function createService(garageCuit: number, description: string, price: number) {
+    if (price < 0) {
+        throw new Error("El precio no puede ser negativo.");
+    }
+    if (!description) {
+        throw new Error("La descripción es obligatoria.");
+    }
 
-async function createService(code:string, description: string, price: number) {
-if (!ALLOWED_CODES.includes(code as ServiceCode)) {
-    throw new Error(`Código de servicio inválido. Los códigos permitidos son: ${ALLOWED_CODES.join(', ')}`);
-}
-if (price < 0) {
-    throw new Error("El precio no puede ser negativo.");
-}
-if (!description) {
-    throw new Error("La descripción es obligatoria.");
-}
-return await serviceRepository.create({ 
-      code: code, 
-      description: description,
-      price: price
-  });
+    const em = RequestContext.getEntityManager() as EntityManager;
+    const garageOwner = await em.findOne(Garage, { cuit: garageCuit});
 
+    if (!garageOwner) {
+        throw new Error("No se encontró la cochera para vincular el servicio.");
+    }
+    return await serviceRepository.create({ 
+          description: description,
+          price: price,
+          garage: garageOwner 
+    });
 }
 
 async function updateService(id: number, data: any) {

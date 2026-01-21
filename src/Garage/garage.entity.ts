@@ -43,6 +43,6 @@ export class Garage {
     })
     reservationTypes = new Collection<ReservationType>(this)
 
-    @ManyToMany(() => Service, 'garages', { owner: true })
+    @OneToMany(() => Service, service => service.garage)
     services = new Collection<Service>(this);
 }
