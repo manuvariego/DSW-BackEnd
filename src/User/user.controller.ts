@@ -4,7 +4,6 @@ import { User } from "./user.entity.js";
 import { Vehicle } from "../Vehicle/vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import jwt, { Secret } from "jsonwebtoken";
-import dotenv from 'dotenv'
 import { Reservation } from "../Reservation/reservation.entity.js";
 import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.business.js";
 import { handleError } from "../shared/errors/errorHandler.js";
@@ -61,39 +60,6 @@ async function add(req: Request, res: Response) {
 }
 
 
-async function login(req: Request, res: Response) {
-    try {
-        const user = await em.findOneOrFail(User, { dni: req.body.dni })
-        const match = await bcrypt.compare(req.body.password, user.password)
-        if (!match) {
-            return res.status(401).json({ message: 'Invalid credentials' })
-        }
-        let time = new Date()
-        const token = jwt.sign({
-            id: user.id,
-            name: req.body.name,
-            type: user.role,
-            timeToken: time,
-        }, process.env.JWT_SECRET || 'palabra_secreta'as Secret)
-
-        return res.status(200).json({
-            message: "Login successful",
-            token: token,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                dni: user.dni,
-                type: user.role
-            }
-        })
-    } catch (error: any) {
-        // Para login, siempre devolvemos 401 para no revelar si el usuario existe
-        return res.status(401).json({ message: 'Invalid credentials' })
-    }
-}
-
-
 async function getActiveReservations(req: Request, res: Response) {
     try {
         const userId = Number.parseInt(req.params.id)
@@ -139,4 +105,4 @@ async function eliminate(req: Request, res: Response) {
 }
 
 
-export { login, getVehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, getActiveReservations }
+export { getVehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, getActiveReservations }
