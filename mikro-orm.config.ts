@@ -16,7 +16,7 @@ export default defineConfig({
   password: process.env.DBPASS,
 
   entities: ['dist/**/*.entity.js'],
-  entitiesTs: ['src/**/*.entity.ts'],
+  entitiesTs: process.env.NODE_ENV === 'production' ? undefined : ['src/**/*.entity.ts'],
 
   extensions: [Migrator],
 
@@ -25,10 +25,10 @@ export default defineConfig({
 
   // Migrations configuration
   migrations: {
-    path: 'migrations',
+    path: 'dist/migrations',  // Use compiled JS in production
     pathTs: 'migrations',
     glob: '!(*.d).{js,ts}',
-    emit: 'ts', // use 'js' for production builds
+    emit: 'js',  // Generate JS migrations
   },
 
   // Disable schema generator in production - use migrations instead

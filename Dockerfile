@@ -30,8 +30,6 @@ COPY --from=builder /app/node_modules ./node_modules
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/migrations ./migrations
-COPY --from=builder /app/mikro-orm.config.ts ./
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
@@ -44,4 +42,4 @@ EXPOSE 3000
 
 ENV NODE_ENV=production
 
-CMD ["node", "dist/app.js"]
+CMD ["node", "dist/src/app.js"]

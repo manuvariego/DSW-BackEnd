@@ -8,5 +8,5 @@ import { getMikroORMConfig } from './config.js';
 export const orm = await MikroORM.init({
   ...getMikroORMConfig(),
   entities: ['dist/**/*.entity.js'],
-  entitiesTs: ['src/**/*.entity.ts'],
+  entitiesTs: process.env.NODE_ENV === 'production' ? undefined : ['src/**/*.entity.ts'],
 });
