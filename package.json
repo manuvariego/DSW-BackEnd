@@ -44,12 +44,7 @@
         "express-validator": "^7.2.0",
         "jsonwebtoken": "^9.0.2",
         "mikro-orm": "^6.3.0",
-<<<<<<< HEAD
-=======
-        "mysql": "^2.18.1",
-        "node": "^22.5.1",
         "nodemailer": "^7.0.12",
->>>>>>> master
         "reflect-metadata": "0.2.2"
     },
     "mikro-orm": {
