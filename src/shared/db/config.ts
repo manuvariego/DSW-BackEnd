@@ -18,4 +18,9 @@ export const getMikroORMConfig = () => ({
   highlighter: new SqlHighlighter(),
   debug: process.env.NODE_ENV !== 'production',
   extensions: [Migrator],
+
+  migrations: {
+    path: './dist/migrations',
+    glob: '!(*.d).{js}',
+  },
 });
