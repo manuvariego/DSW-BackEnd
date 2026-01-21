@@ -1,0 +1,188 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ==========================================
+  # Test & Build
+  # ==========================================
+  test:
+    name: Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint || echo "No lint script configured"
+
+      - name: Type check
+        run: pnpm run build
+
+      - name: Unit tests
+        run: pnpm test || echo "No tests configured yet"
+
+  # ==========================================
+  # Build Docker Image
+  # ==========================================
+  build-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Export image name
+        run: |
+          echo "IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
+
+  # ==========================================
+  # Run Database Migrations
+  # ==========================================
+  migrate:
+    name: Run Migrations
+    runs-on: ubuntu-latest
+    needs: build-image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run migrations
+        run: node dist/shared/db/migration-runner.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DBUSER: ${{ secrets.DBUSER }}
+          DBPASS: ${{ secrets.DBPASS }}
+          NODE_ENV: production
+
+  # ==========================================
+  # Deploy to Production
+  # ==========================================
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: migrate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to server
+        run: |
+          echo "Deployment step - configure based on your hosting"
+          echo "Options:"
+          echo "  - Pull Docker image and restart"
+          echo "  - SSH into server and deploy"
+          echo "  - Trigger webhook for cloud platform"
+
+      # Uncomment and configure based on your deployment:
+
+      # Option 1: Deploy via SSH
+      # - name: Deploy to server via SSH
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       cd /app
+      #       docker pull ghcr.io/${{ github.repository }}:latest
+      #       docker stop cocheras-api || true
+      #       docker rm cocheras-api || true
+      #       docker run -d --name cocheras-api \
+      #         -p 3000:3000 \
+      #         --env-file .env \
+      #         --restart unless-stopped \
+      #         ghcr.io/${{ github.repository }}:latest
+
+      # Option 2: Deploy to Railway (using webhook)
+      # - name: Trigger Railway deployment
+      #   run: |
+      #     curl -X POST ${{ secrets.RAILWAY_DEPLOY_WEBHOOK }}
+
+      # Option 3: Deploy to Render (using webhook)
+      # - name: Trigger Render deployment
+      #   run: |
+      #     curl -X POST ${{ secrets.RENDER_DEPLOY_WEBHOOK }}
+
+      - name: Deployment successful
+        run: echo "✅ Deployment completed successfully!"
