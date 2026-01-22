@@ -6,6 +6,7 @@ import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getAvailablesBusiness } from "./garage.business.js";
 import { validationResult } from 'express-validator';
 import { handleError } from "../shared/errors/errorHandler.js";
+import { Service } from "../Services/service.entity.js";
 
 const em = orm.em
 
@@ -18,7 +19,8 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         location: req.body.location,
-        parking_space: req.body.parking_space
+        parking_space: req.body.parking_space,
+        services: req.body.services
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -42,7 +44,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
-        const garage = await em.findOneOrFail(Garage, { cuit }, { populate: ['parkingSpaces'] })
+        const garage = await em.findOneOrFail(Garage, { cuit }, { populate: ['parkingSpaces', 'services'] });
         res.status(200).json(garage)
     }
     catch (error: any) { handleError(error, res) }
@@ -63,7 +65,7 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const cuit = Number.parseInt(req.params.cuit)
-        const garageToUpdate = await em.findOneOrFail(Garage, { cuit })
+        const garageToUpdate = await em.findOneOrFail(Garage, { cuit },{ populate: ['services'] });
 
         // Hash password if it's being updated
         if (req.body.sanitizedInput.password) {
@@ -71,6 +73,15 @@ async function update(req: Request, res: Response) {
         }
 
         em.assign(garageToUpdate, req.body.sanitizedInput)
+        if (req.body.sanitizedInput.services && Array.isArray(req.body.sanitizedInput.services)) {
+            
+            const servicesEntities = await em.find(Service, { id: { $in: req.body.sanitizedInput.services } });
+
+            // Esto agrega los nuevos servicios y borra los que se desmarcaron automáticamente.
+            garageToUpdate.services.set(servicesEntities);
+        }
+
+
         await em.flush()
         res.status(200).json(garageToUpdate)
     }
@@ -81,7 +92,7 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const cuit = req.params.cuit
-        const garage = await em.findOneOrFail(Garage, { cuit: +cuit },)
+        const garage = await em.findOneOrFail(Garage, { cuit: +cuit },{ populate: ['services'] })
         await em.removeAndFlush(garage)
         res.status(200).json({ message: 'Garage eliminated' })
     }

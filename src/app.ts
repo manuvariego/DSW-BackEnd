@@ -13,6 +13,7 @@ import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
 import { authRouter } from './Auth/auth.routes.js'
+import { serviceRouter } from './Services/service.routes.js'
 import cors from 'cors'
 
 const app = express()
@@ -54,6 +55,9 @@ app.use('/api/reservations', ReservationRouter)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
 })
+
+app.use('/api/services', serviceRouter)
+
 
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found.' })

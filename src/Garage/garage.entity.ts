@@ -1,8 +1,9 @@
-import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel } from '@mikro-orm/core';
+import { ManyToOne, Entity, PrimaryKey, OneToMany, Cascade, Collection, Property, Rel, ManyToMany} from '@mikro-orm/core';
 import { Location } from '../Location/location.entity.js';
 import { ParkingSpace } from '../ParkingSpace/parkingSpace.entity.js';
 import { Reservation } from '../Reservation/reservation.entity.js';
 import { ReservationType } from '../ReservationType/reservationType.entity.js';
+import { Service } from '../Services/service.entity.js';
 
 @Entity()
 export class Garage {
@@ -42,4 +43,6 @@ export class Garage {
     })
     reservationTypes = new Collection<ReservationType>(this)
 
+    @OneToMany(() => Service, service => service.garage)
+    services = new Collection<Service>(this);
 }
