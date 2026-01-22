@@ -31,7 +31,14 @@ async function findAll(req: Request, res: Response) {
   catch (error: any) { res.status(500).json({ message: error.message }) }
 }
 
-
+async function findAllofAGarage(req: Request, res: Response) {
+    try {
+        const cuitGarage = Number.parseInt(req.params.cuitGarage)
+        const parkingSpaces = await em.find(ParkingSpace, { garage: {cuit: cuitGarage} })
+        res.status(200).json(parkingSpaces)
+    }
+    catch (error: any) { res.status(500).json({ message: error.message }) }
+}
 
 async function findOne(req: Request, res: Response) {
   try {
@@ -79,4 +86,4 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
-export { sanitizeParkingSpaceInput, findAll, findOne, add, update, eliminate }
+export { sanitizeParkingSpaceInput, findAll, findOne, add, update, eliminate, findAllofAGarage }
