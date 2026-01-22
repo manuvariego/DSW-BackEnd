@@ -3,7 +3,8 @@ import { Garage } from "./garage.entity.js";
 import { orm } from "../shared/db/orm.js";
 import bcrypt from "bcryptjs"
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
-import { getAvailablesBusiness } from "./garage.business.js";
+import { getAvailablesBusiness, getPriceForReservationBusiness } from "./garage.business.js";
+import { getGaragePricingStatus } from "../ReservationType/reservationType.business.js";
 import { validationResult } from 'express-validator';
 import { handleError } from "../shared/errors/errorHandler.js";
 import { Service } from "../Services/service.entity.js";
@@ -117,7 +118,33 @@ async function getAvailables(req: Request, res: Response) {
         }
 
         const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
-        res.status(200).json(garagesAvailables);
+        
+        // Filtrar solo garages con precios completos
+        const garagesConPreciosCompletos = await Promise.all(
+            garagesAvailables.map(async (garage) => {
+                const status = await getGaragePricingStatus(garage.cuit);
+                return status.completo ? garage : null;
+            })
+        );
+        
+        const garagesFiltrados = garagesConPreciosCompletos.filter((g): g is Garage => g !== null);
+
+        // Calcular precio para cada garage
+        const garagesConPrecio = await Promise.all(
+            garagesFiltrados.map(async (garage) => {
+                const precioEstimado = await getPriceForReservationBusiness(checkin, checkout, garage.cuit);
+                return {
+                    cuit: garage.cuit,
+                    name: garage.name,
+                    address: garage.address,
+                    email: garage.email,
+                    phoneNumber: garage.phoneNumber,
+                    location: garage.location,
+                    precioEstimado: precioEstimado
+                };
+            })
+        );
+        res.status(200).json(garagesConPrecio);
     } catch (error: any) { handleError(error, res) }
 }
 

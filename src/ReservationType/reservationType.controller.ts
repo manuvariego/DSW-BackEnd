@@ -81,4 +81,25 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
-export { sanitizeReservationTypeInput, findAll, findOne, add, update, eliminate }
+async function getPricingStatus(req: Request, res: Response) {
+    try {
+        const cuitGarage = Number.parseInt(req.params.cuit);
+        const { getGaragePricingStatus } = await import('./reservationType.business.js');
+        const status = await getGaragePricingStatus(cuitGarage);
+        res.status(200).json(status);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+async function findByGarage(req: Request, res: Response) {
+    try {
+        const cuitGarage = Number.parseInt(req.params.cuit);
+        const reservationTypes = await em.find(ReservationType, { garage: { cuit: cuitGarage } });
+        res.status(200).json(reservationTypes);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeReservationTypeInput, findAll, findOne, add, update, eliminate, getPricingStatus, findByGarage }

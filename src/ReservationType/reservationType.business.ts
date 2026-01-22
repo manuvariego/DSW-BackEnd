@@ -69,11 +69,26 @@ const calculatePriceByType = (hours: number, type: typeCode, pricing: Reservatio
 }
 
 const getPriceByType = (pricing: ReservationType[], type: typeCode): number => {
-  return pricing.find(x => x.description === type)!.price;
+  const found = pricing.find(x => x.description === type);
+  return found ? found.price : 0;
 }
 
 const getDaysByHours = (hours: number): number => {
   return Math.ceil(hours / 24);
 }
 
-export { getPriceByGarageBusiness }
+const REQUIRED_TYPES: typeCode[] = ['HOUR', 'HALF_DAY', 'DAY', 'WEEKLY', 'HALF_MONTH', 'MONTH'];
+
+const getGaragePricingStatus = async (cuitGarage: number) => {
+    const pricing = await getReservationTypeByGarageRepository(cuitGarage);
+    const configuredTypes = pricing.map(p => p.description);
+    const missingTypes = REQUIRED_TYPES.filter(type => !configuredTypes.includes(type));
+    
+    return {
+        completo: missingTypes.length === 0,
+        tiposFaltantes: missingTypes,
+        tiposConfigurados: pricing
+    };
+}
+
+export { getPriceByGarageBusiness, getGaragePricingStatus }
