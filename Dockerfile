@@ -42,5 +42,4 @@ EXPOSE 3000
 
 ENV NODE_ENV=production
 
-# Run migrations first, then start the app
-CMD sh -c "node dist/shared/db/migration-runner.js && node dist/src/app.js"
+CMD node dist/src/app.js

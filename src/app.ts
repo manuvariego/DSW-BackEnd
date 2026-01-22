@@ -4,7 +4,6 @@ import express from 'express'
 import 'dotenv/config'
 import { orm } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
-import { runMigrations } from './shared/db/migrate.js'
 import { UserRouter } from './User/user.routes.js'
 import { VehicleRouter } from './Vehicle/vehicle.routes.js'
 import { LocationRouter } from './Location/location.routes.js'
@@ -62,15 +61,15 @@ app.use((_, res) => {
 
 /**
  * Start the application
- * Optionally run migrations first if RUN_MIGRATIONS env var is set
  */
 async function start() {
   const port = process.env.PORT || 3000
 
-  // Run migrations on startup if enabled (useful for containerized deployments)
-  if (process.env.RUN_MIGRATIONS === 'true') {
-    console.log('Checking for pending migrations...')
-    await runMigrations()
+  // Auto-sync schema in development
+  if (process.env.NODE_ENV !== 'production') {
+    const generator = orm.getSchemaGenerator();
+    await generator.updateSchema();
+    console.log('Database schema synced');
   }
 
   app.listen(port, () => {
@@ -78,6 +77,7 @@ async function start() {
     console.log(`Health check: http://localhost:${port}/health`)
   })
 }
+
 
 start().catch((error) => {
   console.error('Failed to start server:', error)

@@ -1,10 +1,8 @@
-import { Migrator } from '@mikro-orm/migrations';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { MySqlDriver } from '@mikro-orm/mysql';
 
 /**
  * Shared MikroORM configuration
- * Used by both orm.ts and run-migrations.ts
  */
 export const getMikroORMConfig = () => ({
   driver: MySqlDriver,
@@ -17,10 +15,4 @@ export const getMikroORMConfig = () => ({
 
   highlighter: new SqlHighlighter(),
   debug: process.env.NODE_ENV !== 'production',
-  extensions: [Migrator],
-
-  migrations: {
-    path: './dist/migrations',
-    glob: '!(*.d).{js}',
-  },
 });
