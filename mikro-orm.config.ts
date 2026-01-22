@@ -20,6 +20,11 @@ export default defineConfig({
   highlighter: new SqlHighlighter(),
   debug: process.env.NODE_ENV !== 'production',
 
+  migrations: {
+    path: 'dist/migrations',
+    pathTs: 'src/migrations',
+  },
+
   schemaGenerator: {
     disableForeignKeys: false,
     createForeignKeyConstraints: true,

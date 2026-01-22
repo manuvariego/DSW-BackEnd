@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@mikro-orm/cli':
-        specifier: ^6.6.4
-        version: 6.6.4
       '@mikro-orm/core':
         specifier: ^6.3.4
         version: 6.6.4
@@ -57,6 +54,9 @@ importers:
         specifier: 0.2.2
         version: 0.2.2
     devDependencies:
+      '@mikro-orm/cli':
+        specifier: ^6.6.4
+        version: 6.6.4
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
