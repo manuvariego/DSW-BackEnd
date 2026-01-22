@@ -10,6 +10,4 @@ COPY . .
 # Build TS → JS
 RUN npx tsc
 
-# Run migrations using compiled JS config
-CMD sh -c "npx mikro-orm migration:up --config dist/mikro-orm.config.js"
-# CMD sh -c "npx mikro-orm migration:up && node dist/app.js"
+CMD sh -c "npx mikro-orm migration:up --config dist/mikro-orm.config.js && node dist/src/app.js"

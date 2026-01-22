@@ -21,8 +21,8 @@ export default defineConfig({
   debug: process.env.NODE_ENV !== 'production',
 
   migrations: {
-    path: 'dist/migrations',
-    pathTs: 'src/migrations',
+    path: 'dist/src/migrations',
+    pathTs: process.env.NODE_ENV === 'production' ? undefined : 'src/migrations',
   },
 
   schemaGenerator: {
