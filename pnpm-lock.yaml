@@ -8,15 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@mikro-orm/cli':
+        specifier: 6.6.5
+        version: 6.6.5
       '@mikro-orm/core':
-        specifier: ^6.3.4
-        version: 6.6.4
+        specifier: 6.6.5
+        version: 6.6.5
       '@mikro-orm/migrations':
-        specifier: ^6.6.4
-        version: 6.6.4(@mikro-orm/core@6.6.4)(@types/node@20.12.12)
+        specifier: 6.6.5
+        version: 6.6.5(@mikro-orm/core@6.6.5)(@types/node@20.12.12)
       '@mikro-orm/mysql':
-        specifier: ^6.3.4
-        version: 6.6.4(@mikro-orm/core@6.6.4)
+        specifier: 6.6.5
+        version: 6.6.5(@mikro-orm/core@6.6.5)
       '@mikro-orm/sql-highlighter':
         specifier: 1.0.1
         version: 1.0.1
@@ -54,9 +57,6 @@ importers:
         specifier: 0.2.2
         version: 0.2.2
     devDependencies:
-      '@mikro-orm/cli':
-        specifier: ^6.6.4
-        version: 6.6.4
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -393,17 +393,17 @@ packages:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
 
-  '@mikro-orm/cli@6.6.4':
-    resolution: {integrity: sha512-QGEGatXTebvrXAmy2KXm5p+o0NGNdzTRxP7NndlMolDjTVq36KSzjFTsqK1r5PV4lgJUbudglL8bmDRilhICAA==}
+  '@mikro-orm/cli@6.6.5':
+    resolution: {integrity: sha512-9SjIWmR9V0Ua+bKZHkXrRqEU/5s7LswVrrz+zG1/Ohl5A/leOU83wmnQek8ciD1exq+vGiwBsSWY5FMH/JNRTg==}
     engines: {node: '>= 18.12.0'}
     hasBin: true
 
-  '@mikro-orm/core@6.6.4':
-    resolution: {integrity: sha512-5MOP1QXlE73GimQOHJBR/yBiCx65qTIwdbCokE10zw3Dj7M7dZ0Q8aeR2F0cQyIlw/Ne80AlApSB3kh9mjr4ww==}
+  '@mikro-orm/core@6.6.5':
+    resolution: {integrity: sha512-UNGljNAxOqMdEcphcTzLVZN3yUwv40vmIUIR8HfL3u4CA0s1n9/R9zBLaJpspMhUOpS5UefQA+PiyQnIX7UKew==}
     engines: {node: '>= 18.12.0'}
 
-  '@mikro-orm/knex@6.6.4':
-    resolution: {integrity: sha512-r9SvwQ87s6bwYZzteWPuQ7Kufatv1ZESwTPR/WUAG/Q7phDhPmzktE9G8fAABpwVwvXpXxcfpK9Y9A3eZsIt7w==}
+  '@mikro-orm/knex@6.6.5':
+    resolution: {integrity: sha512-iDfeXivg2kwA+yHfqkZcyDfqbfRHJnZf29JYOQaOOF59tLW1lGjMXL7mmAr36vU/Yjspo+wDIetVBYpfjIQ/ug==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
@@ -418,14 +418,14 @@ packages:
       mariadb:
         optional: true
 
-  '@mikro-orm/migrations@6.6.4':
-    resolution: {integrity: sha512-e2f8A9GELsozaIdojuoReypLDLDvWuVv6HU25Hfkxyf5VFxnXT0XrK2qjnmvFiRhpHqypRJVPzuCMIdRF2g4xw==}
+  '@mikro-orm/migrations@6.6.5':
+    resolution: {integrity: sha512-IxN1lumcuCxyrK2WFURl7quEd5Mu1G9ok8zphlKMZvxicHR4Ks+Dvj7c4UQHbU9w+XFqCFAnm1M7yK46vfXfCQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
 
-  '@mikro-orm/mysql@6.6.4':
-    resolution: {integrity: sha512-EHgjOQz4qSmeTehFYI69FftMptIbcGo4pekPh85cd8EGV8gsqDCX9twjJvmXd3QelpdFrjvnNuz57ozzeu7qiw==}
+  '@mikro-orm/mysql@6.6.5':
+    resolution: {integrity: sha512-D+pvSQtGkdv7SFYRhz86H/SHJN9b6/w3nUfpyN67bxZzATwELO9v+OYEvqHzUesg/ZJ/M+zs7RibWk2IOpstdQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@mikro-orm/core': ^6.0.0
@@ -1304,6 +1304,10 @@ packages:
 
   mikro-orm@6.6.4:
     resolution: {integrity: sha512-8BlTqD7QiivbUFBFTP2o7db9mecK0YvvNVrESHbfaLPK5rBuNMOmdiY22EPmC5KneojpVTeqsEeRrl6/vdjIhA==}
+    engines: {node: '>= 18.12.0'}
+
+  mikro-orm@6.6.5:
+    resolution: {integrity: sha512-y9lACpuyc9mq1ZASJFrJCobcCyEqXbYNu0km8SytjjkKO5GUdGMu0LIs5XXSeQzrgyuDvDdKzsltoe/eNDw6vw==}
     engines: {node: '>= 18.12.0'}
 
   mime-db@1.54.0:
@@ -2289,11 +2293,11 @@ snapshots:
       - encoding
       - supports-color
 
-  '@mikro-orm/cli@6.6.4':
+  '@mikro-orm/cli@6.6.5':
     dependencies:
       '@jercle/yargonaut': 1.1.5
-      '@mikro-orm/core': 6.6.4
-      '@mikro-orm/knex': 6.6.4(@mikro-orm/core@6.6.4)(mysql2@3.16.0)
+      '@mikro-orm/core': 6.6.5
+      '@mikro-orm/knex': 6.6.5(@mikro-orm/core@6.6.5)(mysql2@3.16.0)
       fs-extra: 11.3.3
       tsconfig-paths: 4.2.0
       yargs: 17.7.2
@@ -2309,19 +2313,19 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/core@6.6.4':
+  '@mikro-orm/core@6.6.5':
     dependencies:
       dataloader: 2.2.3
       dotenv: 17.2.3
       esprima: 4.0.1
       fs-extra: 11.3.3
       globby: 11.1.0
-      mikro-orm: 6.6.4
+      mikro-orm: 6.6.5
       reflect-metadata: 0.2.2
 
-  '@mikro-orm/knex@6.6.4(@mikro-orm/core@6.6.4)(mysql2@3.16.0)':
+  '@mikro-orm/knex@6.6.5(@mikro-orm/core@6.6.5)(mysql2@3.16.0)':
     dependencies:
-      '@mikro-orm/core': 6.6.4
+      '@mikro-orm/core': 6.6.5
       fs-extra: 11.3.3
       knex: 3.1.0(mysql2@3.16.0)
       sqlstring: 2.3.3
@@ -2334,10 +2338,10 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/migrations@6.6.4(@mikro-orm/core@6.6.4)(@types/node@20.12.12)':
+  '@mikro-orm/migrations@6.6.5(@mikro-orm/core@6.6.5)(@types/node@20.12.12)':
     dependencies:
-      '@mikro-orm/core': 6.6.4
-      '@mikro-orm/knex': 6.6.4(@mikro-orm/core@6.6.4)(mysql2@3.16.0)
+      '@mikro-orm/core': 6.6.5
+      '@mikro-orm/knex': 6.6.5(@mikro-orm/core@6.6.5)(mysql2@3.16.0)
       fs-extra: 11.3.3
       umzug: 3.8.2(@types/node@20.12.12)
     transitivePeerDependencies:
@@ -2353,10 +2357,10 @@ snapshots:
       - supports-color
       - tedious
 
-  '@mikro-orm/mysql@6.6.4(@mikro-orm/core@6.6.4)':
+  '@mikro-orm/mysql@6.6.5(@mikro-orm/core@6.6.5)':
     dependencies:
-      '@mikro-orm/core': 6.6.4
-      '@mikro-orm/knex': 6.6.4(@mikro-orm/core@6.6.4)(mysql2@3.16.0)
+      '@mikro-orm/core': 6.6.5
+      '@mikro-orm/knex': 6.6.5(@mikro-orm/core@6.6.5)(mysql2@3.16.0)
       mysql2: 3.16.0
     transitivePeerDependencies:
       - better-sqlite3
@@ -3362,6 +3366,8 @@ snapshots:
       picomatch: 2.3.1
 
   mikro-orm@6.6.4: {}
+
+  mikro-orm@6.6.5: {}
 
   mime-db@1.54.0: {}
 
