@@ -12,7 +12,7 @@ import { typeVehicleRouter } from './VehicleType/vehicleType.routes.js'
 import { ParkingSpaceRouter } from './ParkingSpace/parkingSpace.routes.js'
 import { ReservationTypeRouter } from './ReservationType/reservationType.routes.js'
 import { ReservationRouter } from './Reservation/reservation.routes.js'
-import { authRouter } from './Auth/auth.routes.js'
+import { AuthRouter } from './Auth/auth.routes.js'
 import { serviceRouter } from './Services/service.routes.js'
 import cors from 'cors'
 
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 
 })
 
-app.use('/api/auth', authRouter)
+app.use('/api/auth', AuthRouter)
 
 app.use('/api/users', UserRouter)
 
