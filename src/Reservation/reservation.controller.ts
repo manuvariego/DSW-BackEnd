@@ -154,7 +154,9 @@ async function findAllofGarage(req: Request, res: Response) {
     }
     filters.garage = { cuit: cuitGarage };
 
-    const reservations = await em.find(Reservation, filters);
+    const reservations = await em.find(Reservation, filters, {
+        populate: ['services', 'vehicle', 'vehicle.owner'] 
+    });
 
     if (req.params.condition === 'true') {
 
