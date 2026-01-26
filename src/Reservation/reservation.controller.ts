@@ -53,7 +53,7 @@ async function findByUser(req: Request, res: Response) {
     const reservations = await em.find(
       Reservation,
       { vehicle: { owner: { id: userId } } },
-      { populate: ['vehicle', 'garage', 'parkingSpace'] }
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace'] }
     );
     res.status(200).json(reservations);
   } catch (error: any) { handleError(error, res) }
