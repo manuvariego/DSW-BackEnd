@@ -19,6 +19,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
     vehicle: req.body.vehicle,
     garage: req.body.garage,
     parkingSpace: req.body.parkingSpace,
+    services: req.body.services,
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -72,11 +73,12 @@ async function add(req: Request, res: Response) {
     const checkout = new Date(`${req.body.check_out_at}`);
     const licensePlate = `${req.body.license_plate}`;
     const cuitGarage = +(`${req.body.cuitGarage}`);
+    const services = req.body.services || [];
 
-    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage);
+    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage, services);
 
     const fullReservation = await em.findOne(Reservation, { id: reservation.id }, {
-      populate: ['vehicle.owner', 'garage']
+      populate: ['vehicle.owner', 'garage', 'parkingSpace', 'services']
     });
 
     if (fullReservation && fullReservation.vehicle && fullReservation.vehicle.owner) {
