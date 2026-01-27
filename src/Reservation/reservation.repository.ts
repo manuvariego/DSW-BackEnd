@@ -1,3 +1,4 @@
+import { Service } from "../Services/service.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { Reservation, ReservationStatus } from "./reservation.entity.js";
 
@@ -46,8 +47,21 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
 }
 
 
-const createReservationRepository = async (reservation: any) => {
-    reservation = em.create(Reservation, reservation);
+const createReservationRepository = async (reservationData: any) => {
+    const { services, ...data } = reservationData;
+    const reservation = em.create(Reservation, data);
+
+    if (services && services.length > 0) {
+        services.forEach((serviceId: number) => {
+            // 'getReference' crea un puntero al servicio sin consultar la DB (muy rápido)
+            const serviceRef = em.getReference(Service, serviceId);
+            
+            // Agregamos la referencia a la colección. 
+            // Esto le dice al ORM: "Creá una fila en la tabla intermedia para unir esta reserva con este servicio"
+            reservation.services.add(serviceRef);
+        });
+    }
+
     await em.flush();
     return reservation;
 }

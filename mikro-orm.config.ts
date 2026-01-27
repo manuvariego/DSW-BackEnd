@@ -15,14 +15,15 @@ export default defineConfig({
   password: process.env.DBPASS,
 
   entities: ['dist/**/*.entity.js'],
-  entitiesTs: process.env.NODE_ENV === 'production' ? undefined : ['src/**/*.entity.ts'],
+  // entitiesTs is auto-detected by MikroORM CLI when loading .ts config (useTsNode: true)
+  // Don't set it explicitly to avoid conflicts when using compiled JS config
 
   highlighter: new SqlHighlighter(),
   debug: process.env.NODE_ENV !== 'production',
 
   migrations: {
-    path: 'dist/src/migrations',
-    pathTs: process.env.NODE_ENV === 'production' ? undefined : 'src/migrations',
+    path: 'dist/src/migrations',       // runtime: where compiled JS migrations are loaded from
+    pathTs: 'src/migrations',          // development: where new TS migration files are created
   },
 
   schemaGenerator: {

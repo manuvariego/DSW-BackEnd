@@ -53,7 +53,7 @@ async function findByUser(req: Request, res: Response) {
     const reservations = await em.find(
       Reservation,
       { vehicle: { owner: { id: userId } } },
-      { populate: ['vehicle', 'garage', 'parkingSpace'] }
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'services'] }
     );
     res.status(200).json(reservations);
   } catch (error: any) { handleError(error, res) }
@@ -72,8 +72,17 @@ async function add(req: Request, res: Response) {
     const checkout = new Date(`${req.body.check_out_at}`);
     const licensePlate = `${req.body.license_plate}`;
     const cuitGarage = +(`${req.body.cuitGarage}`);
+    const servicesObject = req.body.services || {};
+    const services = Object.values(servicesObject).map(id => Number(id));
+    const totalPrice = req.body.totalPrice || 0;
 
-    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage);
+    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage, services, totalPrice);
+    
+    if (!reservation) {
+      return res.status(400).json({ 
+        message: 'No se pudo crear la reserva.' 
+      });
+    }
 
     const fullReservation = await em.findOne(Reservation, { id: reservation.id }, {
       populate: ['vehicle.owner', 'garage']
