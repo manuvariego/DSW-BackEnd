@@ -140,7 +140,8 @@ async function getAvailables(req: Request, res: Response) {
           email: garage.email,
           phoneNumber: garage.phoneNumber,
           location: garage.location,
-          precioEstimado: precioEstimado
+          precioEstimado: precioEstimado,
+          services: garage.services
         };
       })
     );
