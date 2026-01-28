@@ -41,6 +41,8 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
                 id: filters.vehicleTypeId
             },
         }
+    }, {
+        populate: ['vehicle', 'vehicle.type', 'garage', 'parkingSpace']
     });
 
     return reservasCocheras;

@@ -15,6 +15,7 @@ import { ReservationRouter } from './Reservation/reservation.routes.js'
 import { AuthRouter } from './Auth/auth.routes.js'
 import { serviceRouter } from './Services/service.routes.js'
 import cors from 'cors'
+import { startReservationCron } from './shared/cron/reservationCron.js';
 
 const app = express()
 app.use(express.json())
@@ -80,6 +81,8 @@ async function start() {
     console.log(`Server running on http://localhost:${port}`)
     console.log(`Health check: http://localhost:${port}/health`)
   })
+  
+  startReservationCron();
 }
 
 
