@@ -6,7 +6,8 @@
     "main": "app.js",
     "scripts": {
         "build": "tsc -p ./tsconfig.json",
-        "start:dev": "npx tsc && npx mikro-orm migration:up --config dist/mikro-orm.config.js && node ./dist/src/app.js",
+        "start:dev": "npm run build && node ./dist/src/app.js",
+        "migrate:up": "npx mikro-orm migration:up",
         "start:ui": "npx tsc && node ./dist/src/app.js",
         "start": "node ./dist/src/app.js",
         "migration:create": "mikro-orm migration:create",
@@ -25,6 +26,7 @@
         "@types/cors": "^2.8.17",
         "@types/express": "4.17.21",
         "@types/node": "20.12.12",
+        "@types/node-cron": "^3.0.11",
         "@types/nodemailer": "^7.0.5",
         "bcrypt": "^5.1.1",
         "ts-node": "^10.9.2",
@@ -33,8 +35,8 @@
         "typescript": "5.1.3"
     },
     "dependencies": {
-        "@mikro-orm/core": "6.6.5",
         "@mikro-orm/cli": "6.6.5",
+        "@mikro-orm/core": "6.6.5",
         "@mikro-orm/migrations": "6.6.5",
         "@mikro-orm/mysql": "6.6.5",
         "@mikro-orm/sql-highlighter": "1.0.1",
@@ -47,6 +49,7 @@
         "express-validator": "^7.2.0",
         "jsonwebtoken": "^9.0.2",
         "mikro-orm": "^6.3.0",
+        "node-cron": "^4.2.1",
         "nodemailer": "^7.0.12",
         "reflect-metadata": "0.2.2"
     },
