@@ -135,31 +135,20 @@ async function findAllofGarage(req: Request, res: Response) {
     const filters: any = {};
 
     if (req.query.license_plate) {
-      filters.vehicle = { licensePlate: req.query.license_plate as string };
+      filters.vehicle = { license_plate: req.query.license_plate as string };
     }
     if (req.query.estado) {
       filters.estado = req.query.estado as string;
     }
 
-    const filterCheckInDate = req.query.check_in_at ? new Date(req.query.check_in_at as string) : undefined;
-    const filterCheckOutDate = req.query.check_out_at ? new Date(req.query.check_out_at as string) : undefined;
+    const filterCheckInDate = req.query.check_in_at ? new Date(`${req.query.check_in_at}T00:00:00`) : undefined;
+    const filterCheckOutDate = req.query.check_out_at ? new Date(`${req.query.check_out_at}T23:59:59`) : undefined;
 
-    if (filterCheckInDate && filterCheckOutDate) {
-      // Filter reservations where the reservation's check_in_at is between the provided filter dates
-      filters.check_in_at = {
-        $gte: filterCheckInDate,
-        $lte: filterCheckOutDate
-      };
-    } else if (filterCheckInDate) {
-      // Filter reservations where the reservation's check_in_at is greater than or equal to the provided check_in_at
-      filters.check_in_at = {
-        $gte: filterCheckInDate
-      };
-    } else if (filterCheckOutDate) {
-      // Filter reservations where the reservation's check_in_at is less than or equal to the provided check_out_at
-      filters.check_in_at = {
-        $lte: filterCheckOutDate
-      };
+    if (filterCheckInDate) {
+        filters.check_in_at = { $gte: filterCheckInDate };
+    }
+    if (filterCheckOutDate) {
+        filters.check_out_at = { $lte: filterCheckOutDate };
     }
     filters.garage = { cuit: cuitGarage };
 
