@@ -25,7 +25,7 @@ function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFuncti
 
 async function findAll(req: Request, res: Response) {
   try {
-    const parkingSpaces = await em.find(ParkingSpace, {},)
+    const parkingSpaces = await em.find(ParkingSpace, {}, { populate: ['TypeVehicle'] })
     res.status(200).json(parkingSpaces)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -34,7 +34,7 @@ async function findAll(req: Request, res: Response) {
 async function findAllofAGarage(req: Request, res: Response) {
     try {
         const cuitGarage = Number.parseInt(req.params.cuitGarage)
-        const parkingSpaces = await em.find(ParkingSpace, { garage: {cuit: cuitGarage} })
+        const parkingSpaces = await em.find(ParkingSpace, { garage: {cuit: cuitGarage} }, { populate: ['TypeVehicle'] })
         res.status(200).json(parkingSpaces)
     }
     catch (error: any) { res.status(500).json({ message: error.message }) }
@@ -44,7 +44,7 @@ async function findOne(req: Request, res: Response) {
   try {
     const number = Number.parseInt(req.params.number)
     const cuitGarage = Number.parseInt(req.params.cuitGarage)
-    const parkingSpace = await em.findOneOrFail(ParkingSpace, { number, garage: { cuit: cuitGarage } })
+    const parkingSpace = await em.findOneOrFail(ParkingSpace, { number, garage: { cuit: cuitGarage } }, { populate: ['TypeVehicle'] })
     res.status(200).json(parkingSpace)
   }
   catch (error: any) { res.status(500).json({ message: error.message }) }
