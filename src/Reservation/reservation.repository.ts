@@ -78,5 +78,10 @@ const getActiveReservationsByUserRepository = async(userId: number): Promise<Res
     });
 }
 
+const findReservations = async (filters: any) => {
+  return await em.find(Reservation, filters, {
+    populate: ['services', 'vehicle', 'vehicle.owner'] as const
+  });
+};
 
-export { getAllReservationsRepository, createReservationRepository, getActiveReservationsByUserRepository }
+export { getAllReservationsRepository, createReservationRepository, findReservations, getActiveReservationsByUserRepository }

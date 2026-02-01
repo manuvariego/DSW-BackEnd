@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Reservation } from "./reservation.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { validationResult } from 'express-validator';
-import { createReservationBusiness } from "./reservation.business.js";
+import { createReservationBusiness, getGarageReservationsBusiness } from "./reservation.business.js";
 import { sendReservationEmail } from "../shared/mail.service.js";
 import { handleError } from "../shared/errors/errorHandler.js";
 
@@ -132,54 +132,15 @@ async function cancel(req: Request, res: Response) {
 async function findAllofGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
-    const filters: any = {};
+    const { condition } = req.params;
+    
+    // We pass req.query to the business layer
+    const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
-    if (req.query.license_plate) {
-      filters.vehicle = { licensePlate: req.query.license_plate as string };
-    }
-    if (req.query.estado) {
-      filters.estado = req.query.estado as string;
-    }
-
-    const filterCheckInDate = req.query.check_in_at ? new Date(req.query.check_in_at as string) : undefined;
-    const filterCheckOutDate = req.query.check_out_at ? new Date(req.query.check_out_at as string) : undefined;
-
-    if (filterCheckInDate && filterCheckOutDate) {
-      // Filter reservations where the reservation's check_in_at is between the provided filter dates
-      filters.check_in_at = {
-        $gte: filterCheckInDate,
-        $lte: filterCheckOutDate
-      };
-    } else if (filterCheckInDate) {
-      // Filter reservations where the reservation's check_in_at is greater than or equal to the provided check_in_at
-      filters.check_in_at = {
-        $gte: filterCheckInDate
-      };
-    } else if (filterCheckOutDate) {
-      // Filter reservations where the reservation's check_in_at is less than or equal to the provided check_out_at
-      filters.check_in_at = {
-        $lte: filterCheckOutDate
-      };
-    }
-    filters.garage = { cuit: cuitGarage };
-
-    const reservations = await em.find(Reservation, filters, {
-        populate: ['services', 'vehicle', 'vehicle.owner'] 
-    });
-
-    if (req.params.condition === 'true') {
-
-
-      const totalAmount = reservations.reduce((sum, item) => sum + Number(item.amount), 0);
-
-      // 2. Return the response immediately with the total
-      return res.json({
-        totalRevenue: totalAmount
-      });
-    }
-
-    res.status(200).json(reservations)
-  } catch (error: any) { handleError(error, res) }
+    res.status(200).json(result);
+  } catch (error: any) { 
+    handleError(error, res); 
+  }
 }
 
 

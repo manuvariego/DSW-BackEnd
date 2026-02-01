@@ -1,4 +1,4 @@
-import { createReservationRepository, getActiveReservationsByUserRepository } from "./reservation.repository.js";
+import { createReservationRepository, findReservations, getActiveReservationsByUserRepository } from "./reservation.repository.js";
 import { getVehicleBusiness } from "../Vehicle/vehicle.business.js";
 import { getPriceForReservationBusiness, getParkingSpaceAvailable } from "../Garage/garage.business.js";
 import { Reservation, ReservationStatus } from "./reservation.entity.js";
@@ -38,5 +38,34 @@ const getActiveReservationsByUserBusiness = async (userId: number): Promise<Rese
   return await getActiveReservationsByUserRepository(userId);
 }
 
+const getGarageReservationsBusiness = async (cuitGarage: number, query: any, condition: string) => {
+  const filters: any = { garage: { cuit: cuitGarage } };
 
-export { createReservationBusiness, getActiveReservationsByUserBusiness }
+  // Logic to build filters
+  if (query.license_plate) filters.vehicle = { license_plate: query.license_plate };
+  if (query.estado) filters.estado = query.estado;
+
+  // Date Logic
+  const checkIn = query.check_in_at ? new Date(query.check_in_at) : undefined;
+  const checkOut = query.check_out_at ? new Date(query.check_out_at) : undefined;
+
+  if (checkIn && checkOut) {
+    filters.check_in_at = { $gte: checkIn, $lte: checkOut };
+  } else if (checkIn) {
+    filters.check_in_at = { $gte: checkIn };
+  } else if (checkOut) {
+    filters.check_in_at = { $lte: checkOut };
+  }
+
+  const reservations = await findReservations(filters);
+
+  // Business logic: Calculate revenue if condition is true
+  if (condition === 'true') {
+    const totalRevenue = reservations.reduce((sum, item) => sum + Number(item.amount), 0);
+    return { totalRevenue };
+  }
+
+  return reservations;
+};
+
+export { createReservationBusiness, getActiveReservationsByUserBusiness, getGarageReservationsBusiness }
