@@ -7,8 +7,7 @@ const em = orm.em
 function sanitizeLocationInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
         name: req.body.name,
-        province: req.body.province,
-        garage: req.body.garage
+        province: req.body.province
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
