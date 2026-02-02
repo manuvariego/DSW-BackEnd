@@ -11,6 +11,7 @@ const config: Config = {
     '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   extensionsToTreatAsEsm: ['.ts']
+  
 };
 
 export default config;

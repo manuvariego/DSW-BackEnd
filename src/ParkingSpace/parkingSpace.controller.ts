@@ -10,7 +10,6 @@ function sanitizeParkingSpaceInput(req: Request, res: Response, next: NextFuncti
   req.body.sanitizedInput = {
     number: req.body.number,
     garage: req.body.garage,
-    reservation: req.body.reservation,
     TypeVehicle: req.body.TypeVehicle
   }
 
