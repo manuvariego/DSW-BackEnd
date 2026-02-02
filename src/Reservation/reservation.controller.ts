@@ -19,6 +19,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
     vehicle: req.body.vehicle,
     garage: req.body.garage,
     parkingSpace: req.body.parkingSpace,
+    paymentMethod: req.body.paymentMethod
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -75,8 +76,9 @@ async function add(req: Request, res: Response) {
     const servicesObject = req.body.services || {};
     const services = Object.values(servicesObject).map(id => Number(id));
     const totalPrice = req.body.totalPrice || 0;
+    const paymentMethod: string = req.body.paymentMethod;
 
-    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage, services, totalPrice);
+    const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage, services, totalPrice, paymentMethod);
     
     if (!reservation) {
       return res.status(400).json({ 
@@ -123,10 +125,28 @@ async function cancel(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
     const reservation = await em.findOneOrFail(Reservation, { id })
+
+    const fechaActual = new Date(); 
+    const fechaIngreso = new Date(reservation.check_in_at); 
+
+    if (fechaActual >= fechaIngreso) {
+      return res.status(400).json({ 
+        message: 'No se puede cancelar: La reserva ya comenzó o es una fecha pasada.' 
+      });
+    }
+
+    if (reservation.estado === 'cancelada') {
+      return res.status(400).json({ message: 'La reserva ya se encuentra cancelada.' });
+    }
     reservation.estado = 'cancelada' as any
+    
     await em.flush()
+    
     res.status(200).json({ message: 'Reserva cancelada', reservation })
-  } catch (error: any) { handleError(error, res) }
+
+  } catch (error: any) { 
+    handleError(error, res) 
+  }
 }
 
 async function findAllofGarage(req: Request, res: Response) {

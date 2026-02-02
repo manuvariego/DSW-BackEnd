@@ -28,6 +28,9 @@ export class Reservation extends baseEntity {
     @Property({})
     amount!: number;
 
+    @Property({ nullable: true })
+    paymentMethod?: string; // 'Efectivo' o 'MP'
+
     @ManyToOne(() => Vehicle, { nullable: false })
     vehicle!: Rel<Vehicle>
 

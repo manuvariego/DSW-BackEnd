@@ -4,7 +4,7 @@ import { getPriceForReservationBusiness, getParkingSpaceAvailable } from "../Gar
 import { Reservation, ReservationStatus } from "./reservation.entity.js";
 import { findOne } from "../Services/service.controller.js";
 
-const createReservationBusiness = async (checkin: Date, checkout: Date, licensePlate: string, cuitGarage: number, services: number[], price: number) => {
+const createReservationBusiness = async (checkin: Date, checkout: Date, licensePlate: string, cuitGarage: number, services: number[], price: number, paymentMethod: string) => {
   const vehicle = await getVehicleBusiness(licensePlate);
   if (vehicle === null) return null;
   
@@ -24,7 +24,8 @@ const createReservationBusiness = async (checkin: Date, checkout: Date, licenseP
       garage: cuitGarage,
       parkingSpace: {number: parkingSpaceNumber, garage: cuitGarage},
       vehicle: licensePlate,
-      services: services
+      services: services,
+      paymentMethod: paymentMethod
     };
 
     const result = await createReservationRepository(reservation);
