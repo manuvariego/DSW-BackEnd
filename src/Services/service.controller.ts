@@ -77,4 +77,14 @@ async function remove(req: Request, res: Response) {
     }
 }
 
-export { sanitizeServiceInput, findAll, findOne, add, update, remove }
+async function findByGarage(req: Request, res: Response) {
+    try {
+        const garageCuit = Number.parseInt(req.params.garageCuit);
+        const services = await serviceBusiness.getServicesByGarage(garageCuit);
+        res.status(200).json(services);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeServiceInput, findAll, findOne, add, update, remove, findByGarage }

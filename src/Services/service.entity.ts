@@ -1,4 +1,4 @@
-import { Entity, Cascade, Collection, Property, ManyToMany, ManyToOne} from '@mikro-orm/core';
+import { Entity, Cascade, Collection, Property, ManyToMany, ManyToOne, Rel } from '@mikro-orm/core';
 import { baseEntity } from '../shared/baseEntity.entity.js';
 import { Reservation } from '../Reservation/reservation.entity.js';
 import type { Garage } from '../Garage/garage.entity.js';
@@ -15,5 +15,5 @@ export class Service extends baseEntity{
     reservations = new Collection<Reservation>(this);
 
     @ManyToOne(() => 'Garage', { nullable: false })
-    garage!: Garage;
+    garage!: Rel<Garage>;
 }

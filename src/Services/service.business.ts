@@ -41,4 +41,8 @@ async function deleteService(id: number) {
 return await serviceRepository.remove(id);
 }
 
-export { getAllServices, getServiceById, createService, updateService, deleteService }
+async function getServicesByGarage(garageCuit: number) {
+return await serviceRepository.findByGarage(garageCuit);
+}
+
+export { getAllServices, getServiceById, createService, updateService, deleteService, getServicesByGarage }

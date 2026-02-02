@@ -28,3 +28,7 @@ export async function remove(id: number) {
 const service = await em.getReference(Service, id);
 await em.removeAndFlush(service);
 }
+
+export async function findByGarage(garageCuit: number) {
+return await em.find(Service, { garage: { cuit: garageCuit } });
+}
