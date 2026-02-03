@@ -4,6 +4,8 @@ import jwt, { Secret } from "jsonwebtoken";
 import { orm } from "../shared/db/orm.js";
 import { User } from "../User/user.entity.js";
 import { Garage } from "../Garage/garage.entity.js";
+import { sendEmail} from "../shared/mail.service.js"; 
+import { handleError } from "../shared/errors/errorHandler.js";
 
 const em = orm.em;
 
@@ -99,4 +101,38 @@ async function login(req: Request, res: Response) {
   }
 }
 
-export { login };
+async function forgotPassword(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+    const user = await em.findOne(User, { email });
+
+    if (!user) {
+      return res.status(200).json({ message: 'Si el email existe, se enviaron las instrucciones.' });
+    }
+    const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    user.resetToken = token;
+    await em.flush();
+    const recoveryLink = `http://localhost:4200/reset-password/${token}`;
+
+    await sendEmail({
+      to: email,
+      subject: 'Recuperar Contraseña - ParkEasy',
+      html: `
+        <h1>Recuperar Contraseña - ParkEasy</h1>
+        <p>Recuperación de contraseña</p>
+        <p>Hiciste una solicitud para restablecer tu contraseña.</p>
+        <p>Hacé clic en el siguiente enlace para crear una nueva:</p>
+        <a href="${recoveryLink}" style="background-color: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Restablecer Contraseña</a>
+        <br><br>
+        <small>Si no fuiste vos, ignorá este mensaje.</small>
+      `
+    });
+
+    res.status(200).json({ message: 'Correo enviado con éxito' });
+
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+export { login, forgotPassword };

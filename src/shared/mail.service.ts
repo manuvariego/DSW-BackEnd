@@ -8,13 +8,29 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const sendReservationEmail = async (to: string, reservationDetails: any) => {
-  
+//función genérica para enviar emails (la usamos para recuperar contraseña)
+export const sendEmail = async ({ to, subject, html }: { to: string, subject: string, html: string }) => {
   const mailOptions = {
     from: '"ParkEasy" <no-reply@parkeasy.com>',
     to: to,
-    subject: '¡Reserva Confirmada!',
-    html: `
+    subject: subject,
+    html: html
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email enviado correctamente a ' + to);
+    return info;
+  } catch (error) {
+    console.error('Error enviando email:', error);
+    throw error; 
+  }
+};
+
+//función específica para enviar emails de reserva
+export const sendReservationEmail = async (to: string, reservationDetails: any) => {
+  
+  const htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
         <h2 style="color: #343a40;">¡Hola! Tu lugar está reservado.</h2>
         <p>Gracias por usar ParkEasy. Aquí tienes los detalles de tu reserva:</p>
@@ -26,18 +42,15 @@ export const sendReservationEmail = async (to: string, reservationDetails: any) 
           <li><strong>Cochera:</strong> ${reservationDetails.garage.name}</li>
         </ul>
 
-
         <p style="margin-top: 20px; color: #777;">Si necesitas cancelar, puedes hacerlo desde la app.</p>
         <br>
         <small>Equipo ParkEasy</small>
       </div>
-    `
-  };
+  `;
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('Email enviado correctamente a ' + to);
-  } catch (error) {
-    console.error('Error enviando email:', error);
-  }
+  return sendEmail({
+    to: to,
+    subject: '¡Reserva Confirmada!',
+    html: htmlContent
+  });
 };

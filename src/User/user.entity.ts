@@ -30,6 +30,9 @@ export class User extends baseEntity {
     @Property()
     role!: string
 
+    @Property({ nullable: true })
+    resetToken?: string;
+
     @OneToMany(() => Vehicle, (vehicle) => vehicle.owner, {
         cascade: [Cascade.ALL],
     })
