@@ -163,5 +163,24 @@ async function findAllofGarage(req: Request, res: Response) {
   }
 }
 
+async function listResByGarage(req: Request, res: Response) {
+  try {
+    const cuitGarage = Number.parseInt(req.params.cuitGarage);
 
-export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel }
+    const reservations = await em.find(Reservation, 
+      { 
+        garage: { cuit: cuitGarage },
+      }, 
+      {
+        populate: ['parkingSpace', 'services', 'vehicle'] 
+      }
+    );
+
+    res.status(200).json(reservations);
+  } catch (error: any) { 
+    handleError(error, res); 
+  }
+}
+
+
+export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage }

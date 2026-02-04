@@ -1,10 +1,11 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage } from "./reservation.controller.js";
+import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage } from "./reservation.controller.js";
 import { validateAddReservation } from "./reservation.validation.js";
 
 export const ReservationRouter = Router()
 
+ReservationRouter.get('/garage/:cuitGarage', listResByGarage)
 ReservationRouter.get('/', findAll)
 ReservationRouter.get('/user/:userId', findByUser)
 ReservationRouter.get('/:id', findOne)
