@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage, getReservationsForBlocking } from "./reservation.controller.js";
+import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage, getReservationsForBlocking, checkAvailability } from "./reservation.controller.js";
 import { validateAddReservation } from "./reservation.validation.js";
 
 export const ReservationRouter = Router()
@@ -15,3 +15,4 @@ ReservationRouter.put('/:id', sanitizeReservationInput, update)
 ReservationRouter.patch('/:id/cancel', cancel)
 ReservationRouter.delete('/:id', eliminate)
 ReservationRouter.get('/blocking-data/:cuitGarage', getReservationsForBlocking);
+ReservationRouter.get('/check-availability', checkAvailability);

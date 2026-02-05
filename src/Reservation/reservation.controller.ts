@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Reservation } from "./reservation.entity.js";
+import { Reservation, ReservationStatus } from "./reservation.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { validationResult } from 'express-validator';
 import { createReservationBusiness, getGarageReservationsBusiness } from "./reservation.business.js";
@@ -69,6 +69,27 @@ async function add(req: Request, res: Response) {
       return res.status(400).json({ errors: errors.array() });
     }
 
+    // validación para que no reserve un vehículo que ya tiene una reserva activa en ese rango de fechas
+
+    const newCheckIn = new Date(req.body.check_in_at);
+    const newCheckOut = new Date(req.body.check_out_at);
+    const plate = req.body.license_plate;
+
+    const existeSuperposicion = await em.findOne(Reservation, {
+      vehicle: { license_plate: plate }, 
+      estado: { $ne: ReservationStatus.CANCELLED},  
+      $and: [
+        { check_in_at: { $lt: newCheckOut } },
+        { check_out_at: { $gt: newCheckIn } }
+      ]
+    });
+
+    if (existeSuperposicion) {
+      return res.status(400).json({ 
+        message: `El vehículo ${plate} ya tiene una reserva activa en ese horario.` 
+      });
+    }
+
     const checkin = new Date(`${req.body.check_in_at}`);
     const checkout = new Date(`${req.body.check_out_at}`);
     const licensePlate = `${req.body.license_plate}`;
@@ -99,6 +120,7 @@ async function add(req: Request, res: Response) {
 
   } catch (error: any) { handleError(error, res) }
 }
+
 
 
 async function update(req: Request, res: Response) {
@@ -202,4 +224,38 @@ async function getReservationsForBlocking(req: Request, res: Response) {
   }
 }
 
-export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking }
+async function checkAvailability(req: Request, res: Response) {
+  try {
+    const { license_plate, check_in_at, check_out_at } = req.query;
+
+    if (!license_plate || !check_in_at || !check_out_at) {
+      return res.status(400).json({ message: 'Faltan datos para validar.' });
+    }
+
+    const newCheckIn = new Date(String(check_in_at));
+    const newCheckOut = new Date(String(check_out_at));
+    const plate = String(license_plate);
+
+    // Misma lógica de superposición que en el add
+    const conflict = await em.findOne(Reservation, {
+    vehicle: { license_plate: plate }, 
+    estado: { $ne: ReservationStatus.CANCELLED},  
+      $and: [
+        { check_in_at: { $lt: newCheckOut } },
+        { check_out_at: { $gt: newCheckIn } }
+      ]
+    });
+
+    if (conflict) {
+      return res.status(200).json({ 
+        available: false, 
+        message: `El vehículo ${plate} ya tiene una reserva del ${new Date(conflict.check_in_at).toLocaleDateString()} al ${new Date(conflict.check_out_at).toLocaleDateString()}` 
+      });
+    }
+
+    return res.status(200).json({ available: true, message: 'Disponible' });
+
+  } catch (error: any) { handleError(error, res) }
+}
+
+export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking, checkAvailability }
