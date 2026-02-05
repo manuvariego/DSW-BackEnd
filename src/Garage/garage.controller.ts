@@ -140,7 +140,7 @@ async function getAvailables(req: Request, res: Response) {
           email: garage.email,
           phoneNumber: garage.phoneNumber,
           location: garage.location,
-          precioEstimado: precioEstimado,
+          precioEstimado: Math.round(precioEstimado),
           parkingSpaces: garage.parkingSpaces,
           services: garage.services
         };
