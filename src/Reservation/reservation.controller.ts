@@ -86,7 +86,7 @@ async function add(req: Request, res: Response) {
 
     if (existeSuperposicion) {
       return res.status(400).json({ 
-        message: `El vehículo ${plate} ya tiene una reserva activa en ese horario.` 
+        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(existeSuperposicion.check_in_at).toLocaleDateString()} al ${new Date(existeSuperposicion.check_out_at).toLocaleDateString()}` 
       });
     }
 
