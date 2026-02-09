@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Reservation, ReservationStatus } from "./reservation.entity.js";
+import { ReservationService } from "./reservationService.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { validationResult } from 'express-validator';
 import { createReservationBusiness, getGarageReservationsBusiness } from "./reservation.business.js";
@@ -54,7 +55,7 @@ async function findByUser(req: Request, res: Response) {
     const reservations = await em.find(
       Reservation,
       { vehicle: { owner: { id: userId } } },
-      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'services'] }
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'reservationServices', 'reservationServices.service'] }
     );
     res.status(200).json(reservations);
   } catch (error: any) { handleError(error, res) }
@@ -193,9 +194,7 @@ async function listResByGarage(req: Request, res: Response) {
       { 
         garage: { cuit: cuitGarage },
       }, 
-      {
-        populate: ['parkingSpace', 'services', 'vehicle'] 
-      }
+      { populate: ['parkingSpace', 'reservationServices', 'reservationServices.service', 'vehicle'] }
     );
 
     res.status(200).json(reservations);
@@ -213,9 +212,7 @@ async function getReservationsForBlocking(req: Request, res: Response) {
       { 
         garage: { cuit: cuitGarage },
       }, 
-      { 
-        populate: ['services'] 
-      }
+      { populate: ['reservationServices', 'reservationServices.service'] }
     );
 
     res.status(200).json(reservations);
@@ -258,4 +255,32 @@ async function checkAvailability(req: Request, res: Response) {
   } catch (error: any) { handleError(error, res) }
 }
 
-export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking, checkAvailability }
+async function updateServiceStatus(req: Request, res: Response) {
+  try {
+      const reservationId = Number.parseInt(req.params.reservationId);
+      const serviceId = Number.parseInt(req.params.serviceId);
+      const { status } = req.body;
+
+      const validStatuses = ['pendiente', 'en_progreso', 'completado'];
+      if (!validStatuses.includes(status)) {
+          return res.status(400).json({
+              message: 'Status inválido. Debe ser: pendiente, en_progreso o completado'
+          });
+      }
+
+      const reservationService = await em.findOneOrFail(ReservationService, {
+          reservation: reservationId,
+          service: serviceId
+      });
+
+      reservationService.status = status;
+      await em.flush();
+
+      res.status(200).json(reservationService);
+  } catch (error: any) {
+      handleError(error, res);
+  }
+}
+
+
+export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking, checkAvailability, updateServiceStatus }
