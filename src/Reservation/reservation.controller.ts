@@ -177,8 +177,9 @@ async function cancel(req: Request, res: Response) {
 async function findAllofGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
-    const { condition } = req.params;
-    
+    const  condition  = req.params.condition;
+    console.log('Condition recibida en controller:', condition);
+    // We pass req.query to the business layer
     const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
     res.status(200).json(result);

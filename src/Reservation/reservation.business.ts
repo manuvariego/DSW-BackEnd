@@ -55,6 +55,7 @@ const getGarageReservationsBusiness = async (cuitGarage: number, query: any, con
   const reservations = await findReservations(filters);
 
   if (condition === 'true') {
+    console.log("hola", reservations);
     const totalRevenue = reservations.reduce((sum, item) => sum + Number(item.amount), 0);
     return { totalRevenue };
   }
