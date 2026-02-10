@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ReservationType, typeCode } from "./reservationType.entity.js";
 import { orm } from "../shared/db/orm.js";
-//import { Garage } from "../entities/garage.entity.js";
+
 
 const em = orm.em
 

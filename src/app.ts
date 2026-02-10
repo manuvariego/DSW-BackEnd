@@ -21,9 +21,9 @@ const app = express()
 app.use(express.json())
 
 const corsOptions = {
-  origin: 'http://localhost:4200', // Permitir solicitudes desde este origen
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Métodos permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions))
@@ -52,7 +52,6 @@ app.use('/api/reservationTypes', ReservationTypeRouter)
 
 app.use('/api/reservations', ReservationRouter)
 
-// Health check endpoint for Docker
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
 })

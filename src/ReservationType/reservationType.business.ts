@@ -29,39 +29,33 @@ const calculatePriceByType = (hours: number, type: typeCode, pricing: Reservatio
   const monthPrice = getPriceByType(pricing, 'MONTH');
 
   if (type === 'HOUR') {
-    // Compare: hourly rate vs half-day flat rate
     const hourlyTotal = hours * hourPrice;
     return Math.min(hourlyTotal, halfDayPrice);
 
   } else if (type === 'HALF_DAY') {
-    // Compare: half-day + extra hours vs day flat rate
     const excessHours = hours - 12;
     const halfDayTotal = halfDayPrice + (excessHours * hourPrice);
     return Math.min(halfDayTotal, dayPrice);
 
   } else if (type === 'DAY') {
-    // Compare: daily rate * days vs weekly flat rate
     const days = getDaysByHours(hours);
     const dailyTotal = dayPrice * days;
     return Math.min(dailyTotal, weeklyPrice);
 
   } else if (type === 'WEEKLY') {
-    // Compare: weekly + extra days vs half-month flat rate
-    const excessHours = hours - 168; // 7 days in hours
+    const excessHours = hours - 168;
     const excessDays = getDaysByHours(excessHours);
     const weeklyTotal = weeklyPrice + (dayPrice * excessDays);
     return Math.min(weeklyTotal, halfMonthPrice);
 
   } else if (type === 'HALF_MONTH') {
-    // Compare: half-month + extra days vs month flat rate
-    const excessHours = hours - 360; // 15 days in hours
+    const excessHours = hours - 360;
     const excessDays = getDaysByHours(excessHours);
     const halfMonthTotal = halfMonthPrice + (dayPrice * excessDays);
     return Math.min(halfMonthTotal, monthPrice);
 
-  } else { // MONTH
-    // For months: month rate + recursively calculate excess
-    const excessHours = hours - 720; // 30 days in hours
+  } else {
+    const excessHours = hours - 720;
     const excessType = getTypeOfReservationByHours(excessHours);
     const excessPrice = calculatePriceByType(excessHours, excessType, pricing);
     return monthPrice + excessPrice;

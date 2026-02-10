@@ -68,7 +68,6 @@ async function update(req: Request, res: Response) {
     const cuit = Number.parseInt(req.params.cuit)
     const garageToUpdate = await em.findOneOrFail(Garage, { cuit }, { populate: ['services'] });
 
-    // Hash password if it's being updated
     if (req.body.sanitizedInput.password) {
       req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
     }
@@ -119,20 +118,20 @@ async function getAvailables(req: Request, res: Response) {
 
     const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
 
-    // Filtrar solo garages con precios completos
-    const garagesConPreciosCompletos = await Promise.all(
+    // Filtra solo garages con precios completos
+    const garagesWithCompletePrices = await Promise.all(
       garagesAvailables.map(async (garage) => {
         const status = await getGaragePricingStatus(garage.cuit);
         return status.completo ? garage : null;
       })
     );
 
-    const garagesFiltrados = garagesConPreciosCompletos.filter((g): g is Garage => g !== null);
+    const garagesFiltered = garagesWithCompletePrices.filter((g): g is Garage => g !== null);
 
-    // Calcular precio para cada garage
-    const garagesConPrecio = await Promise.all(
-      garagesFiltrados.map(async (garage) => {
-        const precioEstimado = await getPriceForReservationBusiness(checkin, checkout, garage.cuit);
+    // Calcula el precio para cada garage
+    const garagesWithPrice = await Promise.all(
+      garagesFiltered.map(async (garage) => {
+        const estimatedPrice = await getPriceForReservationBusiness(checkin, checkout, garage.cuit);
         return {
           cuit: garage.cuit,
           name: garage.name,
@@ -140,13 +139,13 @@ async function getAvailables(req: Request, res: Response) {
           email: garage.email,
           phoneNumber: garage.phoneNumber,
           location: garage.location,
-          precioEstimado: Math.round(precioEstimado),
+          estimatedPrice: Math.round(estimatedPrice),
           parkingSpaces: garage.parkingSpaces,
           services: garage.services
         };
       })
     );
-    res.status(200).json(garagesConPrecio);
+    res.status(200).json(garagesWithPrice);
   } catch (error: any) { handleError(error, res) }
 }
 

@@ -24,13 +24,13 @@ export class Reservation extends baseEntity {
     check_out_at!: Date;
 
     @Property({ default: ReservationStatus.ACTIVE })
-    estado: ReservationStatus = ReservationStatus.ACTIVE;
+    status: ReservationStatus = ReservationStatus.ACTIVE;
 
     @Property({})
     amount!: number;
 
     @Property({ nullable: true })
-    paymentMethod?: string; // 'Efectivo' o 'MP'
+    paymentMethod?: string;
 
     @ManyToOne(() => Vehicle, { nullable: false })
     vehicle!: Rel<Vehicle>

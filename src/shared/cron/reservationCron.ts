@@ -14,23 +14,23 @@ export function startReservationCron() {
         
         // 1. Reservas activas cuyo check_in ya pasó pero check_out no → en_curso
         const inProgressReservations = await em.find(Reservation, {
-            estado: ReservationStatus.ACTIVE,
+            status: ReservationStatus.ACTIVE,
             check_in_at: { $lte: now },
             check_out_at: { $gt: now }
         });
 
         for (const reservation of inProgressReservations) {
-            reservation.estado = ReservationStatus.IN_PROGRESS;
+            reservation.status = ReservationStatus.IN_PROGRESS;
         }
 
         // 2. Reservas activas o en_curso cuyo check_out ya pasó → completada
         const expiredReservations = await em.find(Reservation, {
-            estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
+            status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
             check_out_at: { $lte: now }
         });
         
         for (const reservation of expiredReservations) {
-            reservation.estado = ReservationStatus.COMPLETED;
+            reservation.status = ReservationStatus.COMPLETED;
         }
         
         await em.flush();

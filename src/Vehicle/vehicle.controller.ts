@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Vehicle } from "./vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { getVehicleBusiness } from "./vehicle.business.js";
-//import { Reservation } from "../Reservation/reservation.entity.js";
+
 
 const em = orm.em
 
@@ -87,8 +87,8 @@ async function update(req: Request, res: Response) {
 async function eliminate(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
-        const vehiculo = await em.findOneOrFail(Vehicle, { license_plate })
-        await em.removeAndFlush(vehiculo)
+        const vehicleToRemove = await em.findOneOrFail(Vehicle, { license_plate })
+        await em.removeAndFlush(vehicleToRemove)
 
         res.status(200).json({ message: 'Vehicle eliminated' })
 

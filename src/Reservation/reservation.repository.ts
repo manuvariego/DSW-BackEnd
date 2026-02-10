@@ -12,7 +12,7 @@ interface FilterParams {
 }
 
 const getAllReservationsRepository = async (filters: FilterParams): Promise<Reservation[]> => {
-    const reservasCocheras = await em.find(Reservation, {
+    const garageReservations = await em.find(Reservation, {
         $or: [
             {
                 check_in_at: {
@@ -36,7 +36,7 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
             },
         ],
 
-        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
+        status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
         parkingSpace: {
             TypeVehicle: {
                 id: filters.vehicleTypeId
@@ -46,7 +46,7 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
         populate: ['vehicle', 'vehicle.type', 'garage', 'parkingSpace']
     });
 
-    return reservasCocheras;
+    return garageReservations;
 }
 
 
@@ -74,7 +74,7 @@ const getActiveReservationsByUserRepository = async(userId: number): Promise<Res
         vehicle: {
             owner: userId
         },
-        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
+        status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
     });
 }
 

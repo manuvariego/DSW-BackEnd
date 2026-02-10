@@ -15,7 +15,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
     date_time_reservation: req.body.date_time_reservation,
     check_in_at: req.body.check_in_at,
     check_out_at: req.body.check_out_at,
-    estado: req.body.estado,
+    status: req.body.status,
     amount: req.body.amount,
     vehicle: req.body.vehicle,
     garage: req.body.garage,
@@ -76,18 +76,18 @@ async function add(req: Request, res: Response) {
     const newCheckOut = new Date(req.body.check_out_at);
     const plate = req.body.license_plate;
 
-    const existeSuperposicion = await em.findOne(Reservation, {
+    const overlapExists = await em.findOne(Reservation, {
       vehicle: { license_plate: plate }, 
-      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
+      status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
       ]
     });
 
-    if (existeSuperposicion) {
+    if (overlapExists) {
       return res.status(400).json({ 
-        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(existeSuperposicion.check_in_at).toLocaleDateString()} al ${new Date(existeSuperposicion.check_out_at).toLocaleDateString()}` 
+        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(overlapExists.check_in_at).toLocaleDateString()} al ${new Date(overlapExists.check_out_at).toLocaleDateString()}` 
       });
     }
 
@@ -149,24 +149,21 @@ async function cancel(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id)
     const reservation = await em.findOneOrFail(Reservation, { id })
 
-    const fechaActual = new Date(); 
-    const fechaIngreso = new Date(reservation.check_in_at); 
-
-    if (reservation.estado === ReservationStatus.IN_PROGRESS) {
+    if (reservation.status === ReservationStatus.IN_PROGRESS) {
       return res.status(400).json({ 
         message: 'No se puede cancelar: La reserva está en curso.' 
       });
     }
 
-    if (reservation.estado === ReservationStatus.CANCELLED) {
+    if (reservation.status === ReservationStatus.CANCELLED) {
       return res.status(400).json({ message: 'La reserva ya se encuentra cancelada.' });
     }
 
-    if (reservation.estado === ReservationStatus.COMPLETED) {
+    if (reservation.status === ReservationStatus.COMPLETED) {
       return res.status(400).json({ message: 'La reserva ya está completada.' });
     }
 
-    reservation.estado = ReservationStatus.CANCELLED;
+    reservation.status = ReservationStatus.CANCELLED;
     
     await em.flush()
     
@@ -182,7 +179,6 @@ async function findAllofGarage(req: Request, res: Response) {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
     const { condition } = req.params;
     
-    // We pass req.query to the business layer
     const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
     res.status(200).json(result);
@@ -241,7 +237,7 @@ async function checkAvailability(req: Request, res: Response) {
     // Misma lógica de superposición que en el add
     const conflict = await em.findOne(Reservation, {
     vehicle: { license_plate: plate }, 
-    estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
+    status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
