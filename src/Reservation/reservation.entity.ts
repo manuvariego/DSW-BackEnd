@@ -7,6 +7,7 @@ import { ReservationService } from './reservationService.entity.js';
 
 export enum ReservationStatus {
     ACTIVE = 'activa',
+    IN_PROGRESS = 'en_curso',
     CANCELLED = 'cancelada',
     COMPLETED = 'completada'
 }

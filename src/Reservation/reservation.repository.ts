@@ -36,7 +36,7 @@ const getAllReservationsRepository = async (filters: FilterParams): Promise<Rese
             },
         ],
 
-        estado: ReservationStatus.ACTIVE,
+        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
         parkingSpace: {
             TypeVehicle: {
                 id: filters.vehicleTypeId
@@ -74,7 +74,7 @@ const getActiveReservationsByUserRepository = async(userId: number): Promise<Res
         vehicle: {
             owner: userId
         },
-        estado: ReservationStatus.ACTIVE
+        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
     });
 }
 

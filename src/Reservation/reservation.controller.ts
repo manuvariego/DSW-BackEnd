@@ -78,7 +78,7 @@ async function add(req: Request, res: Response) {
 
     const existeSuperposicion = await em.findOne(Reservation, {
       vehicle: { license_plate: plate }, 
-      estado: { $ne: ReservationStatus.CANCELLED},  
+      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
@@ -152,16 +152,21 @@ async function cancel(req: Request, res: Response) {
     const fechaActual = new Date(); 
     const fechaIngreso = new Date(reservation.check_in_at); 
 
-    if (fechaActual >= fechaIngreso) {
+    if (reservation.estado === ReservationStatus.IN_PROGRESS) {
       return res.status(400).json({ 
-        message: 'No se puede cancelar: La reserva ya comenzó o es una fecha pasada.' 
+        message: 'No se puede cancelar: La reserva está en curso.' 
       });
     }
 
-    if (reservation.estado === 'cancelada') {
+    if (reservation.estado === ReservationStatus.CANCELLED) {
       return res.status(400).json({ message: 'La reserva ya se encuentra cancelada.' });
     }
-    reservation.estado = 'cancelada' as any
+
+    if (reservation.estado === ReservationStatus.COMPLETED) {
+      return res.status(400).json({ message: 'La reserva ya está completada.' });
+    }
+
+    reservation.estado = ReservationStatus.CANCELLED;
     
     await em.flush()
     
@@ -236,7 +241,7 @@ async function checkAvailability(req: Request, res: Response) {
     // Misma lógica de superposición que en el add
     const conflict = await em.findOne(Reservation, {
     vehicle: { license_plate: plate }, 
-    estado: { $ne: ReservationStatus.CANCELLED},  
+    estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
