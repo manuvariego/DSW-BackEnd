@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { findAll, add, update, remove, sanitizeServiceInput } from './service.controller.js';
+import { authenticate } from "../shared/middleware/auth.middleware.js";
 
 export const serviceRouter = Router();
 
-serviceRouter.get('/', findAll);
-serviceRouter.post('/', sanitizeServiceInput, add); 
-serviceRouter.put('/:id', sanitizeServiceInput, update);
-serviceRouter.delete('/:id', remove);
+serviceRouter.get('/', authenticate, findAll);
+serviceRouter.post('/', authenticate, sanitizeServiceInput, add);
+serviceRouter.put('/:id', authenticate, sanitizeServiceInput, update);
+serviceRouter.delete('/:id', authenticate, remove);

@@ -1,3 +1,7 @@
 onlyBuiltDependencies:
   - bcrypt
+  - better-sqlite3
+  - esbuild
   - node
+  - sqlite3
+  - unrs-resolver

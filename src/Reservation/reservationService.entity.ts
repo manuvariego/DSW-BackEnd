@@ -1,4 +1,5 @@
-import { Entity, ManyToOne, Property, PrimaryKey, Rel } from '@mikro-orm/core';
+import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { baseEntity } from '../shared/baseEntity.entity.js';
 import { Reservation } from './reservation.entity.js';
 import { Service } from '../Services/service.entity.js';
 
@@ -9,9 +10,7 @@ export enum ServiceStatus {
 }
 
 @Entity({ tableName: 'reservation_services' })
-export class ReservationService {
-    @PrimaryKey()
-    id!: number;
+export class ReservationService extends baseEntity {
 
     @ManyToOne(() => Reservation, { fieldName: 'reservation_id' })
     reservation!: Rel<Reservation>;

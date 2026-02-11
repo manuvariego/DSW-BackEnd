@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { Vehicle } from "./vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { getVehicleBusiness } from "./vehicle.business.js";
+import { User } from "../User/user.entity.js";
+import { typeVehicle } from "../VehicleType/vehicleType.entity.js";
 //import { Reservation } from "../Reservation/reservation.entity.js";
 
 const em = orm.em
@@ -9,9 +11,9 @@ const em = orm.em
 function sanitizeVehicleInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
         license_plate: req.body.license_plate,
-        owner: req.body.owner,
         type: req.body.type,
         reservation: req.body.reservation
+        // owner is taken from authenticated token, not request body
     }
 
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -62,6 +64,9 @@ async function findByOwner(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
+        // Use authenticated user's ID from token
+        req.body.sanitizedInput.owner = req.user?.id;
+
         const vehicle = em.create(Vehicle, req.body.sanitizedInput)
         await em.flush()
 

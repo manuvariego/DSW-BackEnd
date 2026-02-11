@@ -16,7 +16,7 @@ jest.mock('../shared/db/orm.js', () => ({
 }));
 
 jest.mock('../shared/errors/errorHandler.js', () => ({
-    handleError: jest.fn(),
+  handleError: jest.fn(),
 }));
 
 describe('ParkingSpace Controller - add', () => {
@@ -37,7 +37,7 @@ describe('ParkingSpace Controller - add', () => {
     mockParkingSpace.number = 1;
     mockParkingSpace.garage = { cuit: 123456789 } as Garage;
     mockParkingSpace.TypeVehicle = { id: 1 } as typeVehicle;
-    
+
     mockEm.create.mockReturnValue(mockParkingSpace);
     mockEm.flush.mockResolvedValue(undefined);
 

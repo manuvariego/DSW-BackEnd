@@ -1,13 +1,17 @@
 import { Router } from "express";
 
 import { getVehicles, findAll, findOne, update, add, eliminate, sanitizeUserInput, getActiveReservations } from "./user.controller.js";
+import { authenticate } from "../shared/middleware/auth.middleware.js";
 
 export const UserRouter = Router()
 
-UserRouter.get('/', findAll)
-UserRouter.get('/:id', findOne)
-UserRouter.get('/:id/vehicles', getVehicles)
-UserRouter.get('/:id/reservations', getActiveReservations)
+// Public routes
 UserRouter.post('/', sanitizeUserInput, add)
-UserRouter.put('/:id', sanitizeUserInput, update)
-UserRouter.delete('/:id', eliminate)
+
+// Protected routes
+UserRouter.get('/', authenticate, findAll)
+UserRouter.get('/:id', authenticate, findOne)
+UserRouter.get('/:id/vehicles', authenticate, getVehicles)
+UserRouter.get('/:id/reservations', authenticate, getActiveReservations)
+UserRouter.put('/:id', authenticate, sanitizeUserInput, update)
+UserRouter.delete('/:id', authenticate, eliminate)

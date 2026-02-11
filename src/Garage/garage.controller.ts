@@ -118,6 +118,7 @@ async function getAvailables(req: Request, res: Response) {
     }
 
     const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
+    console.log(garagesAvailables)
 
     // Filtrar solo garages con precios completos
     const garagesConPreciosCompletos = await Promise.all(

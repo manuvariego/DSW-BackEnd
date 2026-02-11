@@ -1,12 +1,16 @@
 import { Router } from 'express'
 
 import { add, eliminate, findAll, findOne, sanitizetypeVehicleInput, update } from './vehicleType.controller.js'
+import { authenticate } from "../shared/middleware/auth.middleware.js";
 
 export const typeVehicleRouter = Router()
 
+// Public GET endpoints (reference data for dropdowns, etc.)
 typeVehicleRouter.get('/', findAll)
 typeVehicleRouter.get('/:id', findOne)
-typeVehicleRouter.post('/', sanitizetypeVehicleInput, add)
-typeVehicleRouter.put('/:id', sanitizetypeVehicleInput, update)
-typeVehicleRouter.delete('/:id', eliminate)
+
+// Protected CUD endpoints
+typeVehicleRouter.post('/', authenticate, sanitizetypeVehicleInput, add)
+typeVehicleRouter.put('/:id', authenticate, sanitizetypeVehicleInput, update)
+typeVehicleRouter.delete('/:id', authenticate, eliminate)
 

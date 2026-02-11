@@ -77,8 +77,8 @@ async function add(req: Request, res: Response) {
     const plate = req.body.license_plate;
 
     const existeSuperposicion = await em.findOne(Reservation, {
-      vehicle: { license_plate: plate }, 
-      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
+      vehicle: { license_plate: plate },
+      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
@@ -86,8 +86,8 @@ async function add(req: Request, res: Response) {
     });
 
     if (existeSuperposicion) {
-      return res.status(400).json({ 
-        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(existeSuperposicion.check_in_at).toLocaleDateString()} al ${new Date(existeSuperposicion.check_out_at).toLocaleDateString()}` 
+      return res.status(400).json({
+        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(existeSuperposicion.check_in_at).toLocaleDateString()} al ${new Date(existeSuperposicion.check_out_at).toLocaleDateString()}`
       });
     }
 
@@ -101,10 +101,11 @@ async function add(req: Request, res: Response) {
     const paymentMethod: string = req.body.paymentMethod;
 
     const reservation = await createReservationBusiness(checkin, checkout, licensePlate, cuitGarage, services, totalPrice, paymentMethod);
-    
+    console.log(reservation)
+
     if (!reservation) {
-      return res.status(400).json({ 
-        message: 'No se pudo crear la reserva.' 
+      return res.status(400).json({
+        message: 'No se pudo crear la reserva.'
       });
     }
 
@@ -149,12 +150,12 @@ async function cancel(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id)
     const reservation = await em.findOneOrFail(Reservation, { id })
 
-    const fechaActual = new Date(); 
-    const fechaIngreso = new Date(reservation.check_in_at); 
+    const fechaActual = new Date();
+    const fechaIngreso = new Date(reservation.check_in_at);
 
     if (reservation.estado === ReservationStatus.IN_PROGRESS) {
-      return res.status(400).json({ 
-        message: 'No se puede cancelar: La reserva está en curso.' 
+      return res.status(400).json({
+        message: 'No se puede cancelar: La reserva está en curso.'
       });
     }
 
@@ -167,27 +168,27 @@ async function cancel(req: Request, res: Response) {
     }
 
     reservation.estado = ReservationStatus.CANCELLED;
-    
+
     await em.flush()
-    
+
     res.status(200).json({ message: 'Reserva cancelada', reservation })
 
-  } catch (error: any) { 
-    handleError(error, res) 
+  } catch (error: any) {
+    handleError(error, res)
   }
 }
 
 async function findAllofGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
-    const  condition  = req.params.condition;
+    const condition = req.params.condition;
     console.log('Condition recibida en controller:', condition);
     // We pass req.query to the business layer
     const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
     res.status(200).json(result);
-  } catch (error: any) { 
-    handleError(error, res); 
+  } catch (error: any) {
+    handleError(error, res);
   }
 }
 
@@ -195,16 +196,16 @@ async function listResByGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
 
-    const reservations = await em.find(Reservation, 
-      { 
+    const reservations = await em.find(Reservation,
+      {
         garage: { cuit: cuitGarage },
-      }, 
+      },
       { populate: ['parkingSpace', 'reservationServices', 'reservationServices.service', 'vehicle'] }
     );
 
     res.status(200).json(reservations);
-  } catch (error: any) { 
-    handleError(error, res); 
+  } catch (error: any) {
+    handleError(error, res);
   }
 }
 
@@ -213,16 +214,16 @@ async function getReservationsForBlocking(req: Request, res: Response) {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
 
     // Buscamos reservas de este garage con sus servicios
-    const reservations = await em.find(Reservation, 
-      { 
+    const reservations = await em.find(Reservation,
+      {
         garage: { cuit: cuitGarage },
-      }, 
+      },
       { populate: ['reservationServices', 'reservationServices.service'] }
     );
 
     res.status(200).json(reservations);
-  } catch (error: any) { 
-    handleError(error, res); 
+  } catch (error: any) {
+    handleError(error, res);
   }
 }
 
@@ -240,8 +241,8 @@ async function checkAvailability(req: Request, res: Response) {
 
     // Misma lógica de superposición que en el add
     const conflict = await em.findOne(Reservation, {
-    vehicle: { license_plate: plate }, 
-    estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
+      vehicle: { license_plate: plate },
+      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
@@ -249,9 +250,9 @@ async function checkAvailability(req: Request, res: Response) {
     });
 
     if (conflict) {
-      return res.status(200).json({ 
-        available: false, 
-        message: `El vehículo ${plate} ya tiene una reserva del ${new Date(conflict.check_in_at).toLocaleDateString()} al ${new Date(conflict.check_out_at).toLocaleDateString()}` 
+      return res.status(200).json({
+        available: false,
+        message: `El vehículo ${plate} ya tiene una reserva del ${new Date(conflict.check_in_at).toLocaleDateString()} al ${new Date(conflict.check_out_at).toLocaleDateString()}`
       });
     }
 
@@ -262,28 +263,28 @@ async function checkAvailability(req: Request, res: Response) {
 
 async function updateServiceStatus(req: Request, res: Response) {
   try {
-      const reservationId = Number.parseInt(req.params.reservationId);
-      const serviceId = Number.parseInt(req.params.serviceId);
-      const { status } = req.body;
+    const reservationId = Number.parseInt(req.params.reservationId);
+    const serviceId = Number.parseInt(req.params.serviceId);
+    const { status } = req.body;
 
-      const validStatuses = ['pendiente', 'en_progreso', 'completado'];
-      if (!validStatuses.includes(status)) {
-          return res.status(400).json({
-              message: 'Status inválido. Debe ser: pendiente, en_progreso o completado'
-          });
-      }
-
-      const reservationService = await em.findOneOrFail(ReservationService, {
-          reservation: reservationId,
-          service: serviceId
+    const validStatuses = ['pendiente', 'en_progreso', 'completado'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        message: 'Status inválido. Debe ser: pendiente, en_progreso o completado'
       });
+    }
 
-      reservationService.status = status;
-      await em.flush();
+    const reservationService = await em.findOneOrFail(ReservationService, {
+      reservation: reservationId,
+      service: serviceId
+    });
 
-      res.status(200).json(reservationService);
+    reservationService.status = status;
+    await em.flush();
+
+    res.status(200).json(reservationService);
   } catch (error: any) {
-      handleError(error, res);
+    handleError(error, res);
   }
 }
 
