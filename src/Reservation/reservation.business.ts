@@ -62,7 +62,6 @@ const getGarageReservationsBusiness = async (cuitGarage: number, query: any, con
 
   // Business logic: Calculate revenue if condition is true
   if (condition === 'true') {
-    console.log("hola", reservations);
     const totalRevenue = reservations.reduce((sum, item) => sum + Number(item.amount), 0);
     return { totalRevenue };
   }

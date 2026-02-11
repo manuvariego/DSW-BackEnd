@@ -15,13 +15,19 @@ export function initSocket(server: HttpServer): SocketServer {
     console.log('[Socket] Cliente conectado:', socket.id);
 
     socket.on('join:garage', (cuit: string) => {
-      socket.join(`garage:${cuit}`);
-      console.log(`[Socket] ${socket.id} se unió a sala garage:${cuit}`);
+      const room = `garage:${cuit}`;
+      if (!socket.rooms.has(room)) {
+        socket.join(room);
+        console.log(`[Socket] ${socket.id} se unió a sala ${room}`);
+      }
     });
 
     socket.on('join:user', (userId: string) => {
-      socket.join(`user:${userId}`);
-      console.log(`[Socket] ${socket.id} se unió a sala user:${userId}`);
+      const room = `user:${userId}`;
+      if (!socket.rooms.has(room)) {
+        socket.join(room);
+        console.log(`[Socket] ${socket.id} se unió a sala ${room}`);
+      }
     });
 
     socket.on('disconnect', () => {
