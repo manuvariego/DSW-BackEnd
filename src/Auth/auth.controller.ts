@@ -36,7 +36,7 @@ async function login(req: Request, res: Response) {
           type: user.role,
           timeToken: time,
         },
-        process.env.JWT_SECRET || 'palabra_secreta' as Secret
+        process.env.JWT_SECRET as Secret
       );
 
       return res.status(200).json({
@@ -76,7 +76,7 @@ async function login(req: Request, res: Response) {
           type: 'garage',
           timeToken: time,
         },
-        process.env.JWT_SECRET || 'palabra_secreta' as Secret
+        process.env.JWT_SECRET as Secret
       );
 
       return res.status(200).json({
@@ -112,7 +112,7 @@ async function forgotPassword(req: Request, res: Response) {
     const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
     user.resetToken = token;
     await em.flush();
-    const recoveryLink = `http://localhost:4200/reset-password/${token}`;
+    const recoveryLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
     await sendEmail({
       to: email,
