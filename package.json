@@ -22,7 +22,6 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@mikro-orm/better-sqlite": "^6.6.6",
         "@mikro-orm/cli": "6.6.6",
         "@mikro-orm/core": "^6.6.6",
         "@mikro-orm/migrations": "6.6.6",
@@ -38,8 +37,6 @@
         "@types/nodemailer": "^7.0.5",
         "@types/supertest": "^6.0.3",
         "bcrypt": "^5.1.1",
-        "better-sqlite3": "^12.6.2",
-        "sqlite3": "^5.1.7",
         "supertest": "^7.2.2",
         "ts-jest": "^29.4.6",
         "ts-node": "^10.9.2",
@@ -64,7 +61,8 @@
         "mikro-orm": "^6.3.0",
         "node-cron": "^4.2.1",
         "nodemailer": "^7.0.12",
-        "reflect-metadata": "0.2.2"
+        "reflect-metadata": "0.2.2",
+        "socket.io": "^4.8.3"
     },
     "mikro-orm": {
         "useTsNode": true,
