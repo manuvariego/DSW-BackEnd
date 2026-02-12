@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage, updateServiceStatus } from "./reservation.controller.js";
+import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage, updateServiceStatus, checkAvailability, getReservationsForBlocking } from "./reservation.controller.js";
 import { validateAddReservation } from "./reservation.validation.js";
 
 export const ReservationRouter = Router()

@@ -232,7 +232,7 @@ async function getReservationsForBlocking(req: Request, res: Response) {
     const reservations = await em.find(Reservation, 
       { 
         garage: { cuit: cuitGarage },
-        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
+        status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
       }, 
       { populate: ['reservationServices', 'reservationServices.service', 'parkingSpace'] }
     );
