@@ -6,6 +6,7 @@ import { validationResult } from 'express-validator';
 import { createReservationBusiness, getGarageReservationsBusiness } from "./reservation.business.js";
 import { sendReservationEmail } from "../shared/mail.service.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { getIO } from "../shared/socket/socket.service.js";
 
 
 const em = orm.em
@@ -117,6 +118,12 @@ async function add(req: Request, res: Response) {
       await sendReservationEmail(userEmail, fullReservation);
     }
 
+    const io = getIO();
+    io.to(`garage:${req.body.cuitGarage}`).emit('reservation:created', { reservationId: reservation.id });
+    if (fullReservation?.vehicle?.owner?.id) {
+      io.to(`user:${fullReservation.vehicle.owner.id}`).emit('reservation:created', { reservationId: reservation.id });
+    }
+
     res.status(200).json(reservation);
 
   } catch (error: any) { handleError(error, res) }
@@ -166,6 +173,15 @@ async function cancel(req: Request, res: Response) {
     reservation.status = ReservationStatus.CANCELLED;
     
     await em.flush()
+    
+    const fullReservation = await em.findOne(Reservation, { id }, { populate: ['garage', 'vehicle.owner'] });
+    const io = getIO();
+    if (fullReservation) {
+      io.to(`garage:${fullReservation.garage.cuit}`).emit('reservation:cancelled', { reservationId: id });
+      if (fullReservation.vehicle?.owner?.id) {
+        io.to(`user:${fullReservation.vehicle.owner.id}`).emit('reservation:cancelled', { reservationId: id });
+      }
+    }
     
     res.status(200).json({ message: 'Reserva cancelada', reservation })
 
@@ -277,6 +293,15 @@ async function updateServiceStatus(req: Request, res: Response) {
 
       reservationService.status = status;
       await em.flush();
+
+      const reservation = await em.findOne(Reservation, { id: reservationId }, { populate: ['garage', 'vehicle.owner'] });
+      const io = getIO();
+      if (reservation) {
+        io.to(`garage:${reservation.garage.cuit}`).emit('service:statusChanged', { reservationId, serviceId, status });
+        if (reservation.vehicle?.owner?.id) {
+          io.to(`user:${reservation.vehicle.owner.id}`).emit('service:statusChanged', { reservationId, serviceId, status });
+        }
+      }
 
       res.status(200).json(reservationService);
   } catch (error: any) {

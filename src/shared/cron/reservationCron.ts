@@ -1,12 +1,13 @@
 import cron from 'node-cron';
 import { orm } from '../db/orm.js';
 import { Reservation, ReservationStatus } from '../../Reservation/reservation.entity.js';
+import { getIO } from '../socket/socket.service.js';
 
 export function startReservationCron() {
-    // Corre cada hora (minuto 0 de cada hora)
+    // Corre cada minuto
     // Formato: minuto hora día mes díaSemana
     // '0 * * * *' = minuto 0, cualquier hora, cualquier día
-    cron.schedule('0 * * * *', async () => {
+    cron.schedule('* * * * *', async () => {
         console.log('[CRON] Verificando reservas...');
         
         const em = orm.em.fork();
@@ -17,7 +18,7 @@ export function startReservationCron() {
             status: ReservationStatus.ACTIVE,
             check_in_at: { $lte: now },
             check_out_at: { $gt: now }
-        });
+        }, { populate: ['vehicle.owner', 'garage'] });
 
         for (const reservation of inProgressReservations) {
             reservation.status = ReservationStatus.IN_PROGRESS;
@@ -27,15 +28,33 @@ export function startReservationCron() {
         const expiredReservations = await em.find(Reservation, {
             status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
             check_out_at: { $lte: now }
-        });
+        }, { populate: ['vehicle.owner', 'garage'] });
         
         for (const reservation of expiredReservations) {
             reservation.status = ReservationStatus.COMPLETED;
         }
         
         await em.flush();
+
+        // Emitir eventos por WebSocket
+        const io = getIO();
+
+        for (const reservation of inProgressReservations) {
+            io.to(`garage:${reservation.garage.cuit}`).emit('reservation:inProgress', { reservationId: reservation.id });
+            if (reservation.vehicle?.owner?.id) {
+                io.to(`user:${reservation.vehicle.owner.id}`).emit('reservation:inProgress', { reservationId: reservation.id });
+            }
+        }
+
+        for (const reservation of expiredReservations) {
+            io.to(`garage:${reservation.garage.cuit}`).emit('reservation:completed', { reservationId: reservation.id });
+            if (reservation.vehicle?.owner?.id) {
+                io.to(`user:${reservation.vehicle.owner.id}`).emit('reservation:completed', { reservationId: reservation.id });
+            }
+        }
+
         console.log(`[CRON] ${inProgressReservations.length} reservas en curso, ${expiredReservations.length} completadas`);
     });
     
-    console.log('[CRON] Tarea de reservas programada (cada hora)');
+    console.log('[CRON] Tarea de reservas programada (cada minuto)');
 }

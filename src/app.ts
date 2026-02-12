@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import 'reflect-metadata'
 import express from 'express'
+import http from 'http'
 import 'dotenv/config'
 import { orm } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
@@ -16,6 +17,7 @@ import { AuthRouter } from './Auth/auth.routes.js'
 import { serviceRouter } from './Services/service.routes.js'
 import cors from 'cors'
 import { startReservationCron } from './shared/cron/reservationCron.js';
+import { initSocket } from './shared/socket/socket.service.js'
 
 const app = express()
 app.use(express.json())
@@ -76,7 +78,10 @@ async function start() {
     console.log('Database schema synced');
   }
 
-  app.listen(port, () => {
+  const server = http.createServer(app);
+  initSocket(server);
+
+  server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`)
     console.log(`Health check: http://localhost:${port}/health`)
   })
