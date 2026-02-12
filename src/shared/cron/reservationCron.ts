@@ -8,7 +8,6 @@ export function startReservationCron() {
     // Formato: minuto hora día mes díaSemana
     // '0 * * * *' = minuto 0, cualquier hora, cualquier día
     cron.schedule('* * * * *', async () => {
-        console.log('[CRON] Verificando reservas...');
         
         const em = orm.em.fork();
         const now = new Date();

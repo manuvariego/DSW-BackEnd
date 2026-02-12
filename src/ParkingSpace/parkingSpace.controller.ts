@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ParkingSpace } from "./parkingSpace.entity.js";
 import { orm } from "../shared/db/orm.js";
-import { Reservation } from "../Reservation/reservation.entity.js";
+import { handleError } from "../shared/errors/errorHandler.js";
 
 
 const em = orm.em
@@ -27,7 +27,7 @@ async function findAll(req: Request, res: Response) {
     const parkingSpaces = await em.find(ParkingSpace, {}, { populate: ['TypeVehicle'] })
     res.status(200).json(parkingSpaces)
   }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+  catch (error: any) { handleError(error, res)}
 }
 
 async function findAllofAGarage(req: Request, res: Response) {
@@ -36,7 +36,7 @@ async function findAllofAGarage(req: Request, res: Response) {
         const parkingSpaces = await em.find(ParkingSpace, { garage: {cuit: cuitGarage} }, { populate: ['TypeVehicle'] })
         res.status(200).json(parkingSpaces)
     }
-    catch (error: any) { res.status(500).json({ message: error.message }) }
+    catch (error: any) { handleError(error, res) }
 }
 
 async function findOne(req: Request, res: Response) {
@@ -46,7 +46,7 @@ async function findOne(req: Request, res: Response) {
     const parkingSpace = await em.findOneOrFail(ParkingSpace, { number, garage: { cuit: cuitGarage } }, { populate: ['TypeVehicle'] })
     res.status(200).json(parkingSpace)
   }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+  catch (error: any) { handleError(error, res) }
 }
 
 
@@ -56,7 +56,7 @@ async function add(req: Request, res: Response) {
     await em.flush()
     res.status(201).json(parkingSpace)
   }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+  catch (error: any) { handleError(error, res) }
 }
 
 
@@ -69,7 +69,7 @@ async function update(req: Request, res: Response) {
     await em.flush()
     res.status(200).json(parkingSpaceToUpdate)
   }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+  catch (error: any) { handleError(error, res) }
 }
 
 
@@ -81,7 +81,7 @@ async function eliminate(req: Request, res: Response) {
     await em.removeAndFlush(parkingSpace)
     res.status(200).json({ message: 'ParkingSpace deleted successfully' })
   }
-  catch (error: any) { res.status(500).json({ message: error.message }) }
+  catch (error: any) { handleError(error, res) }
 
 }
 

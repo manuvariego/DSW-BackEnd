@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Vehicle } from "./vehicle.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { getVehicleBusiness } from "./vehicle.business.js";
-
+import { handleError } from "../shared/errors/errorHandler.js";
 
 const em = orm.em
 
@@ -29,7 +29,7 @@ async function findAll(req: Request, res: Response) {
 
         res.status(200).json(vehicles)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -45,7 +45,7 @@ async function findOne(req: Request, res: Response) {
             res.status(200).json(vehicle)
         }
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -54,9 +54,7 @@ async function findByOwner(req: Request, res: Response) {
         const ownerId = Number(req.params.ownerId);
         const vehicles = await em.find(Vehicle, { owner: { id: ownerId } }, { populate: ['type'] });
         res.status(200).json(vehicles);
-    } catch (error: any) { 
-        res.status(500).json({ message: error.message }) 
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -67,7 +65,7 @@ async function add(req: Request, res: Response) {
 
         res.status(201).json(vehicle)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -80,7 +78,7 @@ async function update(req: Request, res: Response) {
 
         res.status(200).json(vehicleToUpdate)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -92,7 +90,7 @@ async function eliminate(req: Request, res: Response) {
 
         res.status(200).json({ message: 'Vehicle eliminated' })
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 
 }
 

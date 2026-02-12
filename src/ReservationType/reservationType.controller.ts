@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ReservationType, typeCode } from "./reservationType.entity.js";
 import { orm } from "../shared/db/orm.js";
-
+import { handleError } from "../shared/errors/errorHandler.js";
 
 const em = orm.em
 
@@ -27,7 +27,7 @@ async function findAll(req: Request, res: Response) {
 
         res.status(200).json(reservationTypes)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -39,7 +39,7 @@ async function findOne(req: Request, res: Response) {
 
         res.status(200).json(reservationType)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -50,7 +50,7 @@ async function add(req: Request, res: Response) {
 
         res.status(201).json(reservationType)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -64,7 +64,7 @@ async function update(req: Request, res: Response) {
 
         res.status(200).json(reservationTypeToUpdate)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -77,7 +77,7 @@ async function eliminate(req: Request, res: Response) {
 
         res.status(200).json({ message: 'ReservationType deleted successfully' })
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 
 }
 
@@ -87,9 +87,7 @@ async function getPricingStatus(req: Request, res: Response) {
         const { getGaragePricingStatus } = await import('./reservationType.business.js');
         const status = await getGaragePricingStatus(cuitGarage);
         res.status(200).json(status);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 async function findByGarage(req: Request, res: Response) {
@@ -97,9 +95,7 @@ async function findByGarage(req: Request, res: Response) {
         const cuitGarage = Number.parseInt(req.params.cuit);
         const reservationTypes = await em.find(ReservationType, { garage: { cuit: cuitGarage } });
         res.status(200).json(reservationTypes);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 export { sanitizeReservationTypeInput, findAll, findOne, add, update, eliminate, getPricingStatus, findByGarage }

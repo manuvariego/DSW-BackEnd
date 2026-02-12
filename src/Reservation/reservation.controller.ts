@@ -35,7 +35,9 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
   try {
-    const reservations = await em.find(Reservation, {})
+    const reservations = await em.find(Reservation, {}, 
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'reservationServices', 'reservationServices.service'] }
+    )
     res.status(200).json(reservations)
   } catch (error: any) { handleError(error, res) }
 }
@@ -44,7 +46,9 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
-    const reservation = await em.findOneOrFail(Reservation, { id })
+    const reservation = await em.findOneOrFail(Reservation, { id },
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'reservationServices', 'reservationServices.service'] }
+    )
     res.status(200).json(reservation)
   } catch (error: any) { handleError(error, res) }
 }
@@ -124,7 +128,7 @@ async function add(req: Request, res: Response) {
       io.to(`user:${fullReservation.vehicle.owner.id}`).emit('reservation:created', { reservationId: reservation.id });
     }
 
-    res.status(200).json(reservation);
+    res.status(201).json(reservation);
 
   } catch (error: any) { handleError(error, res) }
 }
@@ -194,7 +198,6 @@ async function findAllofGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
     const  condition  = req.params.condition;
-    console.log('Condition recibida en controller:', condition);
     // We pass req.query to the business layer
     const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
@@ -229,8 +232,9 @@ async function getReservationsForBlocking(req: Request, res: Response) {
     const reservations = await em.find(Reservation, 
       { 
         garage: { cuit: cuitGarage },
+        estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
       }, 
-      { populate: ['reservationServices', 'reservationServices.service'] }
+      { populate: ['reservationServices', 'reservationServices.service', 'parkingSpace'] }
     );
 
     res.status(200).json(reservations);
