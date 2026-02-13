@@ -6,6 +6,7 @@ import { validationResult } from 'express-validator';
 import { createReservationBusiness, getGarageReservationsBusiness } from "./reservation.business.js";
 import { sendReservationEmail } from "../shared/mail.service.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { getIO } from "../shared/socket/socket.service.js";
 
 
 const em = orm.em
@@ -15,7 +16,7 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
     date_time_reservation: req.body.date_time_reservation,
     check_in_at: req.body.check_in_at,
     check_out_at: req.body.check_out_at,
-    estado: req.body.estado,
+    status: req.body.status,
     amount: req.body.amount,
     vehicle: req.body.vehicle,
     garage: req.body.garage,
@@ -34,7 +35,9 @@ function sanitizeReservationInput(req: Request, res: Response, next: NextFunctio
 
 async function findAll(req: Request, res: Response) {
   try {
-    const reservations = await em.find(Reservation, {})
+    const reservations = await em.find(Reservation, {}, 
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'reservationServices', 'reservationServices.service'] }
+    )
     res.status(200).json(reservations)
   } catch (error: any) { handleError(error, res) }
 }
@@ -43,7 +46,9 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id)
-    const reservation = await em.findOneOrFail(Reservation, { id })
+    const reservation = await em.findOneOrFail(Reservation, { id },
+      { populate: ['vehicle', 'garage', 'garage.location', 'parkingSpace', 'reservationServices', 'reservationServices.service'] }
+    )
     res.status(200).json(reservation)
   } catch (error: any) { handleError(error, res) }
 }
@@ -76,18 +81,18 @@ async function add(req: Request, res: Response) {
     const newCheckOut = new Date(req.body.check_out_at);
     const plate = req.body.license_plate;
 
-    const existeSuperposicion = await em.findOne(Reservation, {
-      vehicle: { license_plate: plate },
-      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
+    const overlapExists = await em.findOne(Reservation, {
+      vehicle: { license_plate: plate }, 
+      status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
       ]
     });
 
-    if (existeSuperposicion) {
-      return res.status(400).json({
-        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(existeSuperposicion.check_in_at).toLocaleDateString()} al ${new Date(existeSuperposicion.check_out_at).toLocaleDateString()}`
+    if (overlapExists) {
+      return res.status(400).json({ 
+        message: `El vehículo ${plate} ya tiene una reserva activa en este rango de fechas: del ${new Date(overlapExists.check_in_at).toLocaleDateString()} al ${new Date(overlapExists.check_out_at).toLocaleDateString()}` 
       });
     }
 
@@ -118,7 +123,13 @@ async function add(req: Request, res: Response) {
       await sendReservationEmail(userEmail, fullReservation);
     }
 
-    res.status(200).json(reservation);
+    const io = getIO();
+    io.to(`garage:${req.body.cuitGarage}`).emit('reservation:created', { reservationId: reservation.id });
+    if (fullReservation?.vehicle?.owner?.id) {
+      io.to(`user:${fullReservation.vehicle.owner.id}`).emit('reservation:created', { reservationId: reservation.id });
+    }
+
+    res.status(201).json(reservation);
 
   } catch (error: any) { handleError(error, res) }
 }
@@ -150,27 +161,33 @@ async function cancel(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id)
     const reservation = await em.findOneOrFail(Reservation, { id })
 
-    const fechaActual = new Date();
-    const fechaIngreso = new Date(reservation.check_in_at);
-
-    if (reservation.estado === ReservationStatus.IN_PROGRESS) {
-      return res.status(400).json({
-        message: 'No se puede cancelar: La reserva está en curso.'
+    if (reservation.status === ReservationStatus.IN_PROGRESS) {
+      return res.status(400).json({ 
+        message: 'No se puede cancelar: La reserva está en curso.' 
       });
     }
 
-    if (reservation.estado === ReservationStatus.CANCELLED) {
+    if (reservation.status === ReservationStatus.CANCELLED) {
       return res.status(400).json({ message: 'La reserva ya se encuentra cancelada.' });
     }
 
-    if (reservation.estado === ReservationStatus.COMPLETED) {
+    if (reservation.status === ReservationStatus.COMPLETED) {
       return res.status(400).json({ message: 'La reserva ya está completada.' });
     }
 
-    reservation.estado = ReservationStatus.CANCELLED;
-
+    reservation.status = ReservationStatus.CANCELLED;
+    
     await em.flush()
-
+    
+    const fullReservation = await em.findOne(Reservation, { id }, { populate: ['garage', 'vehicle.owner'] });
+    const io = getIO();
+    if (fullReservation) {
+      io.to(`garage:${fullReservation.garage.cuit}`).emit('reservation:cancelled', { reservationId: id });
+      if (fullReservation.vehicle?.owner?.id) {
+        io.to(`user:${fullReservation.vehicle.owner.id}`).emit('reservation:cancelled', { reservationId: id });
+      }
+    }
+    
     res.status(200).json({ message: 'Reserva cancelada', reservation })
 
   } catch (error: any) {
@@ -181,8 +198,7 @@ async function cancel(req: Request, res: Response) {
 async function findAllofGarage(req: Request, res: Response) {
   try {
     const cuitGarage = Number.parseInt(req.params.cuitGarage);
-    const condition = req.params.condition;
-    console.log('Condition recibida en controller:', condition);
+    const  condition  = req.params.condition;
     // We pass req.query to the business layer
     const result = await getGarageReservationsBusiness(cuitGarage, req.query, condition);
 
@@ -217,8 +233,9 @@ async function getReservationsForBlocking(req: Request, res: Response) {
     const reservations = await em.find(Reservation,
       {
         garage: { cuit: cuitGarage },
+        status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
       },
-      { populate: ['reservationServices', 'reservationServices.service'] }
+      { populate: ['reservationServices', 'reservationServices.service', 'parkingSpace'] }
     );
 
     res.status(200).json(reservations);
@@ -241,8 +258,8 @@ async function checkAvailability(req: Request, res: Response) {
 
     // Misma lógica de superposición que en el add
     const conflict = await em.findOne(Reservation, {
-      vehicle: { license_plate: plate },
-      estado: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },
+    vehicle: { license_plate: plate }, 
+    status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] },  
       $and: [
         { check_in_at: { $lt: newCheckOut } },
         { check_out_at: { $gt: newCheckIn } }
@@ -279,8 +296,17 @@ async function updateServiceStatus(req: Request, res: Response) {
       service: serviceId
     });
 
-    reservationService.status = status;
-    await em.flush();
+      reservationService.status = status;
+      await em.flush();
+
+      const reservation = await em.findOne(Reservation, { id: reservationId }, { populate: ['garage', 'vehicle.owner'] });
+      const io = getIO();
+      if (reservation) {
+        io.to(`garage:${reservation.garage.cuit}`).emit('service:statusChanged', { reservationId, serviceId, status });
+        if (reservation.vehicle?.owner?.id) {
+          io.to(`user:${reservation.vehicle.owner.id}`).emit('service:statusChanged', { reservationId, serviceId, status });
+        }
+      }
 
     res.status(200).json(reservationService);
   } catch (error: any) {

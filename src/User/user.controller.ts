@@ -83,7 +83,6 @@ async function update(req: Request, res: Response) {
         const id = Number.parseInt(req.params.id)
         const userToUpdate = await em.findOneOrFail(User, { id })
 
-        // Hash password if it's being updated
         if (req.body.sanitizedInput.password) {
             req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
         }

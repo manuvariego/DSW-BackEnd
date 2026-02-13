@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { typeVehicle } from "./vehicleType.entity.js";
 import { orm } from "../shared/db/orm.js";
+import { handleError } from "../shared/errors/errorHandler.js";
 
 const em = orm.em
 
@@ -24,7 +25,7 @@ async function findAll(req: Request, res: Response) {
 
         res.status(200).json(typeVehicles)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -35,7 +36,7 @@ async function findOne(req: Request, res: Response) {
 
         res.status(200).json(typevehicle)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -46,7 +47,7 @@ async function add(req: Request, res: Response) {
 
         res.status(201).json(typevehicle)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -59,7 +60,7 @@ async function update(req: Request, res: Response) {
 
         res.status(200).json(typeVehicleToUpdate)
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -71,7 +72,7 @@ async function eliminate(req: Request, res: Response) {
 
         res.status(200).json({ message: 'typeVehicle eliminated' })
 
-    } catch (error: any) { res.status(500).json({ message: error.message }) }
+    } catch (error: any) { handleError(error, res) }
 
 }
 

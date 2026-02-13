@@ -7,6 +7,4 @@ const getAllGaragesRepository = async (): Promise<Garage[]> => {
  return await em.find(Garage, {}, { populate: ['parkingSpaces', 'location', 'services'] });
 }
 
-
-
 export { getAllGaragesRepository }

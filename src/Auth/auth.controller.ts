@@ -12,22 +12,18 @@ const em = orm.em;
 async function login(req: Request, res: Response) {
   try {
     const { dni, password } = req.body;
-
     if (!dni || !password) {
       return res.status(400).json({ message: 'DNI and password are required' });
     }
-
-    // Primero buscar en la tabla de usuarios por DNI
     const user = await em.findOne(User, { dni: dni });
 
     if (user) {
-      // Usuario encontrado, verificar contraseña
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      // Generar token para usuario
+      // token para usuario
       const time = new Date();
       const token = jwt.sign(
         {
@@ -36,7 +32,7 @@ async function login(req: Request, res: Response) {
           type: user.role,
           timeToken: time,
         },
-        process.env.JWT_SECRET || 'palabra_secreta' as Secret
+        process.env.JWT_SECRET as Secret
       );
 
       return res.status(200).json({
@@ -52,22 +48,20 @@ async function login(req: Request, res: Response) {
       });
     }
 
-    // Si no se encuentra usuario, buscar en la tabla de garages por CUIT
+    // Si no se encuentra usuario, busca en la tabla de garages por CUIT
     const cuitNumber = Number(dni);
     if (isNaN(cuitNumber)) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-
     const garage = await em.findOne(Garage, { cuit: cuitNumber });
 
     if (garage) {
-      // Garage encontrado, verificar contraseña
       const match = await bcrypt.compare(password, garage.password);
       if (!match) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      // Generar token para garage
+      // token para garage
       const time = new Date();
       const token = jwt.sign(
         {
@@ -76,7 +70,7 @@ async function login(req: Request, res: Response) {
           type: 'garage',
           timeToken: time,
         },
-        process.env.JWT_SECRET || 'palabra_secreta' as Secret
+        process.env.JWT_SECRET as Secret
       );
 
       return res.status(200).json({
@@ -94,7 +88,6 @@ async function login(req: Request, res: Response) {
 
     // No se encontró ni usuario ni garage
     return res.status(401).json({ message: 'Invalid credentials' });
-
   } catch (error: any) {
     console.error('Login error:', error);
     return res.status(500).json({ message: error.message });
@@ -112,7 +105,7 @@ async function forgotPassword(req: Request, res: Response) {
     const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
     user.resetToken = token;
     await em.flush();
-    const recoveryLink = `http://localhost:4200/reset-password/${token}`;
+    const recoveryLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
     await sendEmail({
       to: email,

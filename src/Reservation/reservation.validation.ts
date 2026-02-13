@@ -16,6 +16,6 @@ export const validateAddReservation = [
       throw new Error('Check-out debe ser mayor al check-in');
     }
 
-    return true;  // Si ambas validaciones son correctas, retorna true
+    return true;
   })
 ];

@@ -6,7 +6,7 @@ import { User } from '../User/user.entity.js';
 @Entity()
 export class Vehicle {
     @PrimaryKey()
-    license_plate!: string // Asumo que la patente es una cadena única que actúa como la clave primaria
+    license_plate!: string
 
     @ManyToOne(() => User, { nullable: false })
     owner!: Rel<User>

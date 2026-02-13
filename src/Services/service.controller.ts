@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as serviceBusiness from "./service.business.js";
-import { Service } from "./service.entity.js";
+import { handleError } from "../shared/errors/errorHandler.js";
 
 
 function sanitizeServiceInput(req: Request, res: Response, next: NextFunction) {
@@ -22,9 +22,7 @@ async function findAll(req: Request, res: Response) {
     try {
         const services = await serviceBusiness.getAllServices();
         res.status(200).json(services);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 async function findOne(req: Request, res: Response) {
@@ -32,9 +30,7 @@ async function findOne(req: Request, res: Response) {
         const id = Number.parseInt(req.params.id);
         const service = await serviceBusiness.getServiceById(id);
         res.status(200).json(service);
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 
@@ -49,9 +45,7 @@ async function add(req: Request, res: Response) {
         );
         
         res.status(201).json({ message: "Servicio creado", data: newService });
-    } catch (error: any) {
-        res.status(400).json({ message: error.message });
-    }
+    } catch (error: any) { res.status(400).json({ message: error.message }) }
 }
 
 async function update(req: Request, res: Response) {
@@ -62,9 +56,7 @@ async function update(req: Request, res: Response) {
         const updatedService = await serviceBusiness.updateService(id, input);
         
         res.status(200).json({ message: "Servicio actualizado", data: updatedService });
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 async function remove(req: Request, res: Response) {
@@ -72,9 +64,7 @@ async function remove(req: Request, res: Response) {
         const id = Number.parseInt(req.params.id);
         await serviceBusiness.deleteService(id);
         res.status(200).json({ message: "Servicio eliminado" });
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
+    } catch (error: any) { handleError(error, res) }
 }
 
 export { sanitizeServiceInput, findAll, findOne, add, update, remove }

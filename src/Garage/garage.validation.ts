@@ -8,7 +8,7 @@ export const validateGarageAvailables = [
         return false;
       }
       return true;
-    }).withMessage(`Check-out debe ser menor al check-in`),
+    }).withMessage(`Check-out debe ser mayor al check-in`),
   query('check_in_at')
     .notEmpty().withMessage(`El campo check-in es obligatorio`)
     .custom((value, { req }) => {

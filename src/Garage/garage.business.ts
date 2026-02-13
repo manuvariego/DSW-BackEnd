@@ -21,8 +21,8 @@ const getAvailablesBusiness = async (checkin: Date, checkout: Date, vehicleTypeI
       acc[garage.cuit] = 1;
     }
 
-    return acc;   // devuelve esto el contador {101: 2, 102: 2, 103: 1 }
-  }, {}); // Iniciamos con un objeto vacío
+    return acc; 
+  }, {}); 
 
   const garages = await getAllGaragesRepository();
 
@@ -48,7 +48,7 @@ const getParkingSpaceAvailable = async (checkin: Date, checkout: Date, vehicleTy
 
 
 const getPriceForReservationBusiness = async (checkin: Date, checkout: Date, cuitGarage: number): Promise<number> => {
-  // Obtener la diferencia en horas
+  // diferencia en horas
   const reservationsHours = (checkout.getTime() - checkin.getTime()) / (1000 * 60 * 60);
   const price = await getPriceByGarageBusiness(cuitGarage, reservationsHours);
   return price;

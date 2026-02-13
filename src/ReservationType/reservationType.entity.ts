@@ -4,7 +4,6 @@ import { Garage } from '../Garage/garage.entity.js';
 @Entity()
 export class ReservationType {
 
-    //Los codigos de los tipos de reserva pueden ser [HOUR, HALF_DAY, DAILY, WEEKLY, HALF_MONTH, MONTH]
     @PrimaryKey({})
     description!: typeCode;
 
