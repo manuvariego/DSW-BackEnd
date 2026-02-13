@@ -548,6 +548,16 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
+        },
+        "reset_token": {
+          "name": "reset_token",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 255,
+          "mappedType": "string"
         }
       },
       "name": "user",
@@ -735,6 +745,16 @@
           "length": null,
           "mappedType": "integer"
         },
+        "payment_method": {
+          "name": "payment_method",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 255,
+          "mappedType": "string"
+        },
         "vehicle_license_plate": {
           "name": "vehicle_license_plate",
           "type": "varchar(255)",
@@ -865,6 +885,16 @@
     },
     {
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
         "reservation_id": {
           "name": "reservation_id",
           "type": "int",
@@ -884,6 +914,17 @@
           "nullable": false,
           "length": null,
           "mappedType": "integer"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "default": "'pendiente'",
+          "mappedType": "string"
         }
       },
       "name": "reservation_services",
@@ -911,10 +952,9 @@
         {
           "keyName": "PRIMARY",
           "columnNames": [
-            "reservation_id",
-            "service_id"
+            "id"
           ],
-          "composite": true,
+          "composite": false,
           "constraint": true,
           "primary": true,
           "unique": true
@@ -932,7 +972,6 @@
             "id"
           ],
           "referencedTableName": "reservation",
-          "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "reservation_services_service_id_foreign": {
@@ -945,7 +984,6 @@
             "id"
           ],
           "referencedTableName": "service",
-          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
