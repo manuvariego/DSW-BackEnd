@@ -22,8 +22,7 @@ export default defineConfig({
   debug: process.env.NODE_ENV !== 'production',
 
   migrations: {
-    path: 'dist/src/migrations',       // runtime: where compiled JS migrations are loaded from
-    pathTs: 'src/migrations',          // development: where new TS migration files are created
+    path: process.env.NODE_ENV === 'production' ? './dist/src/migrations' : './src/migrations',
   },
 
   schemaGenerator: {
