@@ -724,8 +724,8 @@
           "length": null,
           "mappedType": "datetime"
         },
-        "estado": {
-          "name": "estado",
+        "status": {
+          "name": "status",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

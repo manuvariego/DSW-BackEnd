@@ -20,5 +20,5 @@ RUN pnpm run build
 # Expose port
 EXPOSE 3000
 
-# Run migrations and start server
-CMD ["sh", "-c", "npx mikro-orm migration:up --config dist/mikro-orm.config.js && node dist/src/app.js"]
+# Start server
+CMD ["node", "dist/src/app.js"]
