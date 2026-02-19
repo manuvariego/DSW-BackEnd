@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { typeVehicle } from "./vehicleType.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { validationResult } from "express-validator";
 
 const em = orm.em
 
@@ -42,11 +43,13 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const typevehicle = em.create(typeVehicle, req.body.sanitizedInput)
         await em.flush()
-
         res.status(201).json(typevehicle)
-
     } catch (error: any) { handleError(error, res) }
 }
 

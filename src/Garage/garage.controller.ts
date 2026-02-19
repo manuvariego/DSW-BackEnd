@@ -32,6 +32,25 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
+function sanitizeGarageUpdate(req: Request, res: Response, next: NextFunction) {
+  req.body.sanitizedInput = {
+    name: req.body.name,
+    password: req.body.password,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    location: req.body.location,
+    services: req.body.services
+  }
+
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key]
+    }
+  })
+  next()
+}
+
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -54,6 +73,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
     const garage = em.create(Garage, req.body.sanitizedInput)
     await em.flush()
@@ -151,6 +175,6 @@ async function getAvailables(req: Request, res: Response) {
 }
 
 
-export { sanitizeGarageInput, findAll, findOne, add, update, eliminate, getAvailables }
+export { sanitizeGarageInput, sanitizeGarageUpdate, findAll, findOne, add, update, eliminate, getAvailables }
 
 

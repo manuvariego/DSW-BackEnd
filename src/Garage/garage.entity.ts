@@ -13,8 +13,8 @@ export class Garage {
   @Property({})
   name!: string;
 
-  @Property({})
-  password!: string;
+  @Property({ hidden: true })
+  password!: string
 
   @Property({})
   address!: string;

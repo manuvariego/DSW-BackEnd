@@ -11,28 +11,6 @@ import { getIO } from "../shared/socket/socket.service.js";
 
 const em = orm.em
 
-function sanitizeReservationInput(req: Request, res: Response, next: NextFunction) {
-  req.body.sanitizedInput = {
-    date_time_reservation: req.body.date_time_reservation,
-    check_in_at: req.body.check_in_at,
-    check_out_at: req.body.check_out_at,
-    estado: req.body.estado,
-    amount: req.body.amount,
-    vehicle: req.body.vehicle,
-    garage: req.body.garage,
-    parkingSpace: req.body.parkingSpace,
-    paymentMethod: req.body.paymentMethod
-  }
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key]
-    }
-  })
-  next()
-}
-
-
 async function findAll(req: Request, res: Response) {
   try {
     const reservations = await em.find(Reservation, {}, 
@@ -130,18 +108,6 @@ async function add(req: Request, res: Response) {
 
     res.status(201).json(reservation);
 
-  } catch (error: any) { handleError(error, res) }
-}
-
-
-
-async function update(req: Request, res: Response) {
-  try {
-    const id = Number.parseInt(req.params.id)
-    const reservationToUpdate = await em.findOneOrFail(Reservation, { id })
-    em.assign(reservationToUpdate, req.body.sanitizedInput)
-    await em.flush()
-    res.status(200).json(reservationToUpdate)
   } catch (error: any) { handleError(error, res) }
 }
 
@@ -317,4 +283,4 @@ async function updateServiceStatus(req: Request, res: Response) {
 }
 
 
-export { sanitizeReservationInput, findAll, findByUser, findOne, add, update, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking, checkAvailability, updateServiceStatus }
+export { findAll, findByUser, findOne, add, eliminate, findAllofGarage, cancel, listResByGarage, getReservationsForBlocking, checkAvailability, updateServiceStatus }

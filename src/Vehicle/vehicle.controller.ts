@@ -26,9 +26,7 @@ function sanitizeVehicleInput(req: Request, res: Response, next: NextFunction) {
 async function findAll(req: Request, res: Response) {
     try {
         const vehicles = await em.find(Vehicle, {},)
-
         res.status(200).json(vehicles)
-
     } catch (error: any) { handleError(error, res) }
 }
 
@@ -36,7 +34,6 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
-        
         const vehicle = await getVehicleBusiness(license_plate);
 
         if (vehicle == null) {
@@ -69,19 +66,6 @@ async function add(req: Request, res: Response) {
 }
 
 
-async function update(req: Request, res: Response) {
-    try {
-        const license_plate = req.params.license_plate;
-        const vehicleToUpdate = await em.findOneOrFail(Vehicle, { license_plate })
-        em.assign(vehicleToUpdate, req.body.sanitizedInput)
-        await em.flush()
-
-        res.status(200).json(vehicleToUpdate)
-
-    } catch (error: any) { handleError(error, res) }
-}
-
-
 async function eliminate(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
@@ -94,5 +78,5 @@ async function eliminate(req: Request, res: Response) {
 
 }
 
-export { sanitizeVehicleInput, findAll, findOne, findByOwner, add, update, eliminate }
+export { sanitizeVehicleInput, findAll, findOne, findByOwner, add, eliminate }
 

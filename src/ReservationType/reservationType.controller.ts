@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ReservationType, typeCode } from "./reservationType.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { validationResult } from "express-validator";
 
 const em = orm.em
 
@@ -45,6 +46,10 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const reservationType = em.create(ReservationType, req.body.sanitizedInput)
         await em.flush()
 
