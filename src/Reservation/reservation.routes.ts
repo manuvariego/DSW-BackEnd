@@ -1,20 +1,19 @@
 import { Router } from "express";
 
-import { findAll, findOne, update, add, eliminate, sanitizeReservationInput, findByUser, cancel, findAllofGarage, listResByGarage, getReservationsForBlocking, checkAvailability, updateServiceStatus } from "./reservation.controller.js";
+import { findAll, findOne, add, eliminate, findByUser, cancel, findAllofGarage, listResByGarage, getReservationsForBlocking, checkAvailability, updateServiceStatus } from "./reservation.controller.js";
 import { validateAddReservation } from "./reservation.validation.js";
-import { authenticate } from "../shared/middleware/auth.middleware.js";
+import { authenticate, authorizeUser, authorizeGarage } from "../shared/middleware/auth.middleware.js";
 
 export const ReservationRouter = Router()
 
-ReservationRouter.get('/garage/:cuitGarage', authenticate, listResByGarage)
+ReservationRouter.get('/check-availability', checkAvailability)
+ReservationRouter.get('/blocking-data/:cuitGarage', authenticate, authorizeGarage, getReservationsForBlocking)
+ReservationRouter.get('/user/:userId', authenticate, authorizeUser, findByUser)
+ReservationRouter.get('/garage/:cuitGarage/:condition', authenticate, authorizeGarage, findAllofGarage)
+ReservationRouter.get('/garage/:cuitGarage', authenticate, authorizeGarage, listResByGarage)
 ReservationRouter.get('/', authenticate, findAll)
-ReservationRouter.get('/user/:userId', authenticate, findByUser)
 ReservationRouter.get('/:id', authenticate, findOne)
-ReservationRouter.get('/garage/:cuitGarage/:condition', authenticate, findAllofGarage)
-ReservationRouter.post('/', authenticate, validateAddReservation, add)
-ReservationRouter.put('/:id', authenticate, sanitizeReservationInput, update)
-ReservationRouter.patch('/:id/cancel', authenticate, cancel)
-ReservationRouter.patch('/:reservationId/services/:serviceId', authenticate, updateServiceStatus);
+ReservationRouter.post('/', authenticate, authorizeUser, validateAddReservation, add)
+ReservationRouter.patch('/:id/cancel', authenticate, authorizeUser, cancel)
+ReservationRouter.patch('/:reservationId/services/:serviceId', authenticate, authorizeGarage, updateServiceStatus)
 ReservationRouter.delete('/:id', authenticate, eliminate)
-ReservationRouter.get('/blocking-data/:cuitGarage', authenticate, getReservationsForBlocking);
-ReservationRouter.get('/check-availability', checkAvailability);

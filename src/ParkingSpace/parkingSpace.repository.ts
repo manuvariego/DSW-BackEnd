@@ -1,4 +1,3 @@
-import { ReservationType } from "../ReservationType/reservationType.entity.js"
 import { orm } from "../shared/db/orm.js";
 import { ParkingSpace } from "./parkingSpace.entity.js";
 

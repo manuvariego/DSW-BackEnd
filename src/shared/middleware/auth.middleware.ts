@@ -64,3 +64,17 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     return res.status(500).json({ message: 'Authentication error' });
   }
 }
+
+export function authorizeGarage(req: Request, res: Response, next: NextFunction) {
+  if (req.user?.type !== 'garage') {
+    return res.status(403).json({ message: 'Acceso restringido a garages' });
+  }
+  next();
+}
+
+export function authorizeUser(req: Request, res: Response, next: NextFunction) {
+  if (req.user?.type === 'garage') {
+    return res.status(403).json({ message: 'Acceso restringido a usuarios' });
+  }
+  next();
+}
