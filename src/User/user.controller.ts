@@ -7,6 +7,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import { Reservation } from "../Reservation/reservation.entity.js";
 import { getActiveReservationsByUserBusiness } from "../Reservation/reservation.business.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { validationResult } from "express-validator";
 
 
 const em = orm.em
@@ -32,6 +33,23 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
     next()
 }
 
+function sanitizeUserUpdate(req: Request, res: Response, next: NextFunction) {
+    req.body.sanitizedInput = {
+        name: req.body.name,
+        lastname: req.body.lastname,
+        password: req.body.password,
+        address: req.body.address,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+    }
+
+    Object.keys(req.body.sanitizedInput).forEach((key) => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key]
+        }
+    })
+    next()
+}
 
 async function findAll(req: Request, res: Response) {
     try {
@@ -52,6 +70,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
         const user = em.create(User, req.body.sanitizedInput)
         await em.persistAndFlush(user)
@@ -104,4 +127,4 @@ async function eliminate(req: Request, res: Response) {
 }
 
 
-export { getVehicles, sanitizeUserInput, findAll, findOne, add, update, eliminate, getActiveReservations }
+export { getVehicles, sanitizeUserInput, sanitizeUserUpdate, findAll, findOne, add, update, eliminate, getActiveReservations }

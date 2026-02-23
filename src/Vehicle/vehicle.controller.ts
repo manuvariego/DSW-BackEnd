@@ -5,6 +5,7 @@ import { getVehicleBusiness } from "./vehicle.business.js";
 import { User } from "../User/user.entity.js";
 import { typeVehicle } from "../VehicleType/vehicleType.entity.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { Reservation, ReservationStatus } from "../Reservation/reservation.entity.js";
 
 const em = orm.em
 
@@ -28,9 +29,7 @@ function sanitizeVehicleInput(req: Request, res: Response, next: NextFunction) {
 async function findAll(req: Request, res: Response) {
     try {
         const vehicles = await em.find(Vehicle, {},)
-
         res.status(200).json(vehicles)
-
     } catch (error: any) { handleError(error, res) }
 }
 
@@ -38,7 +37,6 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
-        
         const vehicle = await getVehicleBusiness(license_plate);
 
         if (vehicle == null) {
@@ -74,30 +72,24 @@ async function add(req: Request, res: Response) {
 }
 
 
-async function update(req: Request, res: Response) {
-    try {
-        const license_plate = req.params.license_plate;
-        const vehicleToUpdate = await em.findOneOrFail(Vehicle, { license_plate })
-        em.assign(vehicleToUpdate, req.body.sanitizedInput)
-        await em.flush()
-
-        res.status(200).json(vehicleToUpdate)
-
-    } catch (error: any) { handleError(error, res) }
-}
-
-
 async function eliminate(req: Request, res: Response) {
     try {
         const license_plate = req.params.license_plate;
         const vehicleToRemove = await em.findOneOrFail(Vehicle, { license_plate })
-        await em.removeAndFlush(vehicleToRemove)
 
+        const activeReservations = await em.count(Reservation, {
+            vehicle: { license_plate },
+            status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
+        })
+        if (activeReservations > 0) {
+            return res.status(409).json({ message: 'No se puede eliminar el vehículo porque tiene reservas activas o en curso' })
+        }
+
+        await em.removeAndFlush(vehicleToRemove)
         res.status(200).json({ message: 'Vehicle eliminated' })
 
     } catch (error: any) { handleError(error, res) }
-
 }
 
-export { sanitizeVehicleInput, findAll, findOne, findByOwner, add, update, eliminate }
+export { sanitizeVehicleInput, findAll, findOne, findByOwner, add, eliminate }
 

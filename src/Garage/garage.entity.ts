@@ -7,14 +7,14 @@ import { Service } from '../Services/service.entity.js';
 
 @Entity()
 export class Garage {
-  @PrimaryKey({})
+  @PrimaryKey({ columnType: 'bigint' })
   cuit!: number;
 
   @Property({})
   name!: string;
 
-  @Property({})
-  password!: string;
+  @Property({ hidden: true })
+  password!: string
 
   @Property({})
   address!: string;

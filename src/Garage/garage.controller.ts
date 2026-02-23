@@ -7,7 +7,8 @@ import { getAvailablesBusiness, getPriceForReservationBusiness } from "./garage.
 import { getGaragePricingStatus } from "../ReservationType/reservationType.business.js";
 import { validationResult } from 'express-validator';
 import { handleError } from "../shared/errors/errorHandler.js";
-import { Service } from "../Services/service.entity.js";
+import { Service } from "../Services/service.entity.js"
+import { Reservation, ReservationStatus } from "../Reservation/reservation.entity.js";
 
 const em = orm.em
 
@@ -21,6 +22,25 @@ function sanitizeGarageInput(req: Request, res: Response, next: NextFunction) {
     email: req.body.email,
     location: req.body.location,
     parking_space: req.body.parking_space,
+    services: req.body.services
+  }
+
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key]
+    }
+  })
+  next()
+}
+
+function sanitizeGarageUpdate(req: Request, res: Response, next: NextFunction) {
+  req.body.sanitizedInput = {
+    name: req.body.name,
+    password: req.body.password,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    location: req.body.location,
     services: req.body.services
   }
 
@@ -54,6 +74,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10)
     const garage = em.create(Garage, req.body.sanitizedInput)
     await em.flush()
@@ -93,6 +118,15 @@ async function eliminate(req: Request, res: Response) {
   try {
     const cuit = req.params.cuit
     const garage = await em.findOneOrFail(Garage, { cuit: +cuit }, { populate: ['services'] })
+
+    const activeReservations = await em.count(Reservation, {
+      garage: { cuit: +cuit },
+      status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
+    })
+    if (activeReservations > 0) {
+      return res.status(409).json({ message: 'No se puede eliminar el garage porque tiene reservas activas o en curso' })
+    }
+
     await em.removeAndFlush(garage)
     res.status(200).json({ message: 'Garage eliminated' })
   }
@@ -117,7 +151,6 @@ async function getAvailables(req: Request, res: Response) {
     }
 
     const garagesAvailables = await getAvailablesBusiness(checkin, checkout, vehicle?.type.id!);
-    console.log(garagesAvailables)
 
     // Filtra solo garages con precios completos
     const garagesWithCompletePrices = await Promise.all(
@@ -151,6 +184,6 @@ async function getAvailables(req: Request, res: Response) {
 }
 
 
-export { sanitizeGarageInput, findAll, findOne, add, update, eliminate, getAvailables }
+export { sanitizeGarageInput, sanitizeGarageUpdate, findAll, findOne, add, update, eliminate, getAvailables }
 
 

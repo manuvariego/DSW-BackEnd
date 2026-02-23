@@ -1,4 +1,4 @@
-import { Entity, Cascade, Collection, Property, OneToMany, ManyToOne} from '@mikro-orm/core';
+import { Entity, Collection, Property, OneToMany, ManyToOne} from '@mikro-orm/core';
 import { baseEntity } from '../shared/baseEntity.entity.js';
 import type { Garage } from '../Garage/garage.entity.js';
 import { ReservationService } from '../Reservation/reservationService.entity.js';

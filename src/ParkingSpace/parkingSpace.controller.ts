@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { ParkingSpace } from "./parkingSpace.entity.js";
 import { orm } from "../shared/db/orm.js";
 import { handleError } from "../shared/errors/errorHandler.js";
+import { validationResult } from "express-validator";
+import { Reservation, ReservationStatus } from "../Reservation/reservation.entity.js";
 
 
 const em = orm.em
@@ -52,6 +54,10 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const parkingSpace = em.create(ParkingSpace, req.body.sanitizedInput)
     await em.flush()
     res.status(201).json(parkingSpace)
@@ -77,12 +83,20 @@ async function eliminate(req: Request, res: Response) {
   try {
     const number = Number.parseInt(req.params.number)
     const cuitGarage = Number.parseInt(req.params.cuitGarage)
-    const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number, garage: { cuit: cuitGarage } },)
+    const parkingSpace = await em.findOneOrFail(ParkingSpace, { number: +number, garage: { cuit: cuitGarage } })
+
+    const activeReservations = await em.count(Reservation, {
+      parkingSpace: { number, garage: { cuit: cuitGarage } },
+      status: { $in: [ReservationStatus.ACTIVE, ReservationStatus.IN_PROGRESS] }
+    })
+    if (activeReservations > 0) {
+      return res.status(409).json({ message: 'No se puede eliminar el espacio de estacionamiento porque tiene reservas activas o en curso' })
+    }
+
     await em.removeAndFlush(parkingSpace)
     res.status(200).json({ message: 'ParkingSpace deleted successfully' })
   }
   catch (error: any) { handleError(error, res) }
-
 }
 
 export { sanitizeParkingSpaceInput, findAll, findOne, add, update, eliminate, findAllofAGarage }

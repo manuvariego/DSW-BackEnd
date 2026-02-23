@@ -2,7 +2,6 @@ import 'dotenv/config';
 import 'reflect-metadata'
 import express from 'express'
 import http from 'http'
-import 'dotenv/config'
 import { orm } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { UserRouter } from './User/user.routes.js'

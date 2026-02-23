@@ -1,7 +1,7 @@
 import { Router } from "express";
-
+import { validateAddReservationType } from './reservationType.validation.js';
 import { findAll, findOne, update, add, eliminate, sanitizeReservationTypeInput, getPricingStatus, findByGarage } from "./reservationType.controller.js";
-import { authenticate } from "../shared/middleware/auth.middleware.js";
+import { authenticate, authorizeGarage } from "../shared/middleware/auth.middleware.js";
 
 export const ReservationTypeRouter = Router()
 
@@ -11,7 +11,7 @@ ReservationTypeRouter.get('/garage/:cuit/status', getPricingStatus)
 ReservationTypeRouter.get('/garage/:cuit', findByGarage)
 ReservationTypeRouter.get('/:description/:cuitGarage', findOne)
 
-// Protected CUD endpoints
-ReservationTypeRouter.post('/', authenticate, sanitizeReservationTypeInput, add)
-ReservationTypeRouter.put('/:description/:cuitGarage', authenticate, sanitizeReservationTypeInput, update)
-ReservationTypeRouter.delete('/:description/:cuitGarage', authenticate, eliminate)
+// Protected CUD endpoints (garage only)
+ReservationTypeRouter.post('/', authenticate, authorizeGarage, validateAddReservationType, sanitizeReservationTypeInput, add)
+ReservationTypeRouter.put('/:description/:cuitGarage', authenticate, authorizeGarage, sanitizeReservationTypeInput, update)
+ReservationTypeRouter.delete('/:description/:cuitGarage', authenticate, authorizeGarage, eliminate)
